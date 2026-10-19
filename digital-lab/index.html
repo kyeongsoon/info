@@ -1,0 +1,1118 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>디지털 표현 실험실</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: 남색 헤더 띠 + 탭 4개(문자·이미지·소리·동영상), 각 탭은 '조작판 + 결과판' 2열, 폰에서는 1열 */
+:root{
+  --bg:#F3F6FA; --surface:#FFFFFF; --sunk:#EAF0F7; --ink:#142235; --muted:#5A6678; --line:#D6DEE9;
+  --navy:#1B3350; --on-navy:#FFFFFF; --navy-muted:#A9BCD6;
+  --blue:#2F6FD6; --blue-soft:#E3EDFC; --teal:#12876F; --teal-soft:#DDF3EC; --orange:#C2410C; --orange-soft:#FDEBDD;
+  --bit-on:#142235; --bit-off:#FFFFFF;
+  --f-display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"Noto Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1520; --surface:#152132; --sunk:#1B2A3E; --ink:#E6EDF5; --muted:#9AA8BA; --line:#2A3B52;
+  --navy:#08111C; --on-navy:#F1F5FA; --navy-muted:#8DA2BF;
+  --blue:#6EA2FF; --blue-soft:#1C2E4A; --teal:#3CC3A2; --teal-soft:#123A33; --orange:#F08A4B; --orange-soft:#3E2416;
+  --bit-on:#E6EDF5; --bit-off:#1B2A3E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1520; --surface:#152132; --sunk:#1B2A3E; --ink:#E6EDF5; --muted:#9AA8BA; --line:#2A3B52;
+  --navy:#08111C; --on-navy:#F1F5FA; --navy-muted:#8DA2BF;
+  --blue:#6EA2FF; --blue-soft:#1C2E4A; --teal:#3CC3A2; --teal-soft:#123A33; --orange:#F08A4B; --orange-soft:#3E2416;
+  --bit-on:#E6EDF5; --bit-off:#1B2A3E; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--navy);color:var(--on-navy)}
+header .wrap{padding-block:28px 0;display:grid;gap:18px}
+.eyebrow{font-size:14px;letter-spacing:.06em;color:var(--navy-muted)}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(34px,5vw,52px);line-height:1.1;margin:0;text-wrap:balance}
+h1 .hbits{font-family:var(--f-mono);font-size:.42em;color:var(--navy-muted);letter-spacing:.1em;display:block;margin-top:8px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{font:inherit;font-weight:700;font-size:17px;border:0;cursor:pointer;padding:12px 22px;border-radius:12px 12px 0 0;background:transparent;color:var(--navy-muted);white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+main{padding-block:28px 56px}
+section.tab{display:grid;gap:22px}
+.lead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+h2{font-family:var(--f-display);font-weight:400;font-size:32px;margin:0;line-height:1.2}
+.lead p{margin:0;color:var(--muted)}
+h3{font-size:19px;margin:0 0 4px;font-weight:700}
+.hint{color:var(--muted);font-size:14px;margin:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:22px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:14px;align-content:start;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:inherit;font-weight:700;font-size:15px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--surface)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--sunk);padding:4px;border-radius:12px}
+.seg .btn{border:0;background:transparent;padding:7px 12px}
+.seg .btn[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+label.ctl{display:grid;gap:4px;font-weight:700;font-size:15px}
+label.ctl span.v{font-family:var(--f-mono);color:var(--blue)}
+input[type=range]{width:100%;accent-color:var(--blue)}
+input[type=text],select{font:inherit;font-size:18px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+canvas{display:block;max-width:100%;border-radius:10px;background:var(--sunk)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{background:var(--sunk);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-family:var(--f-mono);font-size:22px;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:13px}
+.key{border-radius:10px;padding:12px 14px;background:var(--teal-soft);font-weight:500}
+.key strong{color:var(--teal)}
+.mono{font-family:var(--f-mono)}
+/* 문자 */
+.chars{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.ch{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.ch .top{display:flex;align-items:center;gap:12px}
+.ch .glyph{font-size:40px;font-weight:700;line-height:1;min-width:48px;text-align:center}
+.ch .meta{font-size:13px;color:var(--muted);line-height:1.4}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px}
+.badge.a{background:var(--blue-soft);color:var(--blue)}
+.badge.u{background:var(--teal-soft);color:var(--teal)}
+.badge.x{background:var(--orange-soft);color:var(--orange)}
+.bits{display:flex;flex-wrap:wrap;gap:3px}
+.bits .g{display:flex;gap:2px}
+.bit{width:20px;height:26px;display:grid;place-items:center;font-family:var(--f-mono);font-size:13px;font-weight:700;border-radius:4px;border:1px solid var(--line)}
+.bit.on{background:var(--bit-on);color:var(--bit-off);border-color:var(--bit-on)}
+.bit.off{background:var(--bit-off);color:var(--muted)}
+.uc{border:1px solid var(--line);border-radius:8px;padding:6px 4px;text-align:center;background:var(--surface);cursor:pointer;font:inherit;color:var(--ink)}
+.uc b{display:block;font-size:26px;line-height:1.2}
+.uc small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.uc.cur{border-color:var(--teal);background:var(--teal-soft)}
+.dstep{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-family:var(--f-mono);font-size:14px;background:var(--sunk);border-radius:8px;padding:6px 10px}
+.dstep .arrow{color:var(--muted)}
+.dstep .gl{font-family:var(--f-body);font-weight:700;font-size:20px}
+/* 이미지 */
+.pix-wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.pixgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:min(100%,300px);aspect-ratio:1;touch-action:none;user-select:none;background:var(--line);padding:2px;border-radius:8px}
+.pixgrid div{background:var(--bit-off);border-radius:2px;cursor:pointer}
+.pixgrid div.on{background:var(--bit-on)}
+.rows{font-family:var(--f-mono);font-size:17px;line-height:1.7;letter-spacing:.12em;display:grid;gap:2px}
+.rows span{font-variant-numeric:tabular-nums}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vs figure{margin:0;display:grid;gap:6px}
+.vs figcaption{font-size:14px;color:var(--muted)}
+.vs figcaption b{color:var(--ink);display:block;font-size:16px}
+.vd-wrap{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:20px}
+@media (max-width:900px){.vd-wrap{grid-template-columns:1fr}}
+.vd-list{margin:0;padding:0;list-style:none;display:grid;gap:6px;max-height:300px;overflow-y:auto}
+.vd-list li{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;background:var(--sunk);border-radius:8px;padding:6px 8px;line-height:1.45}
+.vd-list li .sw{flex:0 0 14px;height:14px;border-radius:4px;border:1px solid var(--line)}
+.vd-list li span.d{flex:1;min-width:0;overflow-wrap:anywhere}
+.vd-list li button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px}
+.vd-list li.sel{outline:2px solid var(--blue)}
+.swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.swatch[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+/* 소리 */
+.samples{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.sm{flex:0 0 auto;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-family:var(--f-mono);font-size:13px;line-height:1.35;background:var(--surface)}
+.sm .q{color:var(--orange);font-weight:700}
+.sm .b{color:var(--blue);font-weight:700}
+.sm .t{color:var(--muted);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.why{background:var(--sunk);border-radius:12px;padding:14px 16px;display:grid;gap:6px;min-width:0}
+.why h4{margin:0;font-size:16px}
+.why ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px}
+.why .now{margin:4px 0 0;padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line);font-size:15px}
+.why .now b.bad{color:var(--orange)} .why .now b.good{color:var(--teal)}
+.now-box{margin:0;padding:12px 14px;border-radius:10px;background:var(--orange-soft);font-size:16px}
+.now-box.ok{background:var(--teal-soft)}
+.now-box b{font-weight:700}
+.al-tb{border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:520px;width:100%}
+.al-tb th,.al-tb td{border:1px solid var(--line);padding:8px 10px;text-align:center;font-family:var(--f-mono);font-size:15px}
+.al-tb th{font-family:var(--f-body);background:var(--sunk)}
+.al-tb td.trend{font-family:var(--f-body);font-weight:700}
+.al-tb td.good,.al-tb .trend.good{color:var(--teal)} .al-tb .trend.bad{color:var(--orange)}
+.vr-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+.vr-wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px}
+@media (max-width:820px){.vr-wrap{grid-template-columns:1fr}}
+.vr-why{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.vr-why .c{border-radius:12px;padding:12px 14px;background:var(--sunk);display:grid;gap:4px;font-size:15px}
+.vr-why .c h4{margin:0;font-size:16px}
+.vr-why .c.bad{background:var(--orange-soft)} .vr-why .c.bad h4{color:var(--orange)}
+.vr-why .c.ok{background:var(--teal-soft)} .vr-why .c.ok h4{color:var(--teal)}
+.vr-why .c p{margin:0}
+/* 동영상 */
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.strip figure{margin:0;display:grid;gap:2px;text-align:center;font-size:12px;color:var(--muted)}
+footer{color:var(--muted);font-size:13px;padding-block:0 32px}
+@media (max-width:520px){.vs{grid-template-columns:1fr}.strip{grid-template-columns:repeat(3,1fr)}h2{font-size:27px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Ⅱ. 데이터 · 1. 데이터의 표현 · 2차시</div>
+    <h1>디지털 표현 실험실<span class="hbits">0 1 0 0 0 1 0 0 · 0 1 0 0 1 0 0 1</span></h1>
+    <nav class="tabs" role="tablist" aria-label="실험 선택">
+      <button role="tab" id="t-text" aria-controls="text" aria-selected="false">문자</button>
+      <button role="tab" id="t-image" aria-controls="image" aria-selected="true">이미지</button>
+      <button role="tab" id="t-sound" aria-controls="sound" aria-selected="false">소리</button>
+      <button role="tab" id="t-video" aria-controls="video" aria-selected="false">동영상</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ========== 문자 ========== -->
+<section class="tab" id="text" role="tabpanel" aria-labelledby="t-text" hidden>
+  <div class="lead"><h2>문자 → 문자 코드 → 이진수</h2><p>글자를 입력하면 컴퓨터가 저장하는 0과 1을 보여 줌</p></div>
+  <div class="panel">
+    <label class="ctl" for="txt-in">입력할 글자 (최대 20자)
+      <input type="text" id="txt-in" maxlength="40" value="Hi 가나" autocomplete="off">
+    </label>
+    <div class="row" style="justify-content:space-between">
+      <div class="seg" role="group" aria-label="보기 방식" id="txt-mode">
+        <button class="btn" data-m="auto" aria-pressed="true">아스키 우선</button>
+        <button class="btn" data-m="uni" aria-pressed="false">모두 유니코드로</button>
+      </div>
+      <span class="hint" id="txt-mode-hint"></span>
+    </div>
+    <div class="row" id="txt-quick">
+      <button class="btn" data-v="A">A</button><button class="btn" data-v="KYS">KYS</button><button class="btn" data-v="가">가</button><button class="btn" data-v="정보 Info">정보 Info</button><button class="btn" data-v="2025!">2025!</button><button class="btn" data-v="안녕こんにちは">안녕こんにちは</button><button class="btn" data-v="Ω π ★ ♥">Ω π ★ ♥</button>
+    </div>
+    <div class="stats" id="txt-stats"></div>
+    <div class="chars" id="txt-chars"></div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>이진수 → 문자 (해독하기)</h3>
+      <div class="seg" role="group" aria-label="해독할 문자 코드" id="dec-mode">
+        <button class="btn" data-m="7" aria-pressed="true">아스키 코드 (7비트씩)</button>
+        <button class="btn" data-m="16" aria-pressed="false">유니코드 (16비트씩)</button>
+      </div>
+      <p class="hint" id="dec-hint"></p>
+      <input type="text" id="dec-in" class="mono" value="1001011 1011001 1010011" autocomplete="off" aria-label="해독할 이진수">
+      <div class="row" id="dec-ex"></div>
+      <div id="dec-out" style="font-size:38px;font-weight:700;letter-spacing:.1em;min-height:50px"></div>
+      <div id="dec-steps" style="display:grid;gap:6px"></div>
+    </div>
+    <div class="panel">
+      <h3>유니코드 표 둘러보기</h3>
+      <p class="hint">유니코드는 전 세계 글자마다 번호(코드 포인트)를 붙인 약속임. 글자 하나를 넣으면 그 주변 번호의 글자를 보여 줌.</p>
+      <div class="row">
+        <input type="text" id="uni-in" value="가" maxlength="2" autocomplete="off" aria-label="시작 글자" style="width:90px;font-size:26px;text-align:center">
+        <button class="btn" id="uni-prev">◀ 앞 16개</button>
+        <button class="btn" id="uni-next">뒤 16개 ▶</button>
+      </div>
+      <div class="row" id="uni-jump">
+        <button class="btn" data-c="0041">A (영문)</button><button class="btn" data-c="AC00">가 (한글)</button><button class="btn" data-c="3042">あ (일본어)</button><button class="btn" data-c="4E00">一 (한자)</button><button class="btn" data-c="03A9">Ω (그리스)</button>
+      </div>
+      <div id="uni-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px"></div>
+      <p class="key" id="uni-key"></p>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>두 문자 코드 비교</h3>
+    <div class="stats">
+      <div class="stat"><small>아스키 코드</small><b>7비트</b><small>2⁷ = 128개 · 영문자, 숫자, 기호</small></div>
+      <div class="stat"><small>유니코드</small><b>16비트</b><small>2¹⁶ = 65,536개 · 한글 등 전 세계 언어</small></div>
+      <div class="stat"><small>같은 'A'</small><b>1000001</b><small>유니코드로는 0000 0000 0100 0001 (U+0041)</small></div>
+    </div>
+    <p class="key">한글 <strong>'가'</strong>는 아스키 코드 128개 안에 없음 → <strong>유니코드</strong>로 저장해야 함. 유니코드의 첫 128개는 아스키 코드와 번호가 같음.</p>
+  </div>
+</section>
+
+<!-- ========== 이미지 ========== -->
+<section class="tab" id="image" role="tabpanel" aria-labelledby="t-image">
+  <div class="lead"><h2>이미지 → 화소 → 이진수</h2><p>비트맵은 화소마다 색을, 벡터는 도형의 수식을 저장함</p></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>① 화소를 칠해 이진수 만들기</h3>
+      <p class="hint">칸을 누르거나 끌어서 칠하셈. 칠한 칸 1, 빈칸 0.</p>
+      <div class="pix-wrap">
+        <div class="pixgrid" id="pix" aria-label="8×8 화소 판"></div>
+        <div class="rows" id="pix-rows" aria-live="polite"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="pix-heart">하트 불러오기</button>
+        <button class="btn" id="pix-invert">반전</button>
+        <button class="btn" id="pix-clear">모두 지우기</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><small>화소 수</small><b>8 × 8 = 64</b></div>
+        <div class="stat"><small>흑백(1비트) 용량</small><b>64비트</b><small>= 8바이트</small></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>② 해상도를 바꾸면?</h3>
+      <canvas id="res-cv" width="480" height="480" style="width:100%;max-width:420px;aspect-ratio:1;image-rendering:pixelated" aria-label="해상도에 따라 바뀌는 그림"></canvas>
+      <label class="ctl" for="res-sl">해상도 <span class="v" id="res-v"></span>
+        <input type="range" id="res-sl" min="0" max="6" step="1" value="2">
+      </label>
+      <div class="stats">
+        <div class="stat"><small>화소 수</small><b id="res-px"></b></div>
+        <div class="stat"><small>용량 (24비트 색)</small><b id="res-size"></b></div>
+      </div>
+      <label class="ctl" for="res-file" style="font-weight:500;font-size:14px">내 사진으로 해 보기
+        <input type="file" id="res-file" accept="image/*">
+      </label>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>③ 확대해 보면: 비트맵 vs 벡터</h3>
+    <label class="ctl" for="zoom-sl">확대 배율 <span class="v" id="zoom-v">1배</span>
+      <input type="range" id="zoom-sl" min="1" max="12" step="1" value="1">
+    </label>
+    <div class="vs">
+      <figure><canvas id="bmp-cv" width="400" height="400" style="width:100%;aspect-ratio:1"></canvas>
+        <figcaption><b>비트맵 방식</b>40×40 화소마다 색을 저장 → 확대하면 경계가 계단처럼 깨짐(계단 현상)</figcaption></figure>
+      <figure><canvas id="vec-cv" width="400" height="400" style="width:100%;aspect-ratio:1"></canvas>
+        <figcaption><b>벡터 방식</b>원: 중심 (20, 20), 반지름 15 / 별: 꼭짓점 좌표 → 확대해도 다시 계산해 매끄러움</figcaption></figure>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>④ 직접 그려 보는 벡터 그림</h3>
+    <p class="hint">벡터 방식은 그림을 화소가 아니라 <b>좌표와 도형 정보</b>로 저장함. 도형을 그리면 오른쪽에 저장되는 데이터가 바로 나타남. 좌표는 가로·세로 0~100.</p>
+    <div class="row" style="justify-content:space-between">
+      <div class="seg" role="group" aria-label="그리기 도구" id="vd-tool">
+        <button class="btn" data-t="line" aria-pressed="true">／ 선</button>
+        <button class="btn" data-t="circle" aria-pressed="false">○ 원</button>
+        <button class="btn" data-t="rect" aria-pressed="false">□ 사각형</button>
+        <button class="btn" data-t="poly" aria-pressed="false">△ 다각형</button>
+        <button class="btn" data-t="move" aria-pressed="false">✥ 점 옮기기</button>
+      </div>
+      <div class="row" id="vd-color" role="group" aria-label="색"></div>
+    </div>
+    <div class="vd-wrap">
+      <div style="display:grid;gap:10px;min-width:0">
+        <canvas id="vd-cv" width="600" height="600" style="width:100%;max-width:560px;aspect-ratio:1;touch-action:none;cursor:crosshair" aria-label="벡터 그리기 판"></canvas>
+        <p class="hint" id="vd-help"></p>
+        <div class="row">
+          <button class="btn" id="vd-poly-done" hidden>다각형 완성</button>
+          <button class="btn" id="vd-undo">되돌리기</button>
+          <button class="btn" id="vd-clear">모두 지우기</button>
+          <button class="btn" id="vd-ex1">예시: 과녁</button>
+          <button class="btn" id="vd-ex2">예시: 집</button>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px;align-content:start;min-width:0">
+        <div class="seg" role="group" aria-label="보기 방식" id="vd-view">
+          <button class="btn" data-v="vec" aria-pressed="true">벡터로 보기</button>
+          <button class="btn" data-v="bmp" aria-pressed="false">비트맵(25×25)으로 바꿔 보기</button>
+        </div>
+        <label class="ctl" for="vd-zoom">확대 배율 <span class="v" id="vd-zoom-v">1배</span>
+          <input type="range" id="vd-zoom" min="1" max="8" value="1"></label>
+        <h3 style="font-size:16px;margin:0">저장된 데이터</h3>
+        <ol id="vd-list" class="vd-list"></ol>
+        <div class="stats">
+          <div class="stat"><small>벡터로 저장</small><b id="vd-num"></b><small id="vd-num-s"></small></div>
+          <div class="stat"><small>비트맵(100×100, 24비트 색)</small><b>30,000 B</b><small>도형 수와 상관없이 화소 1만 개</small></div>
+        </div>
+        <p class="key" id="vd-key">벡터는 <strong>숫자만 바꾸면</strong> 모양이 바뀌고, 확대해도 다시 계산해서 그리므로 <strong>계단 현상이 없음</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 소리 ========== -->
+<section class="tab" id="sound" role="tabpanel" aria-labelledby="t-sound" hidden>
+  <div class="lead"><h2>소리 → 표본화 → 양자화 → 부호화</h2><p>연속된 소리 파형을 끊고, 정수로 맞추고, 이진수로 바꿈</p></div>
+  <div class="panel">
+    <div class="row" style="justify-content:space-between">
+      <div class="seg" role="group" aria-label="단계 선택" id="snd-stage">
+        <button class="btn" data-s="0">아날로그 파형</button>
+        <button class="btn" data-s="1">① 표본화</button>
+        <button class="btn" data-s="2">② 양자화</button>
+        <button class="btn" data-s="3" aria-pressed="true">③ 부호화</button>
+      </div>
+      <div class="legend"><span><i style="background:var(--muted)"></i>원래 소리</span><span><i style="background:var(--blue)"></i>표본</span><span><i style="background:var(--orange)"></i>양자화한 값</span></div>
+    </div>
+    <canvas id="snd-cv" width="1100" height="380" style="width:100%;height:auto" aria-label="소리 파형 그래프"></canvas>
+    <div class="grid2" style="gap:14px">
+      <label class="ctl" for="snd-n">표본 수 (일정한 시간 간격으로 몇 번 측정?) <span class="v" id="snd-n-v"></span>
+        <input type="range" id="snd-n" min="4" max="40" value="10"></label>
+      <label class="ctl" for="snd-b">양자화 비트 수 (높이를 몇 단계로?) <span class="v" id="snd-b-v"></span>
+        <input type="range" id="snd-b" min="1" max="5" value="3"></label>
+    </div>
+    <div class="samples" id="snd-samples" aria-live="polite"></div>
+    <div class="stats">
+      <div class="stat"><small>부호화 결과 데이터 크기</small><b id="snd-size"></b></div>
+      <div class="stat"><small>높이 단계 수</small><b id="snd-levels"></b></div>
+    </div>
+    <p class="key" id="snd-key"></p>
+  </div>
+  <div class="panel">
+    <h3>직접 들어 보기</h3>
+    <p class="hint">표본화 주파수(1초에 측정하는 횟수)와 비트 수를 낮추면 소리가 어떻게 달라지는지 비교하셈. 소리 크기 주의.</p>
+    <div class="grid2" style="gap:14px">
+      <label class="ctl" for="ply-rate">표본화 주파수 <span class="v" id="ply-rate-v"></span>
+        <input type="range" id="ply-rate" min="0" max="5" value="5"></label>
+      <label class="ctl" for="ply-bits">양자화 비트 수 <span class="v" id="ply-bits-v"></span>
+        <input type="range" id="ply-bits" min="0" max="4" value="4"></label>
+    </div>
+    <div class="row">
+      <button class="btn" id="ply-orig">▶ 원래 소리</button>
+      <button class="btn primary" id="ply-dig">▶ 디지털로 바꾼 소리</button>
+      <span class="hint" id="ply-info"></span>
+    </div>
+    <div style="display:grid;gap:6px">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="font-size:16px;margin:0">파형 확대: 높은 '도'(1,047Hz) 부분 4ms</h3>
+        <div class="legend"><span><i style="background:var(--muted)"></i>원래 소리</span><span><i style="background:var(--orange)"></i>디지털로 바꾼 소리</span></div>
+      </div>
+      <canvas id="ply-cv" width="1100" height="260" style="width:100%;height:auto" aria-label="원래 파형과 디지털 파형 비교"></canvas>
+    </div>
+    <div class="grid2" style="gap:14px">
+      <div class="why">
+        <h4>표본화 주파수를 낮추면 왜 소리가 변할까?</h4>
+        <ul>
+          <li>표본화 주파수는 <b>1초에 소리 높이를 측정하는 횟수</b>임. 측정과 측정 사이의 값은 저장되지 않음.</li>
+          <li>측정 간격이 넓으면 파형이 <b>계단 모양</b>으로 각지고, 원래 없던 <b>'지지직' 잡음</b>이 섞임.</li>
+          <li>공기가 한 번 떨리는 동안 <b>최소 2번은 측정</b>해야 그 높이의 소리를 담을 수 있음. 그래서 담을 수 있는 가장 높은 소리는 <b>표본화 주파수의 절반</b>임. 이보다 높은 음은 사라지거나 <b>엉뚱한 높이의 소리</b>로 바뀌어 들림.</li>
+        </ul>
+        <p class="now" id="why-rate"></p>
+      </div>
+      <div class="why">
+        <h4>비트 수를 낮추면 왜 소리가 변할까?</h4>
+        <ul>
+          <li>비트 수는 <b>소리 높이를 몇 단계로 나눌지</b>를 정함. n비트면 2ⁿ단계 (2비트 = 4단계, 16비트 = 65,536단계).</li>
+          <li>측정한 높이를 <b>가장 가까운 단계로 반올림</b>하므로 원래 값과 차이(<b>양자화 오차</b>)가 생김.</li>
+          <li>단계가 적을수록 오차가 커져서 <b>'쉬-', '지글지글' 거친 잡음</b>이 들리고, 작은 소리는 아예 0으로 뭉개짐.</li>
+        </ul>
+        <p class="now" id="why-bits"></p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><small>지금 설정의 1초 데이터 크기</small><b id="ply-size"></b><small id="ply-size-s"></small></div>
+      <div class="stat"><small>음악 CD 기준</small><b>705,600비트</b><small>44,100Hz × 16비트 · 사람 귀(약 20,000Hz)의 2배 이상</small></div>
+    </div>
+    <p class="key"><strong>정리</strong> 표본화 주파수와 비트 수를 높이면 원래 소리에 가까워지지만, 그만큼 저장할 데이터도 커짐.</p>
+  </div>
+  <div class="panel">
+    <h3>헤르츠(Hz)가 낮으면 왜 음이 낮아질까? 눈으로 보기</h3>
+    <p class="hint">회색은 실제 소리의 떨림, 파란 점은 컴퓨터가 측정해 저장한 값임. 컴퓨터는 <b>점만 알고 있으므로</b> 점들을 가장 자연스럽게 잇는 파형(주황 점선)으로 소리를 다시 만듦.</p>
+    <div class="row" style="justify-content:space-between">
+      <div class="seg" role="group" aria-label="원래 음" id="al-note">
+        <button class="btn" data-f="523" aria-pressed="false">도 523Hz</button>
+        <button class="btn" data-f="659" aria-pressed="false">미 659Hz</button>
+        <button class="btn" data-f="784" aria-pressed="false">솔 784Hz</button>
+        <button class="btn" data-f="1047" aria-pressed="true">높은 도 1,047Hz</button>
+      </div>
+      <div class="legend"><span><i style="background:var(--muted)"></i>실제 소리</span><span><i style="background:var(--blue)"></i>측정한 점</span><span><i style="background:var(--orange)"></i>점으로 다시 만든 소리</span></div>
+    </div>
+    <label class="ctl" for="al-rate">표본화 주파수 (1초에 측정하는 횟수) <span class="v" id="al-rate-v"></span>
+      <input type="range" id="al-rate" min="0" max="7" value="2"></label>
+    <canvas id="al-cv" width="1100" height="320" style="width:100%;height:auto" aria-label="표본화로 음이 낮아지는 원리"></canvas>
+    <div class="stats">
+      <div class="stat"><small>한 번 떨리는 동안 측정 횟수</small><b id="al-per"></b><small>2번 이상이어야 원래 높이를 지킴</small></div>
+      <div class="stat"><small>실제 소리</small><b id="al-f"></b></div>
+      <div class="stat"><small>점으로 다시 만든 소리</small><b id="al-fa"></b></div>
+    </div>
+    <p class="now-box" id="al-key"></p>
+    <div class="row">
+      <button class="btn" id="al-play1">▶ 실제 음 듣기</button>
+      <button class="btn primary" id="al-play2">▶ 점으로 다시 만든 음 듣기</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="al-tb" aria-label="멜로디 비교">
+        <thead><tr><th></th><th>도</th><th>미</th><th>솔</th><th>높은 도</th><th></th></tr></thead>
+        <tbody>
+          <tr><th>원래 높이</th><td>523</td><td>659</td><td>784</td><td>1,047</td><td class="trend good">↗ 올라감</td></tr>
+          <tr><th>들리는 높이</th><td id="al-m0"></td><td id="al-m1"></td><td id="al-m2"></td><td id="al-m3"></td><td class="trend" id="al-trend"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="key">동영상에서 빠르게 도는 바퀴가 <strong>느리게 돌거나 거꾸로 도는 것처럼</strong> 보이는 것과 같은 원리임. 너무 듬성듬성 찍으면(측정하면) 빠른 움직임이 느린 움직임으로 잘못 기록됨.</p>
+  </div>
+</section>
+
+<!-- ========== 동영상 ========== -->
+<section class="tab" id="video" role="tabpanel" aria-labelledby="t-video" hidden>
+  <div class="lead"><h2>동영상 → 프레임 → 프레임률</h2><p>정지된 이미지(프레임)를 빠르게 넘기면 잔상 효과로 움직여 보임</p></div>
+  <div class="grid2">
+    <div class="panel">
+      <canvas id="vid-cv" width="640" height="360" style="width:100%;aspect-ratio:16/9" aria-label="공이 튀는 동영상"></canvas>
+      <div class="row" style="justify-content:space-between">
+        <div class="seg" role="group" aria-label="프레임률" id="vid-fps">
+          <button class="btn" data-f="1">1</button><button class="btn" data-f="5">5</button><button class="btn" data-f="12">12</button><button class="btn" data-f="15">15</button><button class="btn" data-f="30" aria-pressed="true">30</button><button class="btn" data-f="60">60</button>
+        </div>
+        <span class="mono" style="font-weight:700">FPS</span>
+      </div>
+      <div class="row">
+        <button class="btn" id="vid-play">❚❚ 멈춤</button>
+        <button class="btn" id="vid-step">다음 프레임 ▸</button>
+        <button class="btn" id="vid-onion" aria-pressed="false">앞 프레임 겹쳐 보기</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><small>현재 프레임</small><b id="vid-frame">0</b></div>
+        <div class="stat"><small>1초에 보이는 프레임</small><b id="vid-fps-v">30장</b></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>1초 동안의 프레임 (앞 6장)</h3>
+      <div class="strip" id="vid-strip"></div>
+      <p class="hint" id="vid-strip-hint"></p>
+      <h3 style="margin-top:6px">압축 안 한 동영상 용량 계산</h3>
+      <div class="grid2" style="gap:12px">
+        <label class="ctl" for="vid-res">해상도
+          <select id="vid-res"><option value="640x360">640 × 360</option><option value="1280x720">1280 × 720 (HD)</option><option value="1920x1080" selected>1920 × 1080 (FHD)</option><option value="3840x2160">3840 × 2160 (4K)</option></select></label>
+        <label class="ctl" for="vid-sec">길이 <span class="v" id="vid-sec-v"></span>
+          <input type="range" id="vid-sec" min="1" max="60" value="10"></label>
+      </div>
+      <div class="stat"><small id="vid-calc"></small><b id="vid-size"></b></div>
+      <p class="key">그래서 동영상은 <strong>코덱</strong>으로 압축해서 저장함 (MP4 등).</p>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>프레임률(FPS)과 주사율(Hz) 비교하기</h3>
+    <div class="stats">
+      <div class="stat"><small>프레임률 (FPS · frames per second)</small><b style="font-size:18px">영상이 1초에 만드는 그림 수</b><small>영상 파일, 게임, 그래픽카드가 정함</small></div>
+      <div class="stat"><small>주사율 (Hz · 헤르츠)</small><b style="font-size:18px">모니터가 1초에 화면을 새로 그리는 횟수</b><small>모니터가 정함 · 위에서 아래로 한 줄씩 그림(주사)</small></div>
+    </div>
+    <div class="vr-ctl">
+      <label class="ctl" for="vr-fps">영상 프레임률
+        <select id="vr-fps"><option>24</option><option>30</option><option selected>45</option><option>60</option><option>90</option><option>120</option><option>144</option><option>200</option></select></label>
+      <label class="ctl" for="vr-hz">모니터 주사율
+        <select id="vr-hz"><option selected>60</option><option>75</option><option>120</option><option>144</option><option>240</option></select></label>
+      <label class="ctl" for="vr-slow">재생 속도
+        <select id="vr-slow"><option value="0.02">1/50 느리게</option><option value="0.05" selected>1/20 느리게</option><option value="0.1">1/10 느리게</option><option value="1">실제 속도</option></select></label>
+      <div class="ctl"><span>수직 동기화 (V-Sync)</span>
+        <div class="seg" role="group" aria-label="수직 동기화" id="vr-vsync"><button class="btn" data-v="0" aria-pressed="true">끄기</button><button class="btn" data-v="1" aria-pressed="false">켜기</button></div></div>
+    </div>
+    <div class="row" id="vr-preset"><span class="hint">예시:</span>
+      <button class="btn" data-p="24,60,1">영화 24 → 60Hz</button>
+      <button class="btn" data-p="45,60,0">게임 45 → 60Hz</button>
+      <button class="btn" data-p="144,60,0">게임 144 → 60Hz</button>
+      <button class="btn" data-p="60,60,1">60 → 60Hz</button>
+      <button class="btn" data-p="120,144,1">120 → 144Hz</button>
+    </div>
+    <div class="vr-wrap">
+      <figure style="margin:0;display:grid;gap:6px;min-width:0">
+        <canvas id="vr-screen" width="640" height="360" style="width:100%;aspect-ratio:16/9" aria-label="모니터 화면 슬로 모션"></canvas>
+        <figcaption class="hint">모니터 화면(슬로 모션). <span style="color:var(--blue);font-weight:700">파란 선</span>은 지금 화면을 다시 그리고 있는 줄(주사선), <span style="color:var(--orange);font-weight:700">주황 점선</span>은 화면이 찢어진 곳(티어링).</figcaption>
+      </figure>
+      <div style="display:grid;gap:10px;align-content:start;min-width:0">
+        <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+          <div class="stat"><small>1초 동안 새 그림이 나온 주사</small><b id="vr-new"></b></div>
+          <div class="stat"><small>같은 그림 반복 (끊김)</small><b id="vr-rep"></b></div>
+          <div class="stat"><small>버려진 프레임</small><b id="vr-drop"></b></div>
+          <div class="stat"><small>찢어진 화면 (티어링)</small><b id="vr-tear"></b></div>
+        </div>
+        <div class="row"><button class="btn" id="vr-play">❚❚ 멈춤</button><button class="btn" id="vr-step">다음 주사 ▸</button></div>
+      </div>
+    </div>
+    <div style="display:grid;gap:4px">
+      <canvas id="vr-tl" width="1100" height="230" style="width:100%;height:auto" aria-label="프레임과 주사 시간표"></canvas>
+      <p class="hint">위 줄: 영상이 만든 프레임(번호). 아래 줄: 모니터의 주사 한 번 한 번에 실제로 보여 준 프레임. ✕ = 한 번도 화면에 못 나온 프레임, ↻ = 앞과 같은 그림을 한 번 더 보여 줌, ⚡ = 두 프레임이 섞여 찢어짐.</p>
+    </div>
+    <div class="vr-why" id="vr-why"></div>
+  </div>
+</section>
+</main>
+<footer class="wrap">세종중학교 정보 · 교과서 48~55쪽 내용 기반 수업 자료</footer>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const T=n=>getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmtBytes=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':b<1073741824?(b/1048576).toFixed(1)+' MB':(b/1073741824).toFixed(2)+' GB';
+const redrawers=[];
+
+/* ---------- 탭 ---------- */
+const tabs=$$('nav.tabs button');
+function show(id){
+  tabs.forEach(b=>b.setAttribute('aria-selected',b.getAttribute('aria-controls')===id));
+  $$('section.tab').forEach(s=>s.hidden=s.id!==id);
+  try{localStorage.setItem('dl-tab',id)}catch(e){}
+  redrawers.forEach(f=>f());
+}
+tabs.forEach(b=>b.addEventListener('click',()=>show(b.getAttribute('aria-controls'))));
+let start='image';
+try{start=localStorage.getItem('dl-tab')||start}catch(e){}
+const h=location.hash.slice(1); if(['text','image','sound','video'].includes(h)) start=h;
+show(start);
+
+/* ---------- 문자 ---------- */
+const bitsHTML=(bin,group)=>{let out='<div class="bits">';for(let i=0;i<bin.length;i+=group){out+='<div class="g">'+[...bin.slice(i,i+group)].map(c=>`<span class="bit ${c==='1'?'on':'off'}">${c}</span>`).join('')+'</div>'}return out+'</div>'};
+let txtMode='auto';
+$$('#txt-mode .btn').forEach(b=>b.addEventListener('click',()=>{txtMode=b.dataset.m;$$('#txt-mode .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));renderText()}));
+const hex4=cp=>'U+'+cp.toString(16).toUpperCase().padStart(4,'0');
+function renderText(){
+  const chars=[...$('#txt-in').value].slice(0,20);
+  $('#txt-mode-hint').textContent=txtMode==='uni'?'모든 글자를 유니코드 16비트로 보여 줌. A도 U+0041 → 16비트.':'아스키로 표현 가능한 글자는 7비트, 나머지는 유니코드 16비트.';
+  let asciiOk=true, aBits=0, uBits=0;
+  $('#txt-chars').innerHTML=chars.map(ch=>{
+    const cp=ch.codePointAt(0), ascii=cp<128, show=ch===' '?'␣':ch;
+    if(!ascii) asciiOk=false; aBits+=7; uBits+=16;
+    if(ascii&&txtMode==='uni'){
+      return `<div class="ch"><div class="top"><div class="glyph">${show}</div><div class="meta"><span class="badge u">유니코드 16비트</span><br>${hex4(cp)} · 10진수 ${cp}<br><span style="color:var(--teal)">아스키 코드와 같은 번호</span></div></div>${bitsHTML(cp.toString(2).padStart(16,'0'),4)}</div>`;
+    }
+    if(ascii){
+      return `<div class="ch"><div class="top"><div class="glyph">${show}</div><div class="meta"><span class="badge a">아스키 코드 7비트</span><br>10진수 ${cp}</div></div>${bitsHTML(cp.toString(2).padStart(7,'0'),7)}</div>`;
+    }
+    const bin=cp.toString(2).padStart(16,'0');
+    return `<div class="ch"><div class="top"><div class="glyph">${show}</div><div class="meta"><span class="badge u">유니코드 16비트</span><br>${hex4(cp)} · 10진수 ${cp.toLocaleString()}<br><span style="color:var(--orange)">아스키 불가</span>${cp>0xFFFF?' · 16비트 2개 필요':''}</div></div>${bitsHTML(cp>0xFFFF?bin:bin.slice(-16),4)}</div>`;
+  }).join('')||'<p class="hint">글자를 입력하셈.</p>';
+  $('#txt-stats').innerHTML=`
+    <div class="stat"><small>글자 수</small><b>${chars.length}</b></div>
+    <div class="stat"><small>아스키 코드로 표현?</small><b style="color:var(${asciiOk?'--teal':'--orange'})">${chars.length?(asciiOk?'가능':'불가능'):'-'}</b></div>
+    <div class="stat"><small>아스키로 저장하면</small><b>${asciiOk?aBits+'비트':'—'}</b></div>
+    <div class="stat"><small>유니코드(16비트)로 저장하면</small><b>${uBits}비트</b></div>`;
+}
+$('#txt-in').addEventListener('input',renderText);
+$$('#txt-quick .btn').forEach(b=>b.addEventListener('click',()=>{$('#txt-in').value=b.dataset.v;renderText()}));
+renderText();
+let decW=7;
+const toBin=(str,w)=>[...str].map(c=>c.codePointAt(0).toString(2).padStart(w,'0')).map(b=>w===16?b.replace(/(.{4})(?=.)/g,'$1 '):b).join(w===16?'  ':' ');
+const DEC_EX={7:[['KYS','KYS'],['Hi','Hi'],['OK!','OK!']],16:[['가나','가나'],['정보','정보'],['A (유니코드)','A']]};
+function setDecMode(w,fill){
+  decW=w;$$('#dec-mode .btn').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.m===w));
+  $('#dec-hint').textContent=w===7?'짝이 준 7자리 이진수를 띄어쓰기로 구분해 넣으셈. 아스키 코드 약속으로 문자를 되돌림.':'16자리씩 끊어 유니코드 번호로 읽음. 4자리마다 띄어 써도 됨 (예: 1010 1100 0000 0000 = 가).';
+  $('#dec-ex').innerHTML='<span class="hint">예시:</span>'+DEC_EX[w].map(([l,v])=>`<button class="btn" data-v="${v}">${l}</button>`).join('');
+  $$('#dec-ex .btn').forEach(b=>b.onclick=()=>{$('#dec-in').value=toBin(b.dataset.v,decW);decode()});
+  if(fill) $('#dec-in').value=toBin(w===7?'KYS':'가나',w);
+  decode();
+}
+function decode(){
+  const raw=$('#dec-in').value, bad='<span style="color:var(--orange)">?</span>';
+  let chunks;
+  if(decW===7) chunks=raw.trim().split(/\s+/).filter(Boolean);
+  else{const d=raw.replace(/\s+/g,'');chunks=d.match(/.{1,16}/g)||[]}
+  const rows=chunks.map(p=>{
+    if(!/^[01]+$/.test(p)) return {p,g:bad,info:'0과 1만 쓸 수 있음'};
+    if(p.length!==decW) return {p,g:bad,info:`${decW}자리가 아님 (${p.length}자리)`};
+    const c=parseInt(p,2);
+    if(decW===7) return c>=32&&c<127?{p,g:String.fromCharCode(c),info:`10진수 ${c}`}:{p,g:bad,info:`10진수 ${c} · 보이지 않는 제어 문자`};
+    const ok=c>=32&&!(c>=0xD800&&c<=0xDFFF)&&!(c>=127&&c<160);
+    return {p:p.replace(/(.{4})(?=.)/g,'$1 '),g:ok?String.fromCodePoint(c):bad,info:`${hex4(c)} · 10진수 ${c.toLocaleString()}`};
+  });
+  $('#dec-out').innerHTML=rows.map(r=>r.g).join('')||'&nbsp;';
+  $('#dec-steps').innerHTML=rows.slice(0,8).map(r=>`<div class="dstep"><span>${r.p}</span><span class="arrow">→</span><span>${r.info}</span><span class="arrow">→</span><span class="gl">${r.g}</span></div>`).join('');
+}
+$('#dec-in').addEventListener('input',decode);
+$$('#dec-mode .btn').forEach(b=>b.addEventListener('click',()=>setDecMode(+b.dataset.m,true)));
+setDecMode(7,false);
+
+/* 유니코드 표 */
+let uniBase=0xAC00, uniCur=0xAC00;
+function renderUni(){
+  let h='';for(let i=0;i<16;i++){const c=uniBase+i;const ok=c>=32&&!(c>=0xD800&&c<=0xDFFF);h+=`<button class="uc${c===uniCur?' cur':''}" data-c="${c}"><b>${ok?String.fromCodePoint(c):'·'}</b><small>${c.toString(16).toUpperCase().padStart(4,'0')}</small></button>`}
+  $('#uni-grid').innerHTML=h;
+  $$('#uni-grid .uc').forEach(b=>b.onclick=()=>{uniCur=+b.dataset.c;$('#uni-in').value=String.fromCodePoint(uniCur);renderUni()});
+  const c=uniCur, bin=c.toString(2).padStart(16,'0').replace(/(.{4})(?=.)/g,'$1 ');
+  let area=c<128?'영문·숫자·기호 (아스키와 같은 영역)':c>=0xAC00&&c<=0xD7A3?'한글 음절 (U+AC00 가 ~ U+D7A3 힣, 11,172자)':c>=0x3040&&c<=0x30FF?'일본어 가나':c>=0x4E00&&c<=0x9FFF?'한자 (CJK 통합 한자)':c>=0x0370&&c<=0x03FF?'그리스 문자':c>=0x1100&&c<=0x11FF||c>=0x3130&&c<=0x318F?'한글 자모':'기타 문자';
+  $('#uni-key').innerHTML=`<strong>${String.fromCodePoint(c)}</strong> = ${hex4(c)} = 10진수 ${c.toLocaleString()} = <span class="mono">${bin}</span><br><span style="font-weight:400">영역: ${area}</span>`;
+}
+$('#uni-in').addEventListener('input',()=>{const v=$('#uni-in').value;if(!v)return;const c=v.codePointAt(0);uniCur=c;uniBase=c-(c%16);renderUni()});
+$('#uni-prev').onclick=()=>{uniBase=Math.max(0,uniBase-16);uniCur=uniBase;$('#uni-in').value=String.fromCodePoint(Math.max(32,uniCur));renderUni()};
+$('#uni-next').onclick=()=>{uniBase=Math.min(0xFFF0,uniBase+16);uniCur=uniBase;$('#uni-in').value=String.fromCodePoint(uniCur);renderUni()};
+$$('#uni-jump .btn').forEach(b=>b.onclick=()=>{const c=parseInt(b.dataset.c,16);uniCur=c;uniBase=c-(c%16);$('#uni-in').value=String.fromCodePoint(c);renderUni()});
+renderUni();
+
+/* ---------- 이미지: 화소 판 ---------- */
+const N=8, cells=[], pix=$('#pix');
+const HEART=['01100110','11111111','11111111','11111111','01111110','00111100','00011000','00000000'];
+for(let i=0;i<N*N;i++){const d=document.createElement('div');pix.appendChild(d);cells.push(d)}
+function setPattern(rows){rows.forEach((r,y)=>[...r].forEach((c,x)=>cells[y*N+x].classList.toggle('on',c==='1')));renderRows()}
+function renderRows(){
+  let out='';for(let y=0;y<N;y++){let r='';for(let x=0;x<N;x++)r+=cells[y*N+x].classList.contains('on')?'1':'0';out+=`<span>${r}</span>`}
+  $('#pix-rows').innerHTML=out;
+}
+let painting=false, paintVal=true;
+const cellAt=e=>{const el=document.elementFromPoint(e.clientX,e.clientY);return cells.includes(el)?el:null};
+pix.addEventListener('pointerdown',e=>{const c=cellAt(e);if(!c)return;painting=true;paintVal=!c.classList.contains('on');c.classList.toggle('on',paintVal);renderRows();e.preventDefault()});
+window.addEventListener('pointermove',e=>{if(!painting)return;const c=cellAt(e);if(c&&c.classList.contains('on')!==paintVal){c.classList.toggle('on',paintVal);renderRows()}});
+window.addEventListener('pointerup',()=>painting=false);
+$('#pix-heart').onclick=()=>setPattern(HEART);
+$('#pix-clear').onclick=()=>setPattern(Array(N).fill('0'.repeat(N)));
+$('#pix-invert').onclick=()=>{cells.forEach(c=>c.classList.toggle('on'));renderRows()};
+setPattern(HEART);
+
+/* ---------- 이미지: 해상도 ---------- */
+const RES=[8,16,32,64,128,256,480];
+const src=document.createElement('canvas');src.width=src.height=480;
+function drawScene(){
+  const g=src.getContext('2d');
+  const sky=g.createLinearGradient(0,0,0,480);sky.addColorStop(0,'#7EC8F2');sky.addColorStop(1,'#E6F4FB');
+  g.fillStyle=sky;g.fillRect(0,0,480,480);
+  g.fillStyle='#FFD34D';g.beginPath();g.arc(380,95,48,0,7);g.fill();
+  g.fillStyle='#5FA35A';g.beginPath();g.moveTo(0,360);g.quadraticCurveTo(140,270,280,350);g.quadraticCurveTo(380,300,480,340);g.lineTo(480,480);g.lineTo(0,480);g.fill();
+  g.fillStyle='#3F7D3A';g.fillRect(0,400,480,80);
+  g.fillStyle='#7A4E2D';g.fillRect(170,250,34,150);
+  [[187,210,78,'#2E7D32'],[140,240,52,'#388E3C'],[235,238,54,'#2E7D32'],[187,165,52,'#43A047']].forEach(([x,y,r,c])=>{g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,7);g.fill()});
+  g.fillStyle='#E53935';[[160,200],[215,190],[190,245],[240,232],[148,252]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,9,0,7);g.fill()});
+  g.fillStyle='#fff';g.font='700 34px "Noto Sans KR",sans-serif';g.fillText('정보',330,440);
+}
+drawScene();
+const resCv=$('#res-cv'), small=document.createElement('canvas');
+function drawRes(){
+  const n=RES[+$('#res-sl').value];small.width=small.height=n;
+  const sg=small.getContext('2d');sg.imageSmoothingEnabled=true;sg.drawImage(src,0,0,n,n);
+  const g=resCv.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(small,0,0,480,480);
+  $('#res-v').textContent=`${n} × ${n}`;
+  $('#res-px').textContent=(n*n).toLocaleString();
+  $('#res-size').textContent=fmtBytes(n*n*3);
+}
+$('#res-sl').addEventListener('input',drawRes);drawRes();
+$('#res-file').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;const img=new Image();
+  img.onload=()=>{const g=src.getContext('2d'),s=Math.min(img.width,img.height);g.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,480,480);drawRes();URL.revokeObjectURL(img.src)};
+  img.src=URL.createObjectURL(f);
+});
+
+/* ---------- 이미지: 비트맵 vs 벡터 ---------- */
+const B=40, bmpSrc=document.createElement('canvas');bmpSrc.width=bmpSrc.height=B;
+function star(g,cx,cy,R,r){g.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r:R;g.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a))}g.closePath();g.fill()}
+function shapes(g){g.fillStyle=T('blue');g.beginPath();g.arc(20,20,15,0,7);g.fill();g.fillStyle=T('orange');star(g,20,20,10,4.2)}
+function drawZoom(){
+  const z=+$('#zoom-sl').value;$('#zoom-v').textContent=z+'배';
+  const bg=bmpSrc.getContext('2d');bg.clearRect(0,0,B,B);bg.fillStyle=T('surface');bg.fillRect(0,0,B,B);shapes(bg);
+  // 비트맵: 화소를 그대로 키움
+  const b=$('#bmp-cv').getContext('2d');b.imageSmoothingEnabled=false;
+  const view=B/z, off=(B-view)/2+ (z>1? view*0.18:0);
+  b.drawImage(bmpSrc,off,off,view,view,0,0,400,400);
+  // 벡터: 수식으로 다시 그림
+  const v=$('#vec-cv').getContext('2d');v.setTransform(1,0,0,1,0,0);v.fillStyle=T('surface');v.fillRect(0,0,400,400);
+  const s=400/B*z;v.setTransform(s,0,0,s,-off*s,-off*s);shapes(v);v.setTransform(1,0,0,1,0,0);
+}
+$('#zoom-sl').addEventListener('input',drawZoom);drawZoom();redrawers.push(drawZoom);
+
+/* ---------- 이미지: 벡터 그리기 ---------- */
+(()=>{
+const cv=$('#vd-cv'), g=cv.getContext('2d'), S=600;
+const COLORS=[['blue','파랑'],['orange','주황'],['teal','초록'],['ink','검정'],['surface','흰색']];
+let tool='line', color='blue', view='vec', zoom=1, shapes=[], temp=null, drag=null, sel=-1;
+const r1=v=>Math.round(v);
+// 색 버튼
+$('#vd-color').innerHTML=COLORS.map(([k,n],i)=>`<button class="swatch" data-c="${k}" title="${n}" aria-label="${n}" aria-pressed="${i===0}" style="background:var(--${k})"></button>`).join('');
+$$('#vd-color .swatch').forEach(b=>b.onclick=()=>{color=b.dataset.c;$$('#vd-color .swatch').forEach(x=>x.setAttribute('aria-pressed',x===b));if(sel>=0&&tool==='move'){shapes[sel].c=color;render()}});
+const HELP={line:'시작점을 누르고 끝점까지 끌었다 놓으셈.',circle:'중심을 누르고 끌어서 반지름을 정하셈.',rect:'한 꼭짓점을 누르고 맞은편 꼭짓점까지 끄셈.',poly:'꼭짓점을 차례로 클릭하고, 첫 점을 다시 누르거나 [다각형 완성]을 누르셈.',move:'파란 네모(조절점)를 끌어 보셈. 좌표 숫자가 바뀌면서 모양이 바뀜. 도형 목록을 누르면 색도 바꿀 수 있음.'};
+function setTool(t){tool=t;temp=null;$$('#vd-tool .btn').forEach(x=>x.setAttribute('aria-pressed',x.dataset.t===t));$('#vd-help').textContent=HELP[t];$('#vd-poly-done').hidden=t!=='poly';cv.style.cursor=t==='move'?'grab':'crosshair';render()}
+$$('#vd-tool .btn').forEach(b=>b.onclick=()=>setTool(b.dataset.t));
+$$('#vd-view .btn').forEach(b=>b.onclick=()=>{view=b.dataset.v;$$('#vd-view .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+$('#vd-zoom').oninput=e=>{zoom=+e.target.value;$('#vd-zoom-v').textContent=zoom+'배';render()};
+// 좌표 변환: 확대 시 (50,50) 중심
+const off=()=>50-50/zoom, k=()=>S/100*zoom;
+const toPx=(x,y)=>[(x-off())*k(),(y-off())*k()];
+function toU(e){const r=cv.getBoundingClientRect();const px=(e.clientX-r.left)/r.width*S,py=(e.clientY-r.top)/r.height*S;return [Math.max(0,Math.min(100,px/k()+off())),Math.max(0,Math.min(100,py/k()+off()))]}
+// 도형 그리기 (u: 단위 → 대상 좌표계 변환 함수, sc: 1단위 길이)
+function drawShape(c,s,P,sc){
+  c.fillStyle=c.strokeStyle=T(s.c);c.lineWidth=Math.max(1,1.6*sc);c.lineJoin=c.lineCap='round';
+  c.beginPath();
+  if(s.t==='line'){c.moveTo(...P(s.x1,s.y1));c.lineTo(...P(s.x2,s.y2));c.stroke();return}
+  if(s.t==='circle'){const [x,y]=P(s.x,s.y);c.arc(x,y,s.r*sc,0,Math.PI*2);c.fill();return}
+  if(s.t==='rect'){const [x,y]=P(Math.min(s.x1,s.x2),Math.min(s.y1,s.y2));c.rect(x,y,Math.abs(s.x2-s.x1)*sc,Math.abs(s.y2-s.y1)*sc);c.fill();return}
+  if(s.t==='poly'){s.p.forEach((q,i)=>i?c.lineTo(...P(q[0],q[1])):c.moveTo(...P(q[0],q[1])));c.closePath();c.fill()}
+}
+const small=document.createElement('canvas');small.width=small.height=25;
+function handles(s){
+  if(s.t==='line'||s.t==='rect')return[['x1','y1'],['x2','y2']].map(([a,b])=>({get:()=>[s[a],s[b]],set:(x,y)=>{s[a]=x;s[b]=y}}));
+  if(s.t==='circle')return[{get:()=>[s.x,s.y],set:(x,y)=>{s.x=x;s.y=y}},{get:()=>[s.x+s.r,s.y],set:(x,y)=>{s.r=Math.max(1,r1(Math.hypot(x-s.x,y-s.y)))}}];
+  return s.p.map(q=>({get:()=>q,set:(x,y)=>{q[0]=x;q[1]=y}}));
+}
+function render(){
+  g.setTransform(1,0,0,1,0,0);g.fillStyle=T('surface');g.fillRect(0,0,S,S);
+  if(view==='bmp'){
+    const sg=small.getContext('2d');sg.setTransform(1,0,0,1,0,0);sg.fillStyle=T('surface');sg.fillRect(0,0,25,25);
+    shapes.forEach(s=>drawShape(sg,s,(x,y)=>[x/4,y/4],0.25));
+    g.imageSmoothingEnabled=false;g.drawImage(small,off()/4,off()/4,25/zoom,25/zoom,0,0,S,S);
+  }
+  // 격자
+  g.strokeStyle=T('line');g.lineWidth=1;g.fillStyle=T('muted');g.font='600 13px "JetBrains Mono",monospace';
+  const step=zoom>=4?5:10;
+  for(let v=0;v<=100;v+=step){const [px]=toPx(v,0),[,py]=toPx(0,v);
+    if(px>=0&&px<=S){g.globalAlpha=view==='bmp'?.35:1;g.beginPath();g.moveTo(px,0);g.lineTo(px,S);g.stroke();g.globalAlpha=1;if(v%10===0&&px<S-20)g.fillText(v,px+3,14)}
+    if(py>=0&&py<=S){g.globalAlpha=view==='bmp'?.35:1;g.beginPath();g.moveTo(0,py);g.lineTo(S,py);g.stroke();g.globalAlpha=1;if(v%10===0&&v>0&&py<S-4)g.fillText(v,3,py-4)}}
+  if(view==='vec'){shapes.forEach(s=>drawShape(g,s,toPx,k()));}
+  // 그리는 중
+  if(temp){g.globalAlpha=.7;
+    if(temp.t==='poly'){g.strokeStyle=T(temp.c);g.lineWidth=2;g.setLineDash([8,6]);g.beginPath();temp.p.forEach((q,i)=>i?g.lineTo(...toPx(...q)):g.moveTo(...toPx(...q)));if(temp.hover)g.lineTo(...toPx(...temp.hover));g.stroke();g.setLineDash([]);
+      temp.p.forEach((q,i)=>{g.fillStyle=i?T('ink'):T('orange');g.beginPath();g.arc(...toPx(...q),i?5:8,0,7);g.fill()})}
+    else drawShape(g,temp,toPx,k());g.globalAlpha=1}
+  // 조절점
+  if(tool==='move'&&view==='vec'){shapes.forEach((s,i)=>handles(s).forEach(h=>{const [x,y]=toPx(...h.get());g.fillStyle=T('surface');g.strokeStyle=T('blue');g.lineWidth=2.5;g.fillRect(x-6,y-6,12,12);g.strokeRect(x-6,y-6,12,12)}))}
+  renderList();
+}
+const cname=c=>(COLORS.find(x=>x[0]===c)||[,''])[1];
+function desc(s){
+  if(s.t==='line')return `선  (${s.x1},${s.y1}) → (${s.x2},${s.y2})`;
+  if(s.t==='circle')return `원  중심(${s.x},${s.y}) 반지름 ${s.r}`;
+  if(s.t==='rect')return `사각형  (${Math.min(s.x1,s.x2)},${Math.min(s.y1,s.y2)}) 가로 ${Math.abs(s.x2-s.x1)} 세로 ${Math.abs(s.y2-s.y1)}`;
+  return `다각형  ${s.p.map(q=>`(${q[0]},${q[1]})`).join(' ')}`;
+}
+const nums=s=>s.t==='circle'?3:s.t==='poly'?s.p.length*2:4;
+function renderList(){
+  $('#vd-list').innerHTML=shapes.length?shapes.map((s,i)=>`<li class="${i===sel?'sel':''}" data-i="${i}"><span class="sw" style="background:var(--${s.c})"></span><span class="d">${desc(s)} · ${cname(s.c)}</span><button aria-label="지우기" data-del="${i}">×</button></li>`).join(''):'<li><span class="d" style="font-family:var(--f-body)">아직 도형이 없음. 왼쪽 판에 그려 보셈.</span></li>';
+  const n=shapes.reduce((a,s)=>a+nums(s),0);
+  $('#vd-num').textContent=`숫자 ${n}개`;
+  $('#vd-num-s').textContent=`도형 ${shapes.length}개 · 좌표·크기 숫자 + 색 정보`;
+  $$('#vd-list [data-del]').forEach(b=>b.onclick=e=>{e.stopPropagation();shapes.splice(+b.dataset.del,1);sel=-1;render()});
+  $$('#vd-list li[data-i]').forEach(li=>li.onclick=()=>{sel=+li.dataset.i;render()});
+}
+function finishPoly(){if(temp&&temp.t==='poly'&&temp.p.length>=3){shapes.push({t:'poly',c:temp.c,p:temp.p})}temp=null;render()}
+$('#vd-poly-done').onclick=finishPoly;
+cv.addEventListener('pointerdown',e=>{
+  const [x,y]=toU(e).map(r1);cv.setPointerCapture(e.pointerId);
+  if(tool==='move'){if(view!=='vec')return;
+    for(let i=shapes.length-1;i>=0;i--){for(const h of handles(shapes[i])){const [hx,hy]=toPx(...h.get()),[px,py]=toPx(...toU(e));if(Math.hypot(hx-px,hy-py)<14){drag=h;sel=i;cv.style.cursor='grabbing';render();return}}}
+    return}
+  if(tool==='poly'){
+    if(!temp)temp={t:'poly',c:color,p:[]};
+    if(temp.p.length>=3){const [fx,fy]=toPx(...temp.p[0]),[px,py]=toPx(x,y);if(Math.hypot(fx-px,fy-py)<14){finishPoly();return}}
+    temp.p.push([x,y]);render();return}
+  if(tool==='line')temp={t:'line',c:color,x1:x,y1:y,x2:x,y2:y};
+  if(tool==='rect')temp={t:'rect',c:color,x1:x,y1:y,x2:x,y2:y};
+  if(tool==='circle')temp={t:'circle',c:color,x,y,r:1};
+  render();
+});
+cv.addEventListener('pointermove',e=>{
+  const [x,y]=toU(e).map(r1);
+  if(drag){drag.set(x,y);render();return}
+  if(!temp)return;
+  if(temp.t==='poly'){temp.hover=[x,y];render();return}
+  if(e.buttons!==1)return;
+  if(temp.t==='circle')temp.r=Math.max(1,r1(Math.hypot(x-temp.x,y-temp.y)));else{temp.x2=x;temp.y2=y}
+  render();
+});
+cv.addEventListener('pointerup',()=>{
+  if(drag){drag=null;cv.style.cursor='grab';return}
+  if(!temp||temp.t==='poly')return;
+  const ok=temp.t==='circle'?temp.r>=2:(Math.abs(temp.x2-temp.x1)+Math.abs(temp.y2-temp.y1))>=2;
+  if(ok)shapes.push(temp);temp=null;render();
+});
+cv.addEventListener('dblclick',()=>{if(tool==='poly')finishPoly()});
+$('#vd-undo').onclick=()=>{if(temp){temp=null}else shapes.pop();sel=-1;render()};
+$('#vd-clear').onclick=()=>{shapes=[];temp=null;sel=-1;render()};
+$('#vd-ex1').onclick=()=>{shapes=[{t:'circle',c:'blue',x:50,y:50,r:40},{t:'circle',c:'surface',x:50,y:50,r:28},{t:'circle',c:'orange',x:50,y:50,r:16},{t:'circle',c:'surface',x:50,y:50,r:6},{t:'line',c:'ink',x1:88,y1:12,x2:52,y2:48}];sel=-1;render()};
+$('#vd-ex2').onclick=()=>{shapes=[{t:'rect',c:'blue',x1:25,y1:50,x2:75,y2:88},{t:'poly',c:'orange',p:[[18,52],[50,20],[82,52]]},{t:'rect',c:'surface',x1:44,y1:64,x2:56,y2:88},{t:'circle',c:'teal',x:82,y:18,r:9},{t:'line',c:'teal',x1:5,y1:88,x2:95,y2:88}];sel=-1;render()};
+setTool('line');$('#vd-ex1').onclick();
+redrawers.push(render);
+})();
+
+/* ---------- 소리: 그래프 ---------- */
+const wave=t=>0.62*Math.sin(2*Math.PI*1.2*t)+0.3*Math.sin(2*Math.PI*3.1*t+1.1);
+let stage=3;
+$$('#snd-stage .btn').forEach(b=>b.addEventListener('click',()=>{stage=+b.dataset.s;$$('#snd-stage .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));drawSound()}));
+function drawSound(){
+  const n=+$('#snd-n').value, bits=+$('#snd-b').value, L=2**bits;
+  $('#snd-n-v').textContent=n+'개';$('#snd-b-v').textContent=bits+'비트';
+  const cv=$('#snd-cv'),g=cv.getContext('2d'),W=cv.width,H=cv.height,pl=56,pr=18,pt=16,pb=34;
+  const X=t=>pl+t*(W-pl-pr), Yl=l=>H-pb-l/(L-1)*(H-pt-pb), toL=v=>(v+0.95)/1.9*(L-1);
+  g.clearRect(0,0,W,H);g.fillStyle=T('surface');g.fillRect(0,0,W,H);
+  g.font='600 18px "JetBrains Mono",monospace';g.textBaseline='middle';
+  // 높이 단계 격자
+  if(stage>=2){for(let l=0;l<L;l++){const y=Yl(l);g.strokeStyle=T('line');g.lineWidth=1;g.beginPath();g.moveTo(pl,y);g.lineTo(W-pr,y);g.stroke();
+    if(L<=16||l%2===0){g.fillStyle=T('muted');g.textAlign='right';g.fillText(l,pl-10,y)}}}
+  else{g.strokeStyle=T('line');g.beginPath();g.moveTo(pl,Yl((L-1)/2));g.lineTo(W-pr,Yl((L-1)/2));g.stroke()}
+  // 원래 파형
+  g.strokeStyle=T('muted');g.lineWidth=3;g.beginPath();
+  for(let i=0;i<=600;i++){const t=i/600;const y=Yl(toL(wave(t)));i?g.lineTo(X(t),y):g.moveTo(X(t),y)}g.stroke();
+  const samples=[];
+  for(let i=0;i<n;i++){const t=(i+0.5)/n,v=toL(wave(t)),q=Math.max(0,Math.min(L-1,Math.round(v)));samples.push({t,v,q})}
+  if(stage>=1){
+    samples.forEach(s=>{g.strokeStyle=T('blue');g.lineWidth=2;g.beginPath();g.moveTo(X(s.t),H-pb);g.lineTo(X(s.t),Yl(stage>=2?s.q:s.v));g.stroke()});
+  }
+  if(stage>=2){
+    g.strokeStyle=T('orange');g.lineWidth=4;g.beginPath();
+    samples.forEach((s,i)=>{const x0=X(i/n),x1=X((i+1)/n),y=Yl(s.q);i?g.lineTo(x0,y):g.moveTo(x0,y);g.lineTo(x1,y)});g.stroke();
+  }
+  if(stage>=1){samples.forEach(s=>{g.fillStyle=stage>=2?T('orange'):T('blue');g.beginPath();g.arc(X(s.t),Yl(stage>=2?s.q:s.v),7,0,7);g.fill()})}
+  g.fillStyle=T('muted');g.textAlign='right';g.fillText('시간 →',W-pr,H-12);
+  // 표본 칩
+  $('#snd-samples').innerHTML=stage<1?'<p class="hint">단계를 눌러 표본화부터 시작하셈.</p>':samples.map((s,i)=>`<div class="sm"><div class="t">${i+1}</div><div>${s.v.toFixed(1)}</div>${stage>=2?`<div class="q">→ ${s.q}</div>`:''}${stage>=3?`<div class="b">${s.q.toString(2).padStart(bits,'0')}</div>`:''}</div>`).join('');
+  $('#snd-size').textContent=`${n} × ${bits} = ${n*bits}비트`;
+  $('#snd-levels').textContent=`2^${bits} = ${L}단계`;
+  $('#snd-key').innerHTML=['연속된 <strong>아날로그</strong> 파형. 컴퓨터는 이대로 저장할 수 없음.','<strong>표본화</strong>: 일정한 시간 간격으로 파형의 높이를 측정함. 촘촘할수록 원래 소리에 가까움.','<strong>양자화</strong>: 측정한 높이를 가장 가까운 정숫값으로 맞춤. 비트가 많을수록 오차가 줄어듦.','<strong>부호화</strong>: 정숫값을 0과 1의 이진수로 바꿈. 이것이 디지털 소리 데이터임.'][stage];
+}
+['#snd-n','#snd-b'].forEach(s=>$(s).addEventListener('input',drawSound));drawSound();redrawers.push(drawSound);
+
+/* ---------- 소리: 들어 보기 ---------- */
+const RATES=[1000,2000,4000,8000,16000,44100], BITS=[2,3,4,8,16];
+let actx=null, cur=null;
+const NOTES=[['도',523],['미',659],['솔',784],['높은 도',1047]];
+function digitize(data,sr,rate,bits){
+  const out=new Float32Array(data.length),hold=sr/rate,L=2**bits;let held=0,last=-1;
+  for(let i=0;i<data.length;i++){const k=Math.floor(i/hold);if(k!==last){last=k;const v=Math.max(-1,Math.min(1,data[i]/0.9));held=(Math.round((v+1)/2*(L-1))/(L-1)*2-1)*0.9}out[i]=held}
+  return out;
+}
+function updPly(){
+  const rate=RATES[+$('#ply-rate').value],bits=BITS[+$('#ply-bits').value],L=2**bits,maxHz=rate/2;
+  $('#ply-rate-v').textContent=rate.toLocaleString()+' Hz';$('#ply-bits-v').textContent=bits+'비트';
+  const lost=NOTES.filter(n=>n[1]>maxHz), lostH=NOTES.filter(n=>n[1]*2>maxHz&&n[1]<=maxHz);
+  let r=`1초에 <b>${rate.toLocaleString()}번</b> 측정 → 담을 수 있는 가장 높은 소리는 <b>${maxHz.toLocaleString()}Hz</b>. `;
+  if(lost.length===NOTES.length) r+=`멜로디 음(523~1,047Hz)이 <b class="bad">모두 이보다 높아서</b> 원래 음이 남지 않고 엉뚱한 소리로 바뀜.`;
+  else if(lost.length) r+=`<b class="bad">${lost.map(n=>n[0]).join(', ')}</b> 음이 이보다 높아서 제 음높이로 들리지 않음.`;
+  else if(lostH.length) r+=`멜로디 음은 담기지만, 음색을 만드는 더 높은 성분이 빠져서 <b class="bad">소리가 먹먹하고 거칠게</b> 들림.`;
+  else r+=`<b class="good">멜로디와 음색 성분이 모두 담겨서</b> 원래 소리에 가깝게 들림.`;
+  $('#why-rate').innerHTML=r;
+  let b=`<b>${bits}비트</b> → 높이를 <b>${L.toLocaleString()}단계</b>로만 저장. `;
+  b+= bits<=3?`단계가 너무 적어서 파형이 네모처럼 각지고 <b class="bad">잡음이 크게</b> 들림.`: bits<=4?`오차가 커서 <b class="bad">'쉬-' 하는 잡음</b>이 뚜렷하게 섞임.`: bits<=8?`대부분 비슷하지만 조용한 부분에서 <b class="bad">약한 잡음</b>이 들릴 수 있음.`:`단계가 촘촘해서 오차가 아주 작음 → <b class="good">잡음을 거의 못 느낌</b>.`;
+  $('#why-bits').innerHTML=b;
+  $('#ply-size').textContent=(rate*bits).toLocaleString()+'비트';
+  $('#ply-size-s').textContent=`${rate.toLocaleString()}Hz × ${bits}비트 = CD의 ${(rate*bits/705600*100).toFixed(rate*bits<70560?1:0)}%`;
+  drawPly(rate,bits);
+}
+function drawPly(rate,bits){
+  const cv=$('#ply-cv'),g=cv.getContext('2d'),W=cv.width,H=cv.height,sr=44100;
+  const t0=1.40,len=Math.round(sr*0.004),full=tone(sr,Math.round(sr*(t0+0.004))+2);
+  const src=full.slice(Math.round(sr*t0),Math.round(sr*t0)+len);
+  // 실제와 같이 처음부터 표본화한 결과에서 잘라 냄
+  const dig=digitize(full,sr,rate,bits).slice(Math.round(sr*t0),Math.round(sr*t0)+len);
+  let m=0;src.forEach(v=>m=Math.max(m,Math.abs(v)));m=m||1;
+  const X=i=>16+i/(len-1)*(W-32),Y=v=>H/2-v/m*(H/2-18);
+  g.fillStyle=T('surface');g.fillRect(0,0,W,H);
+  g.strokeStyle=T('line');g.lineWidth=1;g.beginPath();g.moveTo(0,H/2);g.lineTo(W,H/2);g.stroke();
+  g.strokeStyle=T('muted');g.lineWidth=3;g.beginPath();src.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();
+  g.strokeStyle=T('orange');g.lineWidth=3;g.beginPath();dig.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();
+}
+$('#ply-rate').addEventListener('input',updPly);$('#ply-bits').addEventListener('input',updPly);
+function tone(sr,len){const a=new Float32Array(len),notes=[[523.25,0],[659.25,.45],[783.99,.9],[1046.5,1.35]];
+  for(let i=0;i<len;i++){const t=i/sr;let v=0;for(const[f,s]of notes){const d=t-s;if(d>=0&&d<0.6){const env=Math.min(1,d/0.02)*Math.exp(-d*3.2);v+=env*(Math.sin(2*Math.PI*f*d)+0.35*Math.sin(4*Math.PI*f*d))}}a[i]=v*0.55}return a}
+function play(digital){
+  if(!actx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC){$('#ply-info').textContent='이 브라우저는 소리 재생을 지원하지 않음.';return}actx=new AC()}
+  actx.resume&&actx.resume();
+  if(cur){try{cur.stop()}catch(e){}}
+  const sr=actx.sampleRate,len=Math.floor(sr*2.1),data=tone(sr,len);
+  if(digital){
+    const rate=RATES[+$('#ply-rate').value],bits=BITS[+$('#ply-bits').value];
+    data.set(digitize(data,sr,rate,bits));
+    $('#ply-info').textContent=`1초에 ${rate.toLocaleString()}번 측정 × ${bits}비트 = 1초에 ${(rate*bits).toLocaleString()}비트`;
+  }else $('#ply-info').textContent='원래(연속) 소리에 가장 가까운 소리';
+  const buf=actx.createBuffer(1,len,sr);buf.copyToChannel?buf.copyToChannel(data,0):buf.getChannelData(0).set(data);
+  const s=actx.createBufferSource(),gn=actx.createGain();gn.gain.value=0.35;s.buffer=buf;s.connect(gn).connect(actx.destination);s.start();cur=s;
+}
+updPly();redrawers.push(updPly);
+$('#ply-orig').onclick=()=>play(false);$('#ply-dig').onclick=()=>play(true);
+
+
+/* ---------- 소리: 음이 낮아지는 원리 ---------- */
+(()=>{
+const AR=[800,1000,1200,1500,2000,3000,4000,8000];
+let f=1047;
+const alias=(f,fs)=>f-Math.round(f/fs)*fs; // 부호 있는 겉보기 주파수
+function draw(){
+  const fs=AR[+$('#al-rate').value],fa=alias(f,fs),afa=Math.abs(fa),ok=f<fs/2;
+  $('#al-rate-v').textContent=fs.toLocaleString()+' Hz';
+  const per=fs/f;$('#al-per').textContent=per.toFixed(per<10?2:1)+'번';$('#al-per').style.color=`var(${per>=2?'--teal':'--orange'})`;
+  $('#al-f').textContent=f.toLocaleString()+' Hz';
+  $('#al-fa').textContent=Math.round(afa).toLocaleString()+' Hz';$('#al-fa').style.color=`var(${ok?'--teal':'--orange'})`;
+  const cv=$('#al-cv'),g=cv.getContext('2d'),W=cv.width,H=cv.height,dur=0.01,pl=14,pr=14,pb=30;
+  const X=t=>pl+t/dur*(W-pl-pr),Y=v=>(H-pb)/2-v*((H-pb)/2-16);
+  g.fillStyle=T('surface');g.fillRect(0,0,W,H);
+  g.strokeStyle=T('line');g.lineWidth=1;g.beginPath();g.moveTo(0,Y(0));g.lineTo(W,Y(0));g.stroke();
+  g.fillStyle=T('muted');g.font='600 16px "JetBrains Mono",monospace';g.textAlign='left';g.fillText('0ms',pl,H-8);g.textAlign='right';g.fillText('10ms (0.01초)',W-pr,H-8);
+  // 실제 소리
+  g.strokeStyle=T('muted');g.lineWidth=2.5;g.beginPath();
+  for(let i=0;i<=2000;i++){const t=i/2000*dur,v=Math.sin(2*Math.PI*f*t);i?g.lineTo(X(t),Y(v)):g.moveTo(X(t),Y(v))}g.stroke();
+  // 다시 만든 소리
+  g.strokeStyle=T('orange');g.lineWidth=4;g.setLineDash([12,8]);g.beginPath();
+  for(let i=0;i<=2000;i++){const t=i/2000*dur,v=Math.sin(2*Math.PI*fa*t);i?g.lineTo(X(t),Y(v)):g.moveTo(X(t),Y(v))}g.stroke();g.setLineDash([]);
+  // 측정한 점
+  for(let n=0;n/fs<=dur+1e-9;n++){const t=n/fs,v=Math.sin(2*Math.PI*f*t);
+    g.strokeStyle=T('blue');g.lineWidth=1.5;g.globalAlpha=.5;g.beginPath();g.moveTo(X(t),Y(0));g.lineTo(X(t),Y(v));g.stroke();g.globalAlpha=1;
+    g.fillStyle=T('blue');g.beginPath();g.arc(X(t),Y(v),7,0,7);g.fill()}
+  // 설명
+  const k=$('#al-key');k.classList.toggle('ok',ok);
+  if(ok) k.innerHTML=`한 번 떨리는 동안 <b>${per.toFixed(1)}번</b> 측정 → 점이 충분히 촘촘해서 점을 이으면 <b>원래와 같은 ${f.toLocaleString()}Hz</b> 파형이 됨. 음높이가 그대로 유지됨.`;
+  else k.innerHTML=`한 번 떨리는 동안 <b>${per.toFixed(2)}번</b>밖에 측정하지 못함 (2번 미만). 측정 사이에 빠르게 떨린 부분을 놓쳐서, 점을 이으면 <b>${Math.round(afa).toLocaleString()}Hz짜리 느린 파형</b>이 됨 → 떨림이 느릴수록 <b>낮은 음</b>으로 들림.`;
+  // 멜로디 표
+  const heard=[523,659,784,1047].map(n=>Math.round(Math.abs(alias(n,fs))));
+  heard.forEach((h,i)=>{const el=$('#al-m'+i);el.textContent=h.toLocaleString();el.style.color=`var(${[523,659,784,1047][i]<fs/2?'--teal':'--orange'})`});
+  const up=heard.every((h,i)=>!i||h>heard[i-1]);
+  const tr=$('#al-trend');tr.className='trend '+(up&&heard[3]===1047?'good':'bad');
+  tr.textContent=up&&heard[3]===1047?'↗ 그대로':up?'↗ 올라가지만 높이가 다름':heard.every((h,i)=>!i||h<heard[i-1])?'↘ 오히려 내려감!':'↕ 뒤죽박죽';
+}
+$$('#al-note .btn').forEach(b=>b.onclick=()=>{f=+b.dataset.f;$$('#al-note .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
+$('#al-rate').addEventListener('input',draw);
+function beep(freq){
+  if(!actx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;actx=new AC()}
+  actx.resume&&actx.resume();if(cur){try{cur.stop()}catch(e){}}
+  const o=actx.createOscillator(),gn=actx.createGain(),t=actx.currentTime;o.type='sine';o.frequency.value=Math.max(20,freq);
+  gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(0.3,t+0.03);gn.gain.setValueAtTime(0.3,t+1.1);gn.gain.linearRampToValueAtTime(0,t+1.3);
+  o.connect(gn).connect(actx.destination);o.start(t);o.stop(t+1.35);cur=o;
+}
+$('#al-play1').onclick=()=>beep(f);
+$('#al-play2').onclick=()=>beep(Math.abs(alias(f,AR[+$('#al-rate').value])));
+draw();redrawers.push(draw);
+})();
+
+/* ---------- 동영상 ---------- */
+let fps=30,playing=!reduce,onion=false,vt=0,last=null,frameIdx=-1;
+const ballPos=t=>{const p=(t%2)/2,x=60+p*520,bounce=Math.abs(Math.sin(t*Math.PI*1.5));return{x,y:300-bounce*220}};
+function drawBall(g,t,alpha,W,H,scale){
+  const {x,y}=ballPos(t);g.globalAlpha=alpha;g.fillStyle=T('orange');g.beginPath();g.arc(x*scale,y*scale,24*scale,0,7);g.fill();g.globalAlpha=1;
+}
+function drawFrame(){
+  const cv=$('#vid-cv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+  const idx=Math.floor(vt*fps), ft=idx/fps;
+  g.fillStyle=T('sunk');g.fillRect(0,0,W,H);
+  g.fillStyle=T('line');g.fillRect(0,324,W,36);
+  if(onion){for(let k=4;k>=1;k--)drawBall(g,(idx-k)/fps,0.12+0.05*(4-k),W,H,1)}
+  drawBall(g,ft,1,W,H,1);
+  g.fillStyle=T('ink');g.font='700 22px "JetBrains Mono",monospace';g.textAlign='left';g.textBaseline='top';g.fillText(`frame ${idx}`,16,14);
+  $('#vid-frame').textContent=idx;
+}
+function loop(ts){
+  if(last!==null&&playing&&!$('#video').hidden){vt+=(ts-last)/1000}
+  last=ts;const idx=Math.floor(vt*fps);if(idx!==frameIdx){frameIdx=idx;if(!$('#video').hidden)drawFrame()}
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+function drawStrip(){
+  const wrap=$('#vid-strip');wrap.innerHTML='';
+  for(let i=0;i<6;i++){
+    const c=document.createElement('canvas');c.width=160;c.height=90;const g=c.getContext('2d');
+    g.fillStyle=T('sunk');g.fillRect(0,0,160,90);g.fillStyle=T('line');g.fillRect(0,81,160,9);drawBall(g,i/fps,1,160,90,0.25);
+    const f=document.createElement('figure');f.appendChild(c);const cap=document.createElement('figcaption');cap.textContent=`${i+1}번`;f.appendChild(cap);wrap.appendChild(f);
+  }
+  $('#vid-strip-hint').textContent=fps<=5?`${fps}FPS: 프레임 사이 움직임이 커서 뚝뚝 끊겨 보임.`:fps>=30?`${fps}FPS: 프레임 사이 차이가 작아 자연스럽게 보임 (사람 눈은 보통 25~30FPS면 자연스러움).`:`${fps}FPS: 움직이긴 하지만 약간 끊겨 보임.`;
+  $('#vid-fps-v').textContent=fps+'장';
+}
+function calcVid(){
+  const [w,h]=$('#vid-res').value.split('x').map(Number),sec=+$('#vid-sec').value;
+  $('#vid-sec-v').textContent=sec+'초';
+  $('#vid-calc').textContent=`${w}×${h} 화소 × 3바이트 × ${fps}프레임 × ${sec}초`;
+  $('#vid-size').textContent=fmtBytes(w*h*3*fps*sec);
+}
+$$('#vid-fps .btn').forEach(b=>b.addEventListener('click',()=>{fps=+b.dataset.f;$$('#vid-fps .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));frameIdx=-1;drawStrip();calcVid();drawFrame()}));
+const playBtn=$('#vid-play');const setPlayLabel=()=>playBtn.textContent=playing?'❚❚ 멈춤':'▶ 재생';setPlayLabel();
+playBtn.onclick=()=>{playing=!playing;setPlayLabel()};
+$('#vid-step').onclick=()=>{playing=false;setPlayLabel();vt=(Math.floor(vt*fps)+1)/fps+1e-6;drawFrame()};
+$('#vid-onion').onclick=e=>{onion=!onion;e.currentTarget.setAttribute('aria-pressed',onion);drawFrame()};
+$('#vid-res').addEventListener('change',calcVid);$('#vid-sec').addEventListener('input',calcVid);
+drawStrip();calcVid();drawFrame();
+redrawers.push(()=>{drawStrip();drawFrame()});
+
+
+/* ---------- 동영상: 프레임률 vs 주사율 ---------- */
+(()=>{
+let fps=45,hz=60,vsync=false,slow=0.05,run=!reduce,vt=0,lastTs=null;
+const PH=0.37; // 프레임이 주사 시작과 딱 맞지 않게 약간 어긋남(실제 상황처럼)
+const FP=()=>1000/fps, RP=()=>1000/hz;
+const frameAt=t=>Math.floor(t/FP()-PH);           // 시각 t(ms)에 완성돼 있는 최신 프레임 번호
+const frameStart=k=>(k+PH)*FP();
+const SPEED=640/260;                              // 막대가 260ms에 화면을 가로지름
+const barX=k=>((frameStart(k)*SPEED)%760)-60;
+const COLS=['blue','teal','orange','ink'];
+function rowsOf(j){ // 주사 j번에서 화면 위→아래로 보이는 프레임 구간들 [{k,y0,y1}]
+  const s=j*RP();
+  if(vsync) return [{k:frameAt(s),y0:0,y1:1}];
+  const out=[];let k=frameAt(s),y=0;
+  while(true){const tc=frameStart(k+1);const yc=(tc-s)/RP();if(yc>=1){out.push({k,y0:y,y1:1});break}out.push({k,y0:y,y1:yc});y=yc;k++}
+  return out;
+}
+function stats(){
+  let nw=0,rep=0,tear=0,shown=new Set(),prevLast=(r=>r[r.length-1].k)(rowsOf(-1));
+  for(let j=0;j<hz;j++){const r=rowsOf(j);r.forEach(q=>shown.add(q.k));if(r.length>1)tear++;
+    const first=r[0].k;if(prevLast!==null&&r.length===1&&first===prevLast)rep++;else nw++;prevLast=r[r.length-1].k}
+  const k0=frameAt(0),k1=frameAt(1000);let drop=0;for(let k=k0+1;k<k1;k++)if(!shown.has(k))drop++;
+  return {nw,rep,tear,drop};
+}
+function pattern(){ // V-Sync 켰을 때 프레임마다 몇 번 보이는지
+  const c=[];let prev=null;for(let j=0;j<40;j++){const k=frameAt(j*RP());if(k===prev)c[c.length-1]++;else c.push(1);prev=k}
+  return c.slice(1,9);
+}
+function drawScreen(){
+  const cv=$('#vr-screen'),g=cv.getContext('2d'),W=640,H=360;
+  const j=Math.floor(vt/RP()),p=(vt-j*RP())/RP(),scanY=p*H;
+  const paint=(rows,ya,yb)=>rows.forEach(q=>{const y0=Math.max(ya,q.y0*H),y1=Math.min(yb,q.y1*H);if(y1<=y0)return;
+    g.fillStyle=T('sunk');g.fillRect(0,y0,W,y1-y0);
+    const x=barX(q.k);g.fillStyle=T(COLS[((q.k%4)+4)%4]);g.fillRect(x,y0,70,y1-y0);
+    g.fillStyle=T('muted');g.font='700 15px "JetBrains Mono",monospace';g.textAlign='left';g.textBaseline='top';});
+  // 아래쪽은 지난 주사 결과, 위쪽은 이번 주사 결과
+  const prev=rowsOf(j-1),curR=rowsOf(j);
+  paint(prev,scanY,H);paint(curR,0,scanY);
+  // 티어링 선
+  g.strokeStyle=T('orange');g.lineWidth=3;g.setLineDash([10,7]);
+  prev.slice(1).forEach(q=>{const y=q.y0*H;if(y>scanY){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}});
+  curR.slice(1).forEach(q=>{const y=q.y0*H;if(y<scanY){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}});
+  g.setLineDash([]);
+  // 주사선
+  if(slow<1){g.fillStyle=T('blue');g.fillRect(0,scanY-2,W,4)}
+  g.fillStyle=T('ink');g.font='700 18px "JetBrains Mono",monospace';g.textAlign='left';g.textBaseline='top';
+  g.fillText(`주사 ${j}번째 · ${(vt).toFixed(1)}ms`,12,10);
+}
+function drawTL(){
+  const cv=$('#vr-tl'),g=cv.getContext('2d'),W=cv.width,H=cv.height,L=110,win=Math.max(60,Math.min(140,6*Math.max(FP(),RP())));
+  const t1=vt+win*0.25,t0=t1-win,X=t=>L+(t-t0)/win*(W-L-10);
+  g.fillStyle=T('surface');g.fillRect(0,0,W,H);
+  g.fillStyle=T('ink');g.font='700 16px "Noto Sans KR",sans-serif';g.textAlign='left';g.textBaseline='middle';
+  g.fillText(`영상 ${fps}FPS`,8,58);g.fillText(`모니터 ${hz}Hz`,8,150);
+  // 표시된 프레임 집합(창 범위)
+  const jA=Math.floor(t0/RP())-1,jB=Math.ceil(t1/RP())+1,shown=new Set();
+  for(let j=jA-2;j<=jB+2;j++)rowsOf(j).forEach(q=>shown.add(q.k));
+  // 프레임 줄
+  for(let k=frameAt(t0)-1;frameStart(k)<t1;k++){
+    const a=Math.max(L,X(frameStart(k))),b=Math.min(W-10,X(frameStart(k+1)));if(b<=L)continue;
+    g.fillStyle=T(COLS[((k%4)+4)%4]);g.globalAlpha=frameStart(k)<=vt?1:.35;g.fillRect(a+1,36,b-a-2,44);g.globalAlpha=1;
+    if(b-a>26){g.fillStyle=T('surface');g.font='700 15px "JetBrains Mono",monospace';g.textAlign='center';g.fillText(k,(a+b)/2,58)}
+    if(!shown.has(k)&&frameStart(k+1)<vt+RP()){g.fillStyle=T('orange');g.font='700 22px sans-serif';g.textAlign='center';g.fillText('✕',(a+b)/2,24)}
+  }
+  // 주사 줄
+  let prevLast=null;
+  for(let j=jA-1;j<=jB;j++){
+    const s=j*RP(),r=rowsOf(j);
+    if(j>=jA){
+      r.forEach(q=>{const a=Math.max(L,X(s+q.y0*RP())),b=Math.min(W-10,X(s+q.y1*RP()));if(b<=a)return;
+        g.fillStyle=T(COLS[((q.k%4)+4)%4]);g.globalAlpha=s<=vt?1:.35;g.fillRect(a,128,b-a,44);g.globalAlpha=1;});
+      const a=X(s),b=X(s+RP());
+      if(a>=L){g.strokeStyle=T('surface');g.lineWidth=3;g.beginPath();g.moveTo(a,124);g.lineTo(a,176);g.stroke()}
+      const cx=(Math.max(a,L)+Math.min(b,W-10))/2;
+      if(cx>L+8&&cx<W-14){
+        let mark='';if(r.length>1)mark='⚡';else if(prevLast!==null&&r[0].k===prevLast)mark='↻';
+        g.fillStyle=T('ink');g.font='700 18px sans-serif';g.textAlign='center';if(mark)g.fillText(mark,cx,196);
+        if(b-a>34){g.fillStyle=T('surface');g.font='700 13px "JetBrains Mono",monospace';g.fillText(r.map(q=>q.k).join('|'),cx,150)}
+      }
+    }
+    prevLast=r[r.length-1].k;
+  }
+  // 현재 시각
+  g.strokeStyle=T('ink');g.lineWidth=2;g.beginPath();g.moveTo(X(vt),26);g.lineTo(X(vt),212);g.stroke();
+  g.fillStyle=T('muted');g.font='600 13px "JetBrains Mono",monospace';g.textAlign='right';g.fillText(`← ${win.toFixed(0)}ms 구간 →`,W-12,222);
+}
+function explain(){
+  const s=stats();
+  $('#vr-new').textContent=`${s.nw} / ${hz}번`;
+  $('#vr-rep').textContent=s.rep+'번';$('#vr-rep').style.color=`var(${s.rep?'--orange':'--teal'})`;
+  $('#vr-drop').textContent=s.drop+'장';$('#vr-drop').style.color=`var(${s.drop?'--orange':'--teal'})`;
+  $('#vr-tear').textContent=s.tear+'번';$('#vr-tear').style.color=`var(${s.tear?'--orange':'--teal'})`;
+  const cards=[];
+  if(fps<hz){
+    const pat=vsync?pattern():[];const even=vsync&&pat.every(v=>v===pat[0]);
+    cards.push({c:'bad',h:'끊김 (스터터) · 같은 그림 반복',p:`모니터는 1초에 <b>${hz}번</b> 화면을 그리는데 영상은 <b>${fps}장</b>만 만듦. 새 그림이 없는 주사에서는 <b>앞 그림을 한 번 더</b> 보여 줌(↻). 그래서 사이사이가 비어 보이고 뚝뚝 끊겨 보임.`});
+    if(vsync&&!even)cards.push({c:'bad',h:'저더 · 들쭉날쭉한 반복',p:`프레임마다 보이는 횟수가 <b>${pat.join('-')}</b>처럼 고르지 않음. 어떤 그림은 오래, 어떤 그림은 짧게 보여서 움직임이 <b>울컥울컥</b>함. (영화 24FPS를 60Hz에서 볼 때 3-2-3-2)`});
+    if(vsync&&even)cards.push({c:'ok',h:'고른 반복',p:`프레임마다 <b>${pat[0]}번씩</b> 똑같이 보여서 끊김은 있어도 리듬은 일정함. 주사율이 프레임률의 정수배일 때 생김.`});
+  }else if(fps>hz){
+    cards.push({c:'bad',h:'버려지는 프레임',p:`영상은 1초에 <b>${fps}장</b>을 만들지만 모니터는 <b>${hz}번</b>만 그릴 수 있음. ${vsync?`나머지 <b>${s.drop}장</b>은 화면에 한 번도 못 나오고 버려짐(✕). 프레임률을 높여도 주사율 이상은 눈에 보이지 않음.`:`그래서 한 번 그리는 동안 여러 프레임이 섞여 들어감.`}`});
+  }else cards.push({c:'ok',h:'프레임률 = 주사율',p:`영상 ${fps}장과 모니터 ${hz}번이 똑같아서 그림 하나가 주사 한 번에 딱 맞음. ${vsync?'끊김도 찢김도 없음.':'하지만 V-Sync가 꺼져 있으면 시작 시점이 어긋나 찢김이 생길 수 있음.'}`});
+  if(!vsync&&s.tear)cards.push({c:'bad',h:'티어링 (화면 찢김)',p:`모니터가 위에서 아래로 그리는 <b>도중에</b> 새 프레임이 도착하면, 위쪽은 이전 그림·아래쪽은 새 그림이 그려짐. 움직이는 막대가 <b>어긋나게 잘려</b> 보임(⚡, 주황 점선).`});
+  if(vsync)cards.push({c:'ok',h:'수직 동기화 (V-Sync) 켬',p:`새 프레임을 <b>주사가 끝날 때까지 기다렸다가</b> 다음 주사 처음부터 보여 줌 → 찢김이 사라짐. 대신 기다리는 만큼 반응이 조금 늦어지고 끊김은 남을 수 있음.`});
+  else cards.push({c:'',h:'해결 방법',p:`V-Sync를 켜면 찢김이 사라지고, 요즘 게이밍 모니터는 주사율을 프레임률에 맞춰 바꾸는 <b>가변 주사율</b>(G-Sync, FreeSync)로 끊김과 찢김을 함께 줄임.`});
+  $('#vr-why').innerHTML=cards.map(c=>`<div class="c ${c.c}"><h4>${c.h}</h4><p>${c.p}</p></div>`).join('');
+}
+function all(){drawScreen();drawTL()}
+function loop(ts){
+  if(lastTs!==null&&run&&!$('#video').hidden){vt+=(ts-lastTs)*slow;all()}
+  lastTs=ts;requestAnimationFrame(loop);
+}
+function setAll(){fps=+$('#vr-fps').value;hz=+$('#vr-hz').value;slow=+$('#vr-slow').value;explain();all()}
+['#vr-fps','#vr-hz','#vr-slow'].forEach(s=>$(s).addEventListener('change',setAll));
+$$('#vr-vsync .btn').forEach(b=>b.onclick=()=>{vsync=b.dataset.v==='1';$$('#vr-vsync .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));setAll()});
+$$('#vr-preset .btn').forEach(b=>b.onclick=()=>{const [f,h,v]=b.dataset.p.split(',');$('#vr-fps').value=f;$('#vr-hz').value=h;$$('#vr-vsync .btn')[+v].click()});
+const pb=$('#vr-play');const lab=()=>pb.textContent=run?'❚❚ 멈춤':'▶ 재생';lab();
+pb.onclick=()=>{run=!run;lab()};
+$('#vr-step').onclick=()=>{run=false;lab();vt=(Math.floor(vt/RP())+1)*RP()+RP()*0.999;all()};
+vt=RP()*3.6;setAll();requestAnimationFrame(loop);
+redrawers.push(()=>{explain();all()});
+})();
+
+/* 테마 바뀌면 캔버스 다시 그리기 */
+const mq=matchMedia('(prefers-color-scheme: dark)');(mq.addEventListener?mq.addEventListener('change',()=>redrawers.forEach(f=>f())):mq.addListener(()=>redrawers.forEach(f=>f())));
+new MutationObserver(()=>redrawers.forEach(f=>f())).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+document.fonts&&document.fonts.ready.then(()=>{drawScene();drawRes();redrawers.forEach(f=>f())});
+})();
+</script>
+
+</body></html>
