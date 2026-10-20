@@ -656,7 +656,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
           <figcaption><b>② V-Sync 켬 → 끊김 (스터터링)</b>새 그림이 없으면 앞 그림을 한 번 더 보여 줘서 멈칫함</figcaption>
           <div class="cmp-log" id="log-stut" aria-hidden="true"></div></figure>
         <figure><canvas id="cmp-tear" width="480" height="270" aria-label="V-Sync 끔 찢김 화면"></canvas>
-          <figcaption><b>③ V-Sync 끔 → 찢김 (티어링)</b>화면을 그리는 도중 새 그림이 오면 위아래가 다른 그림이 됨</figcaption>
+          <figcaption><b>③ V-Sync 끔 → 찢김 (티어링)</b>화면을 그리는 도중 새 그림이 오면 위아래가 다른 그림이 됨. <span id="cmp-tear-note"></span></figcaption>
           <div class="cmp-log" id="log-tear" aria-hidden="true"></div></figure>
       </div>
       <div class="legend"><span>최근 주사 기록:</span><span><i style="background:var(--teal);width:12px;height:12px"></i>새 그림</span><span><i style="background:var(--orange);width:12px;height:12px"></i>같은 그림 반복 / 찢김</span><span><i style="background:var(--blue);width:12px;height:12px"></i>프레임 건너뜀</span></div>
@@ -1351,8 +1351,9 @@ function drawCmp(){
     rs.slice(1).forEach(q=>{const y=q.y0*CH;g.strokeStyle=T('orange');g.lineWidth=4;g.setLineDash([12,8]);g.beginPath();g.moveTo(0,y);g.lineTo(CW,y);g.stroke();g.setLineDash([]);
       g.font='700 17px "Noto Sans KR",sans-serif';g.textAlign='right';g.textBaseline='bottom';const t='⚡ 찢김';const w=g.measureText(t).width+14;
       const yy=y<60?y+28:y;g.fillStyle=T('orange');g.fillRect(CW-16-w,yy-26,w,24);g.fillStyle='#fff';g.fillText(t,CW-23,yy-4)});
-    badge(g,`화면 ${rs.length}조각으로 잘림`,'orange');
+    badge(g,fps===hz?'속도는 같지만 시작이 어긋남 → 같은 자리에서 찢김':`화면 ${rs.length}조각으로 잘림`,'orange');
   }
+  $('#cmp-tear-note').textContent=fps===hz?'프레임률 = 주사율이어도 새 그림이 주사 도중(위에서 약 37% 지점)에 도착하므로 매번 같은 높이에서 찢김. V-Sync를 켜야(②) 사라짐.':'';
   if(j!==cJ){cJ=j;logS.push(st);logT.push(rs.length>1?'orange':'teal');logS=logS.slice(-20);logT=logT.slice(-20);
     $('#log-stut').innerHTML=logHTML(logS);$('#log-tear').innerHTML=logHTML(logT)}
 }
