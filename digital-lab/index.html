@@ -208,6 +208,14 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
 .pens{display:flex;gap:6px;align-items:center}
 .pens button{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
 .pens button[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+.cmp3{display:grid;gap:10px;padding:16px;border-radius:12px;background:var(--sunk)}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:14px}
+.cmp-grid figure{margin:0;display:grid;gap:6px;align-content:start;min-width:0}
+.cmp-grid canvas{width:100%;aspect-ratio:16/9;border-radius:8px}
+.cmp-grid figcaption{font-size:14px;color:var(--muted);line-height:1.45}
+.cmp-grid figcaption b{display:block;color:var(--ink);font-size:16px;margin-bottom:2px}
+.cmp-log{display:flex;gap:3px;min-height:12px}
+.cmp-log i{flex:0 0 12px;height:12px;border-radius:3px}
 </style>
 
 <header>
@@ -567,7 +575,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       </article>
       <article class="mcard" data-m="s3" data-goal="3">
         <div class="mtop"><span class="mno">3</span><h4>소리 데이터 퀴즈</h4><span class="mprog"></span></div>
-        <p class="hint">1초 데이터 크기 = 표본화 주파수 × 양자화 비트 수. (3문제)</p>
+        <p class="hint">표본화 주파수·비트 수·녹음 시간이 클수록 음질은 좋아지고 용량은 커짐. (3문제)</p>
         <div class="qwrap"></div>
       </article>
     </div>
@@ -635,6 +643,24 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <button class="btn" data-p="60,60,1">60 → 60Hz</button>
       <button class="btn" data-p="120,144,1">120 → 144Hz</button>
     </div>
+    <div class="cmp3">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">한눈에 비교 · 끊김(스터터링)과 찢김(티어링)</h3>
+        <div class="seg" role="group" aria-label="비교 화면 속도" id="cmp-speed"><button class="btn" data-s="0.125" aria-pressed="false">1/8 느리게</button><button class="btn" data-s="0.25" aria-pressed="true">1/4 느리게</button><button class="btn" data-s="0.5" aria-pressed="false">1/2 느리게</button><button class="btn" data-s="1" aria-pressed="false">실제 속도</button></div>
+      </div>
+      <p class="hint">위에서 고른 프레임률·주사율로 <b>빠르게 지나가는 줄무늬 기둥</b>을 세 화면에 보여 줌. 가운데는 기둥이 <b>멈칫멈칫</b>, 오른쪽은 기둥이 <b>가로로 잘려 어긋남</b>.</p>
+      <div class="cmp-grid">
+        <figure><canvas id="cmp-ideal" width="480" height="270" aria-label="이상적인 움직임"></canvas>
+          <figcaption><b>① 이상적인 움직임</b>매 순간 정확한 위치 (비교 기준)</figcaption></figure>
+        <figure><canvas id="cmp-stut" width="480" height="270" aria-label="V-Sync 켬 끊김 화면"></canvas>
+          <figcaption><b>② V-Sync 켬 → 끊김 (스터터링)</b>새 그림이 없으면 앞 그림을 한 번 더 보여 줘서 멈칫함</figcaption>
+          <div class="cmp-log" id="log-stut" aria-hidden="true"></div></figure>
+        <figure><canvas id="cmp-tear" width="480" height="270" aria-label="V-Sync 끔 찢김 화면"></canvas>
+          <figcaption><b>③ V-Sync 끔 → 찢김 (티어링)</b>화면을 그리는 도중 새 그림이 오면 위아래가 다른 그림이 됨</figcaption>
+          <div class="cmp-log" id="log-tear" aria-hidden="true"></div></figure>
+      </div>
+      <div class="legend"><span>최근 주사 기록:</span><span><i style="background:var(--teal);width:12px;height:12px"></i>새 그림</span><span><i style="background:var(--orange);width:12px;height:12px"></i>같은 그림 반복 / 찢김</span><span><i style="background:var(--blue);width:12px;height:12px"></i>프레임 건너뜀</span></div>
+    </div>
     <div class="vr-wrap">
       <figure style="margin:0;display:grid;gap:6px;min-width:0">
         <canvas id="vr-screen" width="640" height="360" style="width:100%;aspect-ratio:16/9" aria-label="모니터 화면 슬로 모션"></canvas>
@@ -692,7 +718,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       </article>
       <article class="mcard" data-m="v3" data-goal="3">
         <div class="mtop"><span class="mno">3</span><h4>동영상 퀴즈</h4><span class="mprog"></span></div>
-        <p class="hint">프레임 수 = 프레임률 × 시간. 압축 전 용량 = 한 프레임 용량 × 프레임 수. (3문제)</p>
+        <p class="hint">프레임 수 = 프레임률 × 시간. 해상도·프레임률·길이가 클수록 용량이 커지고, 압축하면 작아짐. (3문제)</p>
         <div class="qwrap"></div>
       </article>
     </div>
@@ -1294,8 +1320,53 @@ $$('#vr-preset .btn').forEach(b=>b.onclick=()=>{const [f,h,v]=b.dataset.p.split(
 const pb=$('#vr-play');const lab=()=>pb.textContent=run?'❚❚ 멈춤':'▶ 재생';lab();
 pb.onclick=()=>{run=!run;lab()};
 $('#vr-step').onclick=()=>{run=false;lab();vt=(Math.floor(vt/RP())+1)*RP()+RP()*0.999;all()};
+/* 한눈에 비교: 이상적 / V-Sync 켬(끊김) / V-Sync 끔(찢김) */
+const rowsV=(j,vs)=>{const s=j*RP();if(vs)return[{k:frameAt(s),y0:0,y1:1}];const out=[];let k=frameAt(s),y=0;
+  while(true){const yc=(frameStart(k+1)-s)/RP();if(yc>=1){out.push({k,y0:y,y1:1});break}out.push({k,y0:y,y1:yc});y=yc;k++}return out};
+const CW=480,CH=270,CSP=1.6,PW=40; // 기둥 속도(px/ms), 기둥 너비
+const posAt=t=>((t*CSP)%(CW+160))-80;
+let cvt=1000,cSpeed=0.25,cLast=null,cJ=null,logS=[],logT=[];
+function pillar(g,x,y0,y1){g.save();g.beginPath();g.rect(0,y0,CW,y1-y0);g.clip();
+  for(let y=0;y<CH;y+=27){g.fillStyle=T(Math.round(y/27)%2?'orange':'blue');g.fillRect(x,y,PW,27)}
+  g.restore()}
+function base(g){g.fillStyle=T('surface');g.fillRect(0,0,CW,CH);g.strokeStyle=T('line');g.lineWidth=1;for(let x=40;x<CW;x+=40){g.beginPath();g.moveTo(x,0);g.lineTo(x,CH);g.stroke()}}
+function badge(g,txt,col){g.font='700 20px "Noto Sans KR",sans-serif';const w=g.measureText(txt).width+22;g.fillStyle=T(col);g.fillRect(10,10,w,34);g.fillStyle='#fff';g.textAlign='left';g.textBaseline='middle';g.fillText(txt,21,28)}
+function frameBox(g,col){g.strokeStyle=T(col);g.lineWidth=10;g.strokeRect(5,5,CW-10,CH-10)}
+function logHTML(a){return a.map(c=>`<i style="background:var(--${c})"></i>`).join('')}
+function drawCmp(){
+  const j=Math.floor(cvt/RP());
+  // ① 이상적
+  let g=$('#cmp-ideal').getContext('2d');base(g);pillar(g,posAt(cvt),0,CH);
+  // ② V-Sync 켬
+  const k=rowsV(j,true)[0].k,kp=rowsV(j-1,true)[0].k;
+  g=$('#cmp-stut').getContext('2d');base(g);pillar(g,posAt(frameStart(k)),0,CH);
+  const st=k===kp?'orange':k>kp+1?'blue':'teal';
+  if(st==='orange'){frameBox(g,'orange');badge(g,'↻ 같은 그림 반복 → 멈칫!','orange')}
+  else if(st==='blue'){frameBox(g,'blue');badge(g,`⏭ 프레임 ${k-kp-1}장 건너뜀`,'blue')}
+  // ③ V-Sync 끔
+  const rs=rowsV(j,false);g=$('#cmp-tear').getContext('2d');base(g);
+  rs.forEach(q=>pillar(g,posAt(frameStart(q.k)),q.y0*CH,q.y1*CH));
+  if(rs.length>1){
+    frameBox(g,'orange');
+    rs.slice(1).forEach(q=>{const y=q.y0*CH;g.strokeStyle=T('orange');g.lineWidth=4;g.setLineDash([12,8]);g.beginPath();g.moveTo(0,y);g.lineTo(CW,y);g.stroke();g.setLineDash([]);
+      g.font='700 17px "Noto Sans KR",sans-serif';g.textAlign='right';g.textBaseline='bottom';const t='⚡ 찢김';const w=g.measureText(t).width+14;
+      const yy=y<60?y+28:y;g.fillStyle=T('orange');g.fillRect(CW-16-w,yy-26,w,24);g.fillStyle='#fff';g.fillText(t,CW-23,yy-4)});
+    badge(g,`화면 ${rs.length}조각으로 잘림`,'orange');
+  }
+  if(j!==cJ){cJ=j;logS.push(st);logT.push(rs.length>1?'orange':'teal');logS=logS.slice(-20);logT=logT.slice(-20);
+    $('#log-stut').innerHTML=logHTML(logS);$('#log-tear').innerHTML=logHTML(logT)}
+}
+function cLoop(ts){
+  if(cLast!==null&&!$('#video').hidden){cvt+=Math.min(100,ts-cLast)*cSpeed;drawCmp()}
+  cLast=ts;requestAnimationFrame(cLoop);
+}
+$$('#cmp-speed .btn').forEach(b=>b.onclick=()=>{cSpeed=+b.dataset.s;$$('#cmp-speed .btn').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+['#vr-fps','#vr-hz'].forEach(s=>$(s).addEventListener('change',()=>{logS=[];logT=[];cJ=null}));
+if(reduce){cSpeed=0.125;$$('#cmp-speed .btn').forEach(x=>x.setAttribute('aria-pressed',x.dataset.s==='0.125'))}
+drawCmp();requestAnimationFrame(cLoop);
+
 vt=RP()*3.6;setAll();requestAnimationFrame(loop);
-redrawers.push(()=>{explain();all()});
+redrawers.push(()=>{explain();all();drawCmp()});
 })();
 
 /* 테마 바뀌면 캔버스 다시 그리기 */
@@ -1582,15 +1653,20 @@ quiz('s2',()=>{
 });
 const SC=[
   ['아날로그 소리를 디지털로 바꾸는 순서로 알맞은 것은?','표본화 → 양자화 → 부호화',['양자화 → 표본화 → 부호화','부호화 → 표본화 → 양자화','표본화 → 부호화 → 양자화'],'일정한 간격으로 측정(표본화) → 가까운 단계의 정수로 맞춤(양자화) → 이진수로 바꿈(부호화)'],
-  ['표본화 주파수를 2배로 높이면 데이터 크기는?','2배가 됨',['절반이 됨','4배가 됨','변하지 않음'],'1초에 측정하는 횟수가 2배 → 저장할 값도 2배'],
+  ['표본화 주파수를 높이면 데이터 크기는?','커짐',['작아짐','변하지 않음'],'1초에 측정하는 횟수가 늘어나서 저장할 값도 많아짐.'],
+  ['음질을 좋게 하려고 비트 수를 늘리면 데이터 크기는?','커짐',['작아짐','변하지 않음'],'값 하나를 더 많은 비트로 저장하므로 용량이 커짐. 음질과 용량은 함께 커짐.'],
   ['원래 소리에 더 가깝게 저장하려면?','표본화 주파수와 비트 수를 높임',['표본화 주파수와 비트 수를 낮춤','비트 수만 낮춤','녹음 시간을 줄임'],'더 자주, 더 촘촘한 단계로 측정할수록 원래 파형에 가까워짐. 대신 데이터가 커짐.'],
   ['측정한 소리 높이를 가장 가까운 단계의 정수로 맞추는 과정은?','양자화',['표본화','부호화','압축'],'양자화: 높이 값을 정해진 단계 중 가장 가까운 값으로 맞춤'],
   ['양자화한 값을 0과 1의 이진수로 바꾸는 과정은?','부호화',['표본화','양자화','재생'],'부호화: 정수 값을 이진수 코드로 바꿈'],
 ];
 quiz('s3',()=>{
   const r=rnd(3);
-  if(r===0){const rate=pick([1000,2000,4000,8000,10000]),bits=pick([4,8,16]),sec=pick([1,2,3,5]),a=rate*bits*sec;
-    return{q:`표본화 주파수 <b>${fmt(rate)}Hz</b>, 양자화 <b>${bits}비트</b>로 <b>${sec}초</b> 동안 녹음했음 (모노). 데이터 크기는 몇 비트일까?`,a,show:fmt(a)+'비트',hint:'1초에 측정한 횟수 × 비트 수 × 시간',ex:`${fmt(rate)}번 × ${bits}비트 × ${sec}초 = ${fmt(a)}비트`}}
+  if(r===0){const A={rate:pick([22050,44100]),bits:pick([8,16]),sec:pick([10,30])},B={...A},k=rnd(3);let why,diff;
+    if(k===0){A.rate=pick([8000,22050]);B.rate=44100;diff='표본화 주파수';why='표본화 주파수가 높으면 1초에 측정해서 저장하는 값이 많아짐 → 용량이 커짐 (대신 소리는 원래에 더 가까움).'}
+    else if(k===1){A.bits=8;B.bits=16;diff='양자화 비트 수';why='비트 수가 많으면 값 하나를 저장하는 데 쓰는 비트가 많아짐 → 용량이 커짐 (대신 잡음이 줄어듦).'}
+    else{A.sec=pick([10,30]);B.sec=A.sec*3;diff='녹음 시간';why='녹음 시간이 길면 저장할 값이 그만큼 많아짐 → 용량이 커짐.'}
+    const sw=rnd(2),ga=sw?B:A,na=sw?A:B,d=o=>`${fmt(o.rate)}Hz · ${o.bits}비트 · ${o.sec}초`;
+    return mc(`두 소리 파일 중 <b>용량이 더 큰 것</b>은?<br><span class="mono" style="font-size:15px">가: ${d(ga)}<br>나: ${d(na)}</span>`,sw?'가':'나',[sw?'나':'가','둘이 같음'],`${diff}만 다름. ${why}`,['가','나','둘이 같음'])}
   if(r===1){const n=pick([2,3,4,5,6,8]),a=2**n;return{q:`양자화 비트 수가 <b>${n}비트</b>이면 소리 높이를 몇 단계로 나눌 수 있을까?`,a,show:fmt(a)+'단계',hint:'n비트 → 2를 n번 곱함',ex:`${n}비트 → 2<sup>${n}</sup> = ${fmt(a)}단계`}}
   const it=pick(SC);return mc(it[0],it[1],it[2],it[3]);
 });
@@ -1674,14 +1750,20 @@ const VC=[
   ['정지 이미지를 빠르게 넘기면 움직이는 것처럼 보이는 까닭은?','잔상 효과 때문',['계단 현상 때문','양자화 오차 때문','압축 때문'],'본 장면이 눈에 잠깐 남아 있어서 다음 장면과 이어져 보임.'],
   ['프레임률이 너무 낮으면 영상이 어떻게 보일까?','움직임이 뚝뚝 끊겨 보임',['화면이 더 선명해짐','소리가 작아짐','색이 바램'],'1초에 보여 주는 장면 수가 적으면 장면 사이 간격이 커서 끊겨 보임.'],
   ['동영상을 코덱으로 압축해서 저장하는 가장 큰 까닭은?','압축하지 않으면 용량이 매우 커서',['색을 더 많이 쓰려고','프레임률을 높이려고','소리를 없애려고'],'압축 안 한 FHD(1920×1080) 동영상은 30FPS로 1초만 찍어도 약 180MB가 넘음.'],
-  ['같은 길이의 동영상을 30FPS에서 60FPS로 바꾸면 압축 전 용량은?','2배가 됨',['절반이 됨','변하지 않음','4배가 됨'],'저장할 프레임 수가 2배가 됨.'],
+  ['같은 길이의 동영상을 30FPS에서 60FPS로 바꾸면 압축 전 용량은?','커짐',['작아짐','변하지 않음'],'1초에 저장할 프레임 수가 많아져서 용량이 커짐.'],
 ];
 quiz('v3',()=>{
   const r=rnd(3);
   if(r===0){const fps=pick([12,24,30,60]),sec=pick([2,5,10,60]),a=fps*sec;
     return{q:`<b>${fps}FPS</b> 동영상 <b>${sec}초</b>에는 프레임(정지 이미지)이 모두 몇 장 있을까?`,a,show:fmt(a)+'장',hint:'프레임률 × 시간',ex:`${fps}장 × ${sec}초 = ${fmt(a)}장`}}
-  if(r===1){const [w,h]=pick([[10,10],[20,10],[20,20],[40,30]]),fps=pick([10,20,30]),sec=pick([1,2]),per=w*h*24,a=per*fps*sec;
-    return{q:`가로 ${w} × 세로 ${h} 화소, 화소마다 <b>24비트</b> 색, <b>${fps}FPS</b>, 길이 <b>${sec}초</b>인 압축 안 한 동영상은 몇 비트일까?`,a,show:fmt(a)+'비트',hint:'한 프레임 용량(가로×세로×24) × 전체 프레임 수',ex:`한 프레임 ${w}×${h}×24 = ${fmt(per)}비트 × 프레임 ${fps}×${sec} = ${fps*sec}장 → ${fmt(a)}비트`}}
+  if(r===1){const CASES=[
+      ['HD (1280×720) · 30FPS · 1분','FHD (1920×1080) · 30FPS · 1분','해상도','해상도가 높으면 한 프레임의 화소 수가 많아짐 → 용량이 커짐.'],
+      ['FHD · 30FPS · 1분','4K (3840×2160) · 30FPS · 1분','해상도','4K는 FHD보다 화소가 4배 많아서 한 프레임 용량이 훨씬 큼.'],
+      ['FHD · 30FPS · 1분','FHD · 60FPS · 1분','프레임률','프레임률이 높으면 1초에 저장할 프레임(그림)이 많아짐 → 용량이 커짐.'],
+      ['FHD · 30FPS · 10초','FHD · 30FPS · 1분','길이','영상이 길면 저장할 프레임 수가 많아짐 → 용량이 커짐.'],
+      ['FHD · 30FPS · 1분 · MP4로 압축','FHD · 30FPS · 1분 · 압축 안 함','압축 여부','코덱으로 압축하면 용량이 크게 줄어듦. 압축 안 한 동영상은 매우 큼.']];
+    const [small,big,diff,why]=pick(CASES),sw=rnd(2);
+    return mc(`두 동영상 중 <b>용량이 더 큰 것</b>은?<br><span style="font-size:15px">가: ${sw?big:small}<br>나: ${sw?small:big}</span>`,sw?'가':'나',[sw?'나':'가','둘이 같음'],`${diff}만 다름. ${why}`,['가','나','둘이 같음'])}
   const it=pick(VC);return mc(it[0],it[1],it[2],it[3]);
 });
 
