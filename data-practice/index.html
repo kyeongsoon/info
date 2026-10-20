@@ -1,0 +1,431 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>데이터 수행평가 연습실</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 시험지 한 장 — 상단 탭(개념·문항·결과), 가운데 답안 조립대, 아래 낱말 상자 */
+:root {
+  --paper: #f5f7fb; --card: #ffffff; --ink: #18223a; --muted: #5b6683; --line: #d8deea;
+  --accent: #2f5bd3; --accent-soft: #e7edff; --hl: #ffe066; --hl-ink: #1b1b1b;
+  --ok: #1d8f4e; --ok-soft: #e3f5ea; --bad: #cc3b3b; --bad-soft: #fde8e8;
+  --slot: #fffaf0; --slot-line: #c9b98a; --chip: #ffffff; --shadow: 0 1px 2px rgba(24,34,58,.08), 0 4px 14px rgba(24,34,58,.06);
+  --f-display: 'Black Han Sans', 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --f-body: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1320; --card: #171d2d; --ink: #e8ecf6; --muted: #9aa5c0; --line: #2b344b;
+  --accent: #82a0ff; --accent-soft: #1e2847; --hl: #f3c84b; --hl-ink: #1b1b1b;
+  --ok: #4cc38a; --ok-soft: #14301f; --bad: #ff7d7d; --bad-soft: #3a1a1d;
+  --slot: #221f17; --slot-line: #6d6040; --chip: #1f2639; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.3); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #0f1320; --card: #171d2d; --ink: #e8ecf6; --muted: #9aa5c0; --line: #2b344b;
+  --accent: #82a0ff; --accent-soft: #1e2847; --hl: #f3c84b; --hl-ink: #1b1b1b;
+  --ok: #4cc38a; --ok-soft: #14301f; --bad: #ff7d7d; --bad-soft: #3a1a1d;
+  --slot: #221f17; --slot-line: #6d6040; --chip: #1f2639; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.3); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.65; margin: 0; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--card); }
+.wrap { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 12px 0; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand h1 { font-family: var(--f-display); font-weight: 400; font-size: 26px; margin: 0; letter-spacing: .5px; }
+.brand h1 mark { background: linear-gradient(transparent 55%, var(--hl) 55%); color: inherit; padding: 0 2px; }
+.brand .sub { color: var(--muted); font-size: 13.5px; }
+.score-pill { margin-left: auto; font-family: var(--f-mono); font-size: 13px; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; white-space: nowrap; }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; margin-top: 10px; scrollbar-width: none; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs button { font: inherit; font-size: 14.5px; font-weight: 700; color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 12px 9px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+nav.tabs .dot { font-family: var(--f-mono); font-size: 11.5px; font-weight: 500; background: var(--line); color: var(--muted); border-radius: 6px; padding: 0 6px; }
+nav.tabs .dot.done { background: var(--ok-soft); color: var(--ok); }
+button:focus-visible, .slot:focus-visible, .chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+h2.sec { font-family: var(--f-display); font-weight: 400; font-size: 24px; margin: 26px 0 4px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0 0 16px; max-width: 65ch; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.concept h3 { margin: 0 0 6px; font-size: 16.5px; display: flex; gap: 8px; align-items: baseline; }
+.concept h3 .pg { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+.concept p, .concept ul { margin: 4px 0; font-size: 15px; }
+.concept ul { padding-left: 18px; }
+.hl { background: linear-gradient(transparent 58%, var(--hl) 58%); color: inherit; }
+.mono { font-family: var(--f-mono); font-size: .92em; }
+table.t { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 6px; }
+table.t th, table.t td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.t th { background: var(--paper); }
+.tscroll { overflow-x: auto; }
+
+/* exercise */
+.qhead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 24px 0 6px; }
+.qhead h2 { font-family: var(--f-display); font-weight: 400; font-size: 24px; margin: 0; }
+.qhead .pts { font-family: var(--f-mono); font-size: 13px; border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; color: var(--muted); }
+.prompt { margin: 0 0 12px; max-width: 70ch; }
+details.ctx { background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 14px; }
+details.ctx summary { cursor: pointer; padding: 10px 14px; font-weight: 700; font-size: 14.5px; color: var(--muted); }
+details.ctx .body { padding: 0 16px 14px; font-size: 15px; }
+details.ctx .body p { margin: 6px 0; }
+.ctx-flex { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+.ctx-flex > * { flex: 1 1 300px; min-width: 0; }
+svg.chart { width: 100%; height: auto; display: block; }
+svg.chart .axis { stroke: var(--muted); }
+svg.chart .grid { stroke: var(--line); }
+svg.chart text { fill: var(--muted); font-family: var(--f-body); font-size: 11px; }
+svg.chart .pt { fill: var(--accent); }
+svg.chart .pt.lab { fill: var(--bad); }
+svg.chart text.lab { fill: var(--bad); font-weight: 700; font-size: 13px; }
+
+.sheet { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 14px; box-shadow: var(--shadow); }
+.sheet .label { font-size: 12.5px; font-weight: 700; color: var(--muted); letter-spacing: .5px; margin-bottom: 6px; }
+.frame { font-size: 16.5px; line-height: 2.45; }
+.frame p { margin: 0 0 4px; }
+.slot { display: inline-flex; align-items: center; min-width: 120px; min-height: 36px; vertical-align: middle; margin: 2px 3px; padding: 3px 10px; border: 2px dashed var(--slot-line); background: var(--slot); border-radius: 9px; font: inherit; font-size: 15px; line-height: 1.4; color: var(--muted); cursor: pointer; text-align: left; max-width: 100%; }
+.slot.filled { touch-action: none; border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.slot.active { box-shadow: 0 0 0 3px var(--hl); }
+.slot.over { background: var(--hl); color: var(--hl-ink); }
+.slot.ok { border-color: var(--ok); background: var(--ok-soft); }
+.slot.bad { border-color: var(--bad); background: var(--bad-soft); }
+.slot .ph { font-size: 13px; }
+
+.bank { margin-top: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.bank .label { font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 8px; display: flex; gap: 8px; }
+.bank .label span { font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 14.5px; line-height: 1.4; text-align: left; background: var(--chip); color: var(--ink); border: 1px solid var(--line); border-radius: 9px; padding: 7px 11px; cursor: grab; box-shadow: var(--shadow); touch-action: none; user-select: none; -webkit-user-select: none; max-width: 100%; }
+.chip:hover { border-color: var(--accent); }
+.chip.used { display: none; }
+.ghost { position: fixed; pointer-events: none; z-index: 50; opacity: .92; transform: rotate(-2deg); cursor: grabbing; }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.btn { font: inherit; font-weight: 700; font-size: 15px; border-radius: 10px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--card); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.result { margin-top: 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); padding: 16px 18px; }
+.result .big { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.result .big b { font-family: var(--f-display); font-weight: 400; font-size: 38px; line-height: 1; }
+.result .big .of { color: var(--muted); font-family: var(--f-mono); }
+.checks { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+.checks li { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; }
+.checks .mk { flex: 0 0 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+.checks .y .mk { background: var(--ok-soft); color: var(--ok); }
+.checks .n .mk { background: var(--bad-soft); color: var(--bad); }
+.model { margin-top: 14px; border-left: 4px solid var(--hl); background: var(--paper); border-radius: 8px; padding: 10px 14px; font-size: 15px; }
+.model h4, .ladder h4 { margin: 0 0 4px; font-size: 14px; color: var(--muted); }
+.model p { margin: 4px 0; }
+.ladder { margin-top: 12px; }
+.ladder th:first-child, .ladder td:first-child { white-space: nowrap; }
+.ladder td:first-child { font-family: var(--f-mono); font-weight: 500; white-space: nowrap; }
+.ladder tr.me td { background: var(--accent-soft); }
+
+/* summary */
+.sumgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.sumcell { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.sumcell .n { font-size: 13px; color: var(--muted); font-weight: 700; }
+.sumcell .v { font-family: var(--f-display); font-size: 28px; line-height: 1.2; }
+.sumcell .v small { font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+.total { display: flex; align-items: baseline; gap: 12px; margin: 10px 0 16px; }
+.total b { font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 1; }
+.total span { color: var(--muted); font-family: var(--f-mono); }
+.howto { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0 0; }
+.howto div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+.howto b { display: block; font-size: 14.5px; }
+@media (max-width: 640px) { .brand .sub { display: none; } .brand h1 { font-size: 22px; } .howto { grid-template-columns: minmax(0, 1fr); } .frame { font-size: 15.5px; } .slot { min-width: 90px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>데이터 수행평가 <mark>연습실</mark></h1>
+      <span class="sub">2학년 정보 Ⅱ. 데이터 · 연습문제(사물함 대여 · 문제 풀이와 단원평가)</span>
+      <span class="score-pill" id="pill">0 / 30점</span>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<script>
+(function(){
+'use strict';
+const $ = (s, r=document) => r.querySelector(s);
+const el = (tag, attrs={}, html) => { const e=document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html!=null) e.innerHTML=html; return e; };
+
+/* ---------- 연습문제 데이터 ---------- */
+const PASSAGE1 = `
+<p>우리 학교는 그동안 종이 대장으로 사물함 물품(우산, 체육복, 실내화 등) 대여 현황을 관리해 왔다. 학생회 부원 지우는 한 학기 동안 대여 업무를 맡으면서 다음과 같은 일들을 겪었다.</p>
+<p>① 대장은 금방 두꺼워져 새 대장을 계속 사야 했다. 대여 창구 옆에 둔 대장에 우산에서 떨어진 빗물이 묻어 글씨가 번졌고, 1학기 대장은 어디에 두었는지 찾지 못해 누가 우산을 아직 돌려주지 않았는지 알 수 없었다.</p>
+<p>② 학기 말에 '가장 많이 빌려 간 물품'과 '반납하지 않은 학생 명단'을 정리해 달라는 부탁을 받았다. 지우는 대장을 처음부터 끝까지 넘기며 하나씩 표시했다. 하루 종일 걸렸는데, 반납 표시를 빠뜨린 줄이 있어 이미 반납한 학생에게 독촉 쪽지가 가기도 했다.</p>
+<p>③ 담임 선생님들이 반 학생들의 미반납 현황을 물어보실 때마다 지우는 해당 내용을 쪽지에 옮겨 적어 각 교실로 직접 가져다드렸다. 반이 많아 쉬는 시간마다 돌아다녀야 했고, 중간에 쪽지를 잃어버린 반도 있었다.</p>
+<p>그래서 학교는 올해부터 QR코드 태그를 이용하는 디지털 사물함 관리 시스템으로 바꾸기로 했다. 그런데 시험 운영 첫날 문제가 생겼다. 러시아에서 온 교환학생의 이름을 입력하자 영어로 쓴 'Ivan'은 화면에 바르게 나타났지만, 러시아어로 쓴 'Иван'은 '????'처럼 알아볼 수 없는 기호로 바뀌어 나타났다. 확인해 보니 시스템의 문자 코드가 아스키 코드로 설정되어 있었다.</p>`;
+
+const XS=[3,7,12,16,21,25,30,34,38,42,46,55,58,63,67,71,75,79,83,87,91,95,40];
+const NZ=[3,-2,-4,2,4,-3,1,-1,3,-4,2,-2,4,-3,1,3,-4,2,-1,4,-2,1,-3];
+const PTS = XS.map((x,i)=>[x, Math.round(30+0.6*x+NZ[i])]).concat([[50,90],[100,50]]);
+const LAB = {'가':[42,51],'나':[95,88],'다':[50,90],'라':[7,32],'마':[100,50]};
+const TABLE = [['가','가끔 함','쉬운 문제 위주','2회'],['나','항상 함','쉬운 것부터 어려운 것까지','3회'],['다','항상 함','쉬운 것부터 어려운 것까지','3회'],['라','안 함','쉬운 문제만 반복','0회'],['마','안 함','쉬운 문제만 반복','0회']];
+
+function chartSVG(){
+  const W=520,H=300,L=46,R=505,T=14,B=250, X=x=>L+(R-L)*x/105, Y=y=>B-(B-T)*y/100;
+  let g='';
+  for (let y=0;y<=100;y+=20){ g+=`<line class="grid" x1="${L}" x2="${R}" y1="${Y(y)}" y2="${Y(y)}"/><text x="${L-8}" y="${Y(y)+4}" text-anchor="end">${y}</text>`; }
+  for (let x=0;x<=100;x+=10){ g+=`<line class="grid" y1="${T}" y2="${B}" x1="${X(x)}" x2="${X(x)}"/><text x="${X(x)}" y="${B+16}" text-anchor="middle">${x}</text>`; }
+  g+=`<line class="axis" x1="${L}" x2="${R}" y1="${B}" y2="${B}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${B}"/>`;
+  const labSet=new Set(Object.values(LAB).map(p=>p.join(',')));
+  PTS.forEach(([x,y])=>{ if(!labSet.has(x+','+y)) g+=`<circle class="pt" cx="${X(x)}" cy="${Y(y)}" r="4.2"/>`; });
+  for (const k in LAB){ const [x,y]=LAB[k]; g+=`<circle class="pt lab" cx="${X(x)}" cy="${Y(y)}" r="5"/><text class="lab" x="${Math.min(X(x)+7,R-6)}" y="${Y(y)-7}">${k}</text>`; }
+  g+=`<text x="${(L+R)/2}" y="${H-12}" text-anchor="middle">주간 수학 문제 풀이 개수(개)</text><text x="14" y="${(T+B)/2}" text-anchor="middle" transform="rotate(-90 14 ${(T+B)/2})">수학 단원평가 점수(점)</text>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="문제 풀이 개수와 단원평가 점수 산점도. 가 42개 51점, 나 95개 88점, 다 50개 90점, 라 7개 32점, 마 100개 50점">${g}</svg>`;
+}
+function tableHTML(){
+  return `<div class="tscroll"><table class="t"><tr><th>학생</th><th>틀린 문제 다시 풀기</th><th>푸는 문제 종류</th><th>개념 복습(일주일)</th></tr>${TABLE.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table></div>`;
+}
+const CTX1 = `<details class="ctx" open><summary>지문 보기 · 문항 1</summary><div class="body">${PASSAGE1}</div></details>`;
+const CTX2 = () => `<details class="ctx" open><summary>그래프와 표 보기 · 문항 2</summary><div class="body"><p>우리 학교 수학 선생님께서는 학생들의 주간 수학 문제 풀이 개수와 수학 단원평가 점수를 함께 조사하여, 수학 학습 지도에 활용하려고 한다. (학생 25명)</p><div class="ctx-flex"><div>${chartSVG()}</div><div>${tableHTML()}</div></div></div></details>`;
+
+/* ---------- 문항 정의 ---------- */
+const EX = [
+{ id:'c', tab:'개념', title:'개념 익히기', concept:true },
+{ id:'q11', tab:'1-(1)', title:'디지털 데이터의 장점', max:7, ctx:'1',
+  prompt:'지문의 ①은 저장, ②는 가공, ③은 전송 측면에서 종이 대장(아날로그 방식)이 가진 문제를 보여 준다. 각 사례를 바탕으로 디지털 사물함 관리 시스템이 저장·가공·전송 측면에서 어떤 장점을 갖는지 서술하시오. (세 가지 측면마다 그 장점이 생기는 이유를 함께 쓸 것)',
+  frame:`<p>디지털 사물함 관리 시스템은 종이 대장과 비교했을 때 저장, 가공, 전송 측면에서 다음과 같은 장점이 있다.</p>
+<p><b>첫째, 저장 측면의 장점은</b> [[s1|장점]]는 것이다. 왜냐하면 [[s2|이유]] 때문이다.</p>
+<p><b>둘째, 가공 측면의 장점은</b> [[s3|장점]]는 것이다. 왜냐하면 [[s4|이유]] 때문이다.</p>
+<p><b>셋째, 전송 측면의 장점은</b> [[s5|장점]]는 것이다. 왜냐하면 [[s6|이유]] 때문이다.</p>`,
+  chips:{a1:'대여 기록을 오래 안전하게 보관할 수 있다',a2:'필요한 정보를 빠르고 정확하게 얻을 수 있다',a3:'여러 사람과 쉽고 빠르게 공유할 수 있다',
+    r1:'분량이 늘어도 부피·무게가 늘지 않고 백업해 둘 수 있기',r2:'컴퓨터가 데이터를 자동으로 검색·정렬·집계할 수 있기',r3:'네트워크로 손실 없이 빠르게 보낼 수 있기',
+    d1:'종이 대장보다 가격이 싸다',d2:'화면 글씨가 종이 글씨보다 크기'},
+  grade(f){ const asp=[['저장','s1','a1','s2','r1'],['가공','s3','a2','s4','r2'],['전송','s5','a3','s6','r3']];
+    const slots={}, items=[]; let c=0;
+    asp.forEach(([n,sa,ca,sr,cr])=>{ const okA=f[sa]===ca, okR=f[sr]===cr; slots[sa]=okA; slots[sr]=okR; if(okA&&okR)c++;
+      items.push({ok:okA&&okR, t:`${n} 측면: 장점${okA?' ✓':' ✗'} · 이유${okR?' ✓':' ✗'}`}); });
+    return {score:c===3?7:c===2?5:3, slots, items, level:c===3?0:c===2?1:2}; },
+  model:`<p>디지털 사물함 관리 시스템은 종이 대장과 비교했을 때 저장, 가공, 전송 측면에서 다음과 같은 장점이 있다.</p><p><b>첫째, 저장 측면의 장점은</b> <span class="hl">대여 기록을 오래 안전하게 보관할 수 있다</span>는 것이다. 디지털 데이터는 분량이 늘어나도 부피와 무게가 늘지 않고 <span class="hl">백업해 둘 수 있기 때문에</span>, ①처럼 대장이 두꺼워지거나 빗물에 젖거나 잃어버려서 기록을 확인하지 못하는 일이 생기지 않는다.</p><p><b>둘째, 가공 측면의 장점은</b> <span class="hl">필요한 정보를 빠르고 정확하게 얻을 수 있다</span>는 것이다. <span class="hl">컴퓨터가 데이터를 자동으로 검색하고 정렬하고 셀 수 있기 때문에</span>, ②처럼 대장을 하루 종일 넘기지 않아도 인기 물품과 미반납 학생 명단을 실수 없이 바로 정리할 수 있다.</p><p><b>셋째, 전송 측면의 장점은</b> <span class="hl">여러 사람과 쉽고 빠르게 공유할 수 있다</span>는 것이다. 디지털 데이터는 <span class="hl">네트워크로 손실 없이 빠르게 보낼 수 있기 때문에</span>, ③처럼 쪽지를 들고 교실을 돌아다니거나 쪽지를 잃어버릴 걱정 없이 모든 담임 선생님께 미반납 현황을 동시에 전달할 수 있다.</p>`,
+  ladder:[['7점','저장·가공·전송 세 측면 모두 장점과 그 이유를 씀','세 측면 모두 장점 + 이유'],['5점','저장·가공만 장점과 이유를 쓰고 전송이 빠짐','두 가지만 갖춤'],['3점','"저장도 잘 되고, 가공도 편리하고, 전송도 빠르다."','이유가 없음 (한 가지 이하)']] },
+
+{ id:'q12', tab:'1-(2)', title:'문자 코드', max:6, ctx:'1',
+  prompt:'시험 운영 첫날 러시아어 이름이 깨져 나타난 원인을 아스키 코드와 유니코드의 차이(비트 수 또는 표현할 수 있는 문자 수)를 들어 설명하시오. 또한 러시아어 이름을 바르게 저장하려면 문자 코드를 무엇으로 바꿔야 하는지 그 이유와 함께 서술하시오.',
+  frame:`<p>아스키 코드는 [[s1|비트 수]]를 사용하여 [[s2|문자 수]]의 문자만 표현할 수 있지만, 유니코드는 [[s3|비트 수]]를 사용하여 [[s4|문자 수]]의 문자를 표현할 수 있다.</p>
+<p>그래서 'Ivan'은 바르게 나타났지만, [[s5|원인]] '????'로 깨져 나타났다.</p>
+<p>따라서 러시아어 이름을 바르게 저장하려면 문자 코드를 [[s6|문자 코드]](으)로 바꿔야 한다.</p>`,
+  chips:{b7:'7비트',n128:'128개',b16:'16비트 이상',n65:'65,536개 이상',cause:'러시아 문자 \'Иван\'은 아스키 코드로 표현할 수 없어서',uni:'유니코드',
+    b8:'8비트',n1k:'1,024개',dc:'러시아어 이름이 영어 이름보다 길어서',asc:'아스키 코드'},
+  grade(f){ const s={s1:f.s1==='b7',s2:f.s2==='n128',s3:f.s3==='b16',s4:f.s4==='n65',s5:f.s5==='cause',s6:f.s6==='uni'};
+    const diff=(s.s1&&s.s3)||(s.s2&&s.s4);
+    const items=[{ok:diff,t:'아스키 코드와 유니코드의 차이 (비트 수 또는 문자 수)'},{ok:s.s5,t:'깨진 문자(러시아 문자)는 아스키 코드로 표현할 수 없다는 원인'},{ok:s.s6,t:'유니코드로 바꾸기 (채점 요소는 아니지만 꼭 쓰기)'}];
+    return {score:diff&&s.s5?6:diff?4:2, slots:s, items, level:diff&&s.s5?0:diff?1:2}; },
+  model:`<p>시험 운영 첫날 러시아어 이름이 깨져 나타난 원인은 시스템이 아스키 코드를 사용했기 때문이다. <span class="hl">아스키 코드는 7비트를 사용하여 2<sup>7</sup>인 128개의 문자만 표현할 수 있으며</span>, 여기에는 영문자, 숫자, 기호만 들어 있다. 그래서 영문자로 쓴 'Ivan'은 바르게 나타났지만, <span class="hl">러시아 문자로 쓴 'Иван'은 아스키 코드로 표현할 수 없어서</span> '????'로 깨져 나타났다. 반면 <span class="hl">유니코드는 16비트 이상을 사용하여 65,536개 이상의 문자를 표현할 수 있으며</span>, 러시아 문자를 포함한 세계 여러 언어의 문자가 들어 있다. 따라서 러시아어 이름을 바르게 저장하려면 <span class="hl">문자 코드를 유니코드로 바꿔야 한다.</span></p>`,
+  ladder:[['6점','비트 수·문자 수 차이와 "러시아 문자는 아스키 코드로 표현할 수 없다"를 모두 씀','차이 + 원인'],['4점','"아스키 코드는 7비트로 128개, 유니코드는 16비트 이상으로 65,536개 이상… 그래서 유니코드로 바꿔야 한다."','원인 문장이 없음'],['2점','"아스키 코드라서 깨졌으니 유니코드로 바꿔야 한다."','차이 설명 없이 이름만']] },
+
+{ id:'q21', tab:'2-(1)', title:'그래프의 관계', max:5, ctx:'2',
+  prompt:'그래프에서 문제 풀이 개수와 단원평가 점수는 대체로 어떤 관계가 있는지 점들이 퍼져 있는 모양을 근거로 서술하시오.',
+  frame:`<p>문제 풀이 개수가 [[s1|어떻게 변할 때]] 단원평가 점수도 대체로 [[s2|어떻게 되는가]].</p>
+<p>점들이 [[s3|점의 모양]] 퍼져 있으므로 [[s4|관계의 이름]]이다.</p>`,
+  chips:{up:'늘어날수록',hi:'높아진다',shape:'왼쪽 아래에서 오른쪽 위로 올라가는 띠 모양으로',pos:'양의 상관관계',down:'줄어들수록',lo:'낮아진다',rand:'아무 규칙 없이 흩어진 모양으로',none:'상관관계 없음'},
+  grade(f){ const dir=(f.s1==='up'&&f.s2==='hi')||(f.s1==='down'&&f.s2==='lo');
+    const shape=f.s3==='shape', term=f.s4==='pos';
+    const slots={s1:dir,s2:dir,s3:shape,s4:term};
+    const items=[{ok:dir,t:'방향 문장: 한쪽이 늘수록 다른 쪽도 대체로 는다'},{ok:shape||term,t:'\'양의 상관관계\'라는 용어 또는 점의 모양'}];
+    return {score:dir&&(shape||term)?5:dir?4:3, slots, items, level:dir&&(shape||term)?0:dir?1:2}; },
+  model:`<p>그래프에서 문제 풀이 개수와 단원평가 점수는 <span class="hl">양의 상관관계</span>가 있다. 점들이 <span class="hl">왼쪽 아래에서 오른쪽 위로 올라가는 띠 모양</span>으로 퍼져 있기 때문이다. 즉, <span class="hl">주간 수학 문제 풀이 개수가 늘어날수록 단원평가 점수도 대체로 높아지는</span> 경향이 있다.</p>`,
+  ladder:[['5점','방향 문장과 \'양의 상관관계\'(또는 점의 모양)를 함께 씀','방향 + 용어 또는 점 모양'],['4점','"문제를 많이 풀수록 단원평가 점수도 대체로 높아진다."','용어나 점의 모양이 없음'],['3점','"문제 풀이 개수와 단원평가 점수는 관계가 있다."','방향을 말하지 않음']] },
+
+{ id:'q22', tab:'2-(2)', title:'예외 사례 찾기', max:6, ctx:'2',
+  prompt:'가~마 학생 중 문제 풀이 개수에 비해 단원평가 점수가 유독 높거나 낮은 학생을 하나 골라 수치를 들어 제시하고, 표를 참고하여 "문제를 많이 풀수록 무조건 단원평가 점수가 높다"라고 말할 수 없는 이유를 다른 요인과 함께 서술하시오.',
+  frame:`<p>[[s1|학생]] 학생은 일주일에 문제를 [[s2|풀이 개수]] 풀었고 단원평가 점수는 [[s3|점수]]이다.</p>
+<p>표를 보면 이 학생은 [[s4|표에서 찾은 다른 요인]].</p>
+<p>따라서 [[s5|결론]].</p>`,
+  chips:{ma:'마',da:'다',ga:'가',c100:'100개',c50:'50개',c42:'42개',p50:'50점',p90:'90점',p51:'51점',
+    fbad:'쉬운 문제만 반복하고 틀린 문제를 다시 풀지 않는다',fgood:'쉬운 것부터 어려운 것까지 풀고 틀린 문제를 항상 다시 푼다',fx:'문제를 푸는 시간이 길다',
+    no:'문제를 많이 풀수록 무조건 점수가 높다고 할 수 없다',yes:'문제를 많이 풀수록 무조건 점수가 높다'},
+  grade(f){ const who=f.s1; const pick = who==='ma'?{c:'c100',p:'p50',fa:'fbad'}: who==='da'?{c:'c50',p:'p90',fa:'fgood'}:null;
+    const okWho=!!pick&&f.s2===pick.c&&f.s3===pick.p; const okF=!!pick&&f.s4===pick.fa; const okC=f.s5==='no';
+    const slots={s1:!!pick,s2:!!pick&&f.s2===pick.c,s3:!!pick&&f.s3===pick.p,s4:okF,s5:okC};
+    const items=[{ok:okWho,t:'예외 학생을 수치로 지목 (마: 100개·50점 또는 다: 50개·90점)'},{ok:okF,t:'표에서 찾은 다른 요인'},{ok:okC,t:'"무조건 그렇지는 않다"는 결론 부정'}];
+    if(who==='ga') items.unshift({ok:false,t:'가 학생(42개, 51점)은 띠 안에 있는 학생이라 예외가 아니에요'});
+    const n=[okWho,okF,okC].filter(Boolean).length;
+    return {score:n===3?6:n===2?4:2, slots, items, level:n===3?0:n===2?1:2}; },
+  model:`<p><span class="hl">마 학생은 일주일에 수학 문제를 100개</span>나 풀었지만 <span class="hl">단원평가 점수는 50점</span>으로, 문제를 비슷하게 많이 푼 다른 학생들(약 80~90점)보다 훨씬 낮다. 표를 보면 마 학생은 <span class="hl">쉬운 문제만 반복해서 풀고, 틀린 문제를 다시 풀지 않으며, 개념 복습도 하지 않는다.</span> 반대로 문제를 50개만 푼 다 학생은 90점을 받았는데, 쉬운 문제부터 어려운 문제까지 골고루 풀고 틀린 문제를 항상 다시 풀었다. 이처럼 단원평가 점수에는 문제 풀이 개수뿐 아니라 다른 요인도 영향을 준다. 따라서 <span class="hl">'문제를 많이 풀수록 무조건 단원평가 점수가 높다'라고 말할 수 없다.</span></p>`,
+  ladder:[['6점','학생 지목(수치), 다른 요인, "무조건 그렇지는 않다"를 모두 씀','세 요소 모두'],['4점','"마 학생은 100개를 풀었지만 50점이다. 그러므로 무조건 점수가 높다고 할 수 없다."','다른 요인이 없음'],['2점','"점수가 낮은 학생이 있으니 무조건 그렇지는 않다."','지목·다른 요인이 없음']] },
+
+{ id:'q23', tab:'2-(3)', title:'분석 결과 활용', max:6, ctx:'2',
+  prompt:'수학 선생님은 이 분석 결과를 수학 학습 지도에 활용하려고 한다. 가~마 학생 중 단원평가 점수를 올리기 위해 도움이 필요한 학생을 한 명 골라, 그 학생을 위한 방안을 한 가지 제시하고, 그 방안이 도움이 되는 이유를 그래프나 표의 내용을 근거로 서술하시오. (누가, 누구에게, 무엇을, 왜(근거) 하는지가 모두 드러나게 쓸 것)',
+  frame:`<p>[[s1|누가]] [[s2|누구에게]] [[s3|무엇을]].</p>
+<p>왜냐하면 [[s4|그래프나 표의 근거]] 때문이다.</p>`,
+  chips:{tch:'수학 선생님이',stu:'친구들이',ma:'마 학생에게',ra:'라 학생에게',
+    stepw:'단계별 문제지를 주고 틀린 문제를 오답 노트에 다시 풀게 한 뒤 매주 확인한다',daily:'매일 종례 후 문제를 5개씩 풀게 하고 확인표에 도장을 찍어 준다',gen:'수학 공부를 더 열심히 하게 한다',
+    rtab:'표에서 점수가 높은 다 학생은 오답을 항상 다시 풀지만 마 학생은 쉬운 문제만 반복하고 다시 풀지 않았기',rgr:'그래프에서 문제를 많이 풀수록 단원평가 점수가 대체로 높았기',rno:'수학은 중요한 과목이기'},
+  grade(f){ const who=f.s1==='tch', to=f.s2==='ma'||f.s2==='ra'; const concrete=f.s3==='stepw'||f.s3==='daily';
+    const action=who&&to&&concrete;
+    const match=(f.s2==='ma'&&f.s3==='stepw'&&f.s4==='rtab')||(f.s2==='ra'&&f.s3==='daily'&&f.s4==='rgr');
+    const slots={s1:who,s2:to,s3:concrete,s4:action&&match};
+    const items=[{ok:action,t:'누가·누구에게·무엇을이 드러나는 구체적인 행동'},{ok:action&&match,t:'그 행동이 왜 도움이 되는지, 그래프나 표에 근거한 이유'}];
+    if(action&&!match&&f.s4) items.push({ok:false,t:f.s4==='rno'?'"수학은 중요하다"는 그래프나 표의 근거가 아니에요':'고른 학생·행동과 이유가 서로 맞지 않아요 (마 학생은 이미 100개를 풀었어요)'});
+    return {score:action&&match?6:action?4:2, slots, items, level:action&&match?0:action?1:2}; },
+  model:`<p>나는 단원평가 점수를 올리기 위해 도움이 필요한 학생으로 마 학생을 골랐다. <span class="hl">수학 선생님이 마 학생에게</span> <span class="hl">쉬운 문제부터 어려운 문제까지 단계별로 구성된 문제지를 매주 나누어 주고, 틀린 문제는 오답 노트에 옮겨 답지를 보지 않고 다시 풀게 한 뒤, 매주 금요일에 오답 노트를 확인한다.</span> 왜냐하면 <span class="hl">표에서 단원평가 점수가 높은 다 학생은 여러 난이도의 문제를 풀고 틀린 문제를 항상 다시 푸는 반면, 점수가 낮은 마 학생은 쉬운 문제만 반복하고 틀린 문제를 다시 풀지 않았기 때문이다.</span> 이 방안을 실천하면 마 학생은 푸는 문제의 양이 아니라 질을 높여, 많이 푼 만큼 점수도 오를 수 있을 것이다.</p><p><b>다른 예시</b> · 수학 선생님이 라 학생(7개, 32점)에게 매일 종례 후 문제를 5개씩 풀게 하고 확인표에 도장을 찍어 준다. 왜냐하면 그래프에서 문제 풀이 개수가 많을수록 단원평가 점수가 대체로 높은 양의 상관관계가 나타났기 때문이다.</p>`,
+  ladder:[['6점','누가·누구에게·무엇을(구체적 행동)과 "왜냐하면 + 표나 그래프의 근거"를 모두 씀','구체적 행동 + 이유'],['4점','"수학 선생님이 마 학생에게 단계별 문제지를 주고 틀린 문제를 다시 풀게 한다."','이유 문장이 없음'],['2점','"마 학생이 수학 공부를 더 열심히 하게 한다."','구체적인 행동이 없음']] },
+{ id:'sum', tab:'결과', title:'내 점수' }
+];
+
+/* ---------- 개념 짝 맞추기 ---------- */
+const MATCH = { id:'cm', frameRows:[
+  ['아날로그','데이터를 연속적인 신호로 나타내는 것'],['디지털','데이터를 불연속적인 숫자(0과 1)로 명확하게 표현한 것'],
+  ['아스키 코드','7비트로 영문자·숫자·기호 128개를 표현하는 문자 코드'],['유니코드','16비트 이상으로 한글·일본어·러시아 문자 등 다양한 언어를 표현하는 문자 코드'],
+  ['산점도','두 데이터 속성을 좌표 평면에 점으로 표시한 그래프'],['양의 상관관계','한 데이터가 증가할 때 다른 데이터도 함께 증가하는 관계']]};
+
+/* ---------- 상태 ---------- */
+let state = { tab:'c', fill:{}, res:{} };
+try { const s=JSON.parse(localStorage.getItem('datalab-v1')||'null'); if(s&&s.fill) state=Object.assign(state,s); } catch(e){}
+const save = () => { try { localStorage.setItem('datalab-v1', JSON.stringify(state)); } catch(e){} };
+const ex = id => EX.find(e=>e.id===id);
+const total = () => EX.filter(e=>e.max).reduce((a,e)=>a+(state.res[e.id]?state.res[e.id].score:0),0);
+
+/* deterministic shuffle */
+function shuffle(arr, seed){ const a=arr.slice(); let s=0; for(const ch of seed) s=(s*31+ch.charCodeAt(0))>>>0; for(let i=a.length-1;i>0;i--){ s=(s*1103515245+12345)>>>0; const j=s%(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* ---------- 탭 ---------- */
+function renderTabs(){
+  const nav=$('#tabs'); nav.innerHTML='';
+  EX.forEach(e=>{ const b=el('button',{role:'tab','aria-selected':String(state.tab===e.id),id:'tab-'+e.id});
+    let dot=''; if(e.max){ const r=state.res[e.id]; dot=`<span class="dot${r?' done':''}">${r?r.score:'–'}/${e.max}</span>`; }
+    b.innerHTML=`${e.tab}${dot}`; b.onclick=()=>{ state.tab=e.id; save(); render(); window.scrollTo({top:0}); }; nav.appendChild(b); });
+  $('#pill').textContent=`${total()} / 30점`;
+}
+
+/* ---------- 조립대 공통 ---------- */
+function buildBoard(container, key, frameHTML, chips, onChange){
+  const fill = state.fill[key] || (state.fill[key]={});
+  const sheet=el('div',{class:'sheet'}); sheet.innerHTML=`<div class="label">답안 조립대</div><div class="frame">${frameHTML.replace(/\[\[(\w+)\|([^\]]+)\]\]/g,(m,id,ph)=>`<button type="button" class="slot" data-slot="${id}" data-ph="${ph}"></button>`)}</div>`;
+  const bank=el('div',{class:'bank'}); bank.innerHTML=`<div class="label">낱말 상자 <span>끌어다 빈칸에 놓거나, 빈칸을 고른 뒤 낱말을 누르세요. 필요 없는 조각도 섞여 있어요.</span></div><div class="chips"></div>`;
+  container.append(sheet, bank);
+  const chipBox=$('.chips',bank);
+  const order=shuffle(Object.keys(chips), key);
+  let active=null;
+  function draw(){
+    sheet.querySelectorAll('.slot').forEach(s=>{ const id=s.dataset.slot, c=fill[id];
+      s.classList.toggle('filled',!!c); s.classList.toggle('active',active===id);
+      s.innerHTML = c ? chips[c] : `<span class="ph">${s.dataset.ph}</span>`;
+      s.setAttribute('aria-label', c ? `${chips[c]} — 눌러서 빼기` : `빈칸: ${s.dataset.ph}`); });
+    const used=new Set(Object.values(fill));
+    chipBox.innerHTML=''; order.forEach(cid=>{ const b=el('button',{type:'button',class:'chip'+(used.has(cid)?' used':''),'data-chip':cid}, chips[cid]); if(used.has(cid)) b.tabIndex=-1; chipBox.appendChild(b); });
+  }
+  function place(slotId, cid){ for(const k in fill) if(fill[k]===cid) delete fill[k]; fill[slotId]=cid; active=null; changed(); }
+  function firstEmpty(){ const s=[...sheet.querySelectorAll('.slot')].find(s=>!fill[s.dataset.slot]); return s&&s.dataset.slot; }
+  function changed(){ sheet.querySelectorAll('.slot').forEach(s=>s.classList.remove('ok','bad')); save(); draw(); onChange&&onChange(); }
+  sheet.addEventListener('click',e=>{ const s=e.target.closest('.slot'); if(!s||dragMoved) return; const id=s.dataset.slot;
+    if(fill[id]){ delete fill[id]; active=id; changed(); } else { active = active===id?null:id; draw(); } });
+  chipBox.addEventListener('click',e=>{ const c=e.target.closest('.chip'); if(!c||dragMoved) return; const t=active||firstEmpty(); if(t) place(t,c.dataset.chip); });
+
+  /* pointer drag */
+  let drag=null, dragMoved=false;
+  function down(e){ const c=e.target.closest('.chip:not(.used)'), s=e.target.closest('.slot.filled'); const src=c||s; if(!src||e.button>0) return;
+    dragMoved=false; drag={src, cid: c?c.dataset.chip:fill[s.dataset.slot], fromSlot: s?s.dataset.slot:null, x:e.clientX, y:e.clientY, ghost:null}; }
+  function move(e){ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+    if(!drag.ghost){ if(Math.hypot(dx,dy)<6) return; dragMoved=true; const g=el('div',{class:'chip ghost'},chips[drag.cid]); g.style.width=Math.min(drag.src.offsetWidth+20,360)+'px'; document.body.appendChild(g); drag.ghost=g; drag.src.style.opacity='.35'; }
+    e.preventDefault(); drag.ghost.style.left=(e.clientX-20)+'px'; drag.ghost.style.top=(e.clientY-18)+'px';
+    sheet.querySelectorAll('.slot').forEach(s=>s.classList.remove('over')); const t=document.elementFromPoint(e.clientX,e.clientY); const sl=t&&t.closest('.slot'); if(sl&&sheet.contains(sl)) sl.classList.add('over'); }
+  function up(e){ if(!drag) return; const d=drag; drag=null; if(!d.ghost){ return; }
+    d.ghost.remove(); d.src.style.opacity=''; sheet.querySelectorAll('.slot').forEach(s=>s.classList.remove('over'));
+    const t=document.elementFromPoint(e.clientX,e.clientY); const sl=t&&t.closest('.slot');
+    if(sl&&sheet.contains(sl)){ const to=sl.dataset.slot, prev=fill[to]; if(d.fromSlot){ if(prev) fill[d.fromSlot]=prev; else delete fill[d.fromSlot]; } fill[to]=d.cid; active=null; changed(); }
+    else if(d.fromSlot && t && bank.contains(t)){ delete fill[d.fromSlot]; changed(); }
+    setTimeout(()=>{dragMoved=false;},0); }
+  container.addEventListener('pointerdown',down); window.addEventListener('pointermove',move,{passive:false}); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up);
+  draw();
+  return { sheet, mark(slots){ sheet.querySelectorAll('.slot').forEach(s=>{ const v=slots[s.dataset.slot]; if(fill[s.dataset.slot]||v===false){ s.classList.toggle('ok',v===true); s.classList.toggle('bad',v===false); } }); }, fill,
+           reset(){ for(const k in fill) delete fill[k]; active=null; changed(); }, filledCount(){ return Object.keys(fill).length; }, slotCount(){ return sheet.querySelectorAll('.slot').length; } };
+}
+
+/* ---------- 화면 ---------- */
+function renderConcept(main){
+  main.innerHTML=`
+  <h2 class="sec">먼저 개념부터</h2>
+  <p class="lede">교과서(비상교육 중학 정보) 46·49·68·75~76쪽 내용을 정리했어요. 읽고 나서 아래 짝 맞추기로 확인해 보세요.</p>
+  <div class="grid2">
+    <div class="card concept"><h3>아날로그와 디지털 <span class="pg">46쪽</span></h3>
+      <p><b>아날로그</b>는 데이터를 <span class="hl">연속적인 신호</span>로, <b>디지털</b>은 <span class="hl">불연속적인 숫자</span>로 명확하게 나타낸다.</p>
+      <p>예: 종이 대장 → 아날로그, 사물함 관리 시스템 → 디지털</p></div>
+    <div class="card concept"><h3>디지털 데이터의 장점 <span class="pg">46쪽</span></h3>
+      <div class="tscroll"><table class="t"><tr><th>측면</th><th>특징 → 장점</th></tr>
+      <tr><td><b>저장</b></td><td>분량이 늘어도 부피·무게가 늘지 않음 → 많은 데이터를 효율적으로 저장</td></tr>
+      <tr><td><b>가공</b></td><td>컴퓨터로 검색·수정·분석이 쉬움 → 유용한 정보를 얻음</td></tr>
+      <tr><td><b>전송</b></td><td>손실이 거의 없고 빠름 → 쉽게 공유</td></tr></table></div></div>
+    <div class="card concept"><h3>문자 코드 <span class="pg">49쪽</span></h3>
+      <p>컴퓨터는 <b>문자 코드</b>로 문자를 0과 1로 바꾼다.</p>
+      <ul><li><b>아스키 코드</b>: <span class="mono">7비트</span> → 2<sup>7</sup> = <span class="hl">128개</span>. 영문자·숫자·기호만 (A = <span class="mono">1000001</span>)</li>
+      <li><b>유니코드</b>: <span class="mono">16비트 이상</span> → <span class="hl">65,536개 이상</span>. 한글·일본어·러시아 문자 등 (가 = <span class="mono">AC00</span>)</li></ul>
+      <p>아스키에 없는 문자는 '????'처럼 깨진다.</p></div>
+    <div class="card concept"><h3>산점도와 상관관계 <span class="pg">68쪽</span></h3>
+      <ul><li><b>산점도</b>: 두 속성을 점으로 표시한 그래프. 점 하나 = 학생 한 명</li>
+      <li><b>양의 상관관계</b>: 한쪽이 늘면 다른 쪽도 늘어남. 점이 <span class="hl">오른쪽 위로 올라가는 띠</span></li>
+      <li><b>상관관계 없음</b>: 점이 규칙 없이 흩어짐</li></ul></div>
+    <div class="card concept"><h3>예외 사례</h3>
+      <p>상관관계는 '대체로 그렇다'는 경향일 뿐이다. 띠에서 <b>멀리 떨어진 점</b>이 예외이고, 표에서 그 학생의 <span class="hl">다른 요인</span>을 찾으면 "무조건"이 아닌 이유가 된다.</p></div>
+    <div class="card concept"><h3>분석 결과 활용 <span class="pg">75~76쪽</span></h3>
+      <p>데이터에서 찾은 <b>근거</b>로 <b>눈에 보이는 행동</b>을 정한다.</p>
+      <p><b>누가</b> + <b>누구에게</b> + <b>무엇을(언제·얼마나)</b> + <span class="hl">왜냐하면 (그래프·표의 근거)</span></p></div>
+  </div>
+  <h2 class="sec">개념 짝 맞추기</h2>
+  <p class="lede">설명에 맞는 낱말을 빈칸에 끌어다 놓으세요.</p>
+  <div id="matchHost"></div>
+  <div class="actions"><button class="btn primary" id="mCheck" type="button">확인하기</button><button class="btn" id="mReset" type="button">다시 하기</button></div>
+  <div id="mOut"></div>
+  <div class="howto">
+    <div><b>1. 지문·그래프 읽기</b>문항마다 위에 지문이나 그래프·표가 있어요.</div>
+    <div><b>2. 답안 조립하기</b>낱말 조각을 끌어다 빈칸에 놓아 서술형 답안을 완성해요.</div>
+    <div><b>3. 채점·예시답안</b>채점기준대로 점수를 보고 빠진 요소와 예시답안을 확인해요.</div>
+  </div>
+  <div class="actions"><button class="btn primary" type="button" id="goQ">연습문제 1-(1) 시작</button></div>`;
+  const chips={}, frame=MATCH.frameRows.map(([term,def],i)=>{ chips['t'+i]=term; return `<p>[[m${i}|낱말]] : ${def}</p>`; }).join('');
+  const board=buildBoard($('#matchHost',main),'cm',frame,chips,()=>{ $('#mOut').innerHTML=''; });
+  $('#mCheck').onclick=()=>{ const f=board.fill, slots={}; let n=0; MATCH.frameRows.forEach((r,i)=>{ const ok=f['m'+i]==='t'+i; slots['m'+i]=ok; if(ok)n++; }); board.mark(slots);
+    $('#mOut').innerHTML=`<div class="result"><div class="big"><b>${n}</b><span class="of">/ ${MATCH.frameRows.length} 맞음</span></div><p style="margin:6px 0 0">${n===MATCH.frameRows.length?'모두 맞았어요. 이제 연습문제로 가 볼까요?':'빨간 칸을 다시 확인해 보세요. 칸을 누르면 낱말이 빠져요.'}</p></div>`; };
+  $('#mReset').onclick=()=>{ board.reset(); $('#mOut').innerHTML=''; };
+  $('#goQ').onclick=()=>{ state.tab='q11'; save(); render(); window.scrollTo({top:0}); };
+}
+
+function renderQ(main, e){
+  const idx=EX.indexOf(e), next=EX[idx+1];
+  main.innerHTML=`<div class="qhead"><h2>문항 ${e.tab} · ${e.title}</h2><span class="pts">${e.max}점</span></div><p class="prompt">${e.prompt}</p>${e.ctx==='1'?CTX1:CTX2()}<div id="host"></div>
+  <div class="actions"><button class="btn primary" id="grade" type="button">채점하기</button><button class="btn" id="reset" type="button">다시 하기</button><button class="btn" id="next" type="button">${next.id==='sum'?'결과 보기':'다음 문항 '+next.tab} →</button></div><div id="out"></div>`;
+  const board=buildBoard($('#host',main), e.id, e.frame, e.chips, ()=>{ $('#out').innerHTML=''; });
+  function show(r){ board.mark(r.slots);
+    const lad=e.ladder.map((row,i)=>`<tr class="${i===r.level?'me':''}"><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join('');
+    $('#out').innerHTML=`<div class="result" aria-live="polite"><div class="big"><b>${r.score}</b><span class="of">/ ${e.max}점</span></div>
+      <ul class="checks">${r.items.map(i=>`<li class="${i.ok?'y':'n'}"><span class="mk">${i.ok?'✓':'!'}</span><span>${i.t}</span></li>`).join('')}</ul>
+      <div class="model"><h4>예시답안 (서·논술형)</h4>${e.model}</div>
+      <div class="ladder"><h4>이런 답은 몇 점일까? (내 점수는 파란 줄)</h4><div class="tscroll"><table class="t"><tr><th>점수</th><th>답안 예</th><th>점수가 나뉘는 이유</th></tr>${lad}</table></div></div></div>`; }
+  $('#grade').onclick=()=>{ if(board.filledCount()<board.slotCount()){ $('#out').innerHTML=`<div class="result"><p style="margin:0">빈칸이 ${board.slotCount()-board.filledCount()}개 남았어요. 모두 채운 뒤 채점해 보세요.</p></div>`; return; }
+    const r=e.grade(board.fill); state.res[e.id]={score:r.score}; save(); renderTabs(); show(r); };
+  $('#reset').onclick=()=>{ board.reset(); delete state.res[e.id]; save(); renderTabs(); $('#out').innerHTML=''; };
+  $('#next').onclick=()=>{ state.tab=next.id; save(); render(); window.scrollTo({top:0}); };
+  if(state.res[e.id] && board.filledCount()===board.slotCount()) show(e.grade(board.fill));
+}
+
+function renderSum(main){
+  const qs=EX.filter(e=>e.max); const t=total(); const done=qs.filter(e=>state.res[e.id]).length;
+  main.innerHTML=`<h2 class="sec">내 점수</h2><p class="lede">채점한 문항의 점수예요. 실제 평가에서는 직접 문장으로 써야 하니, 예시답안의 표현을 익혀 두세요.</p>
+  <div class="total"><b>${t}</b><span>/ 30점 · ${done}/5 문항 채점</span></div>
+  <div class="sumgrid">${qs.map(e=>{ const r=state.res[e.id]; return `<div class="sumcell"><div class="n">${e.tab} ${e.title}</div><div class="v">${r?r.score:'–'} <small>/ ${e.max}</small></div></div>`; }).join('')}</div>
+  <div class="card" style="margin-top:16px"><b>제출 전 체크리스트</b><ul style="margin:6px 0 0;padding-left:18px">
+  <li>1-(1) 저장·가공·전송 세 가지 모두, 각각 장점과 이유</li><li>1-(2) 비트 수 또는 문자 수 차이 + 깨진 문자는 아스키로 표현 불가</li>
+  <li>2-(1) 방향 문장 + 양의 상관관계(점의 모양)</li><li>2-(2) 학생 수치 + 다른 요인 + "무조건 아님"</li><li>2-(3) 누가·누구에게·무엇을 + 왜냐하면(그래프·표 근거)</li></ul></div>
+  <div class="actions"><button class="btn" id="resetAll" type="button">처음부터 다시 풀기</button></div><div id="confirm"></div>`;
+  $('#resetAll').onclick=()=>{ $('#confirm').innerHTML=`<div class="result"><p style="margin:0 0 8px">모든 답안과 점수를 지울까요?</p><div class="actions" style="margin:0"><button class="btn primary" id="yes" type="button">지우기</button><button class="btn" id="no" type="button">취소</button></div></div>`;
+    $('#yes').onclick=()=>{ state={tab:'c',fill:{},res:{}}; save(); render(); window.scrollTo({top:0}); }; $('#no').onclick=()=>{ $('#confirm').innerHTML=''; }; };
+}
+
+function render(){ renderTabs(); const main=$('#main'); const e=ex(state.tab)||EX[0];
+  if(e.concept) renderConcept(main); else if(e.id==='sum') renderSum(main); else renderQ(main,e); }
+render();
+})();
+</script>
+
+</body></html>
