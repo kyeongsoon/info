@@ -253,6 +253,22 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
     <div class="stats" id="txt-stats"></div>
     <div class="chars" id="txt-chars"></div>
   </div>
+  <div class="panel missions" id="m-text">
+    <div class="mhead"><h3>🎯 활동 미션 · 문자</h3><span class="mtot"></span></div>
+    <p class="hint">바로 위 실험 도구를 써도 됨. 미션마다 목표 개수를 채우면 ✓ 완료로 바뀜. 기록은 지금 쓰는 기기의 브라우저에만 남음.</p>
+    <div class="mgrid">
+      <article class="mcard" data-m="t2" data-goal="3">
+        <div class="mtop"><span class="mno">1</span><h4>비트 스위치로 글자 만들기</h4><span class="mprog"></span></div>
+        <p class="hint">스위치를 눌러 0과 1을 바꾸셈. 목표 글자의 아스키 코드를 만들면 성공. 번호는 아래 코드표에서 찾으셈. (3글자)</p>
+        <div class="row" style="align-items:center;gap:14px"><span style="font-weight:700">만들 글자</span><b id="t2-target" style="font-size:44px;line-height:1;font-family:var(--f-mono)"></b></div>
+        <div class="bitsw" id="t2-sw"></div>
+        <div class="dstep" id="t2-sum"></div>
+        <p class="fb" id="t2-fb"></p>
+        <div class="row"><button class="btn" id="t2-new">새 글자</button></div>
+        <details><summary>도움 자료: 아스키 코드표 (10진수)</summary><div class="atable"></div></details>
+      </article>
+    </div>
+  </div>
   <div class="grid2">
     <div class="panel">
       <h3>이진수 → 문자 (해독하기)</h3>
@@ -281,6 +297,19 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <p class="key" id="uni-key"></p>
     </div>
   </div>
+  <div class="panel missions">
+    <div class="mhead"><h3>🎯 활동 미션 · 문자</h3><span class="mtot"></span></div>
+    <div class="mgrid">
+      <article class="mcard" data-m="t1" data-goal="3">
+        <div class="mtop"><span class="mno">2</span><h4>암호 해독가</h4><span class="mprog"></span></div>
+        <p class="hint">친구가 아스키 코드(7비트)로 보낸 비밀 단어임. 7자리 묶음 하나가 글자 하나. 무슨 단어일까? (3문제)</p>
+        <div class="codebox" id="t1-q" aria-live="polite"></div>
+        <div class="row"><input type="text" id="t1-in" placeholder="해독한 영어 단어" autocomplete="off" autocapitalize="characters" aria-label="해독한 단어"><button class="btn primary" id="t1-ok">확인</button><button class="btn" id="t1-new">새 문제</button></div>
+        <p class="fb" id="t1-fb"></p>
+        <details><summary>도움 자료: 자리값과 아스키 코드표</summary><p class="hint" style="margin-top:8px">7자리 이진수의 자리값은 <b class="mono">64 32 16 8 4 2 1</b>. 1인 자리의 값을 모두 더하면 10진수 번호가 됨. 예: 1000001 = 64 + 1 = 65 = A</p><div class="atable"></div></details>
+      </article>
+    </div>
+  </div>
   <div class="panel">
     <h3>두 문자 코드 비교</h3>
     <div class="stats">
@@ -290,28 +319,9 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
     </div>
     <p class="key">한글 <strong>'가'</strong>는 아스키 코드 128개 안에 없음 → <strong>유니코드</strong>로 저장해야 함. 유니코드의 첫 128개는 아스키 코드와 번호가 같음.</p>
   </div>
-  <div class="panel missions" id="m-text">
+  <div class="panel missions">
     <div class="mhead"><h3>🎯 활동 미션 · 문자</h3><span class="mtot"></span></div>
-    <p class="hint">위 실험 도구를 써도 됨. 미션마다 목표 개수를 채우면 ✓ 완료로 바뀜. 기록은 지금 쓰는 기기의 브라우저에만 남음.</p>
     <div class="mgrid">
-      <article class="mcard" data-m="t1" data-goal="3">
-        <div class="mtop"><span class="mno">1</span><h4>암호 해독가</h4><span class="mprog"></span></div>
-        <p class="hint">친구가 아스키 코드(7비트)로 보낸 비밀 단어임. 7자리 묶음 하나가 글자 하나. 무슨 단어일까? (3문제)</p>
-        <div class="codebox" id="t1-q" aria-live="polite"></div>
-        <div class="row"><input type="text" id="t1-in" placeholder="해독한 영어 단어" autocomplete="off" autocapitalize="characters" aria-label="해독한 단어"><button class="btn primary" id="t1-ok">확인</button><button class="btn" id="t1-new">새 문제</button></div>
-        <p class="fb" id="t1-fb"></p>
-        <details><summary>도움 자료: 자리값과 아스키 코드표</summary><p class="hint" style="margin-top:8px">7자리 이진수의 자리값은 <b class="mono">64 32 16 8 4 2 1</b>. 1인 자리의 값을 모두 더하면 10진수 번호가 됨. 예: 1000001 = 64 + 1 = 65 = A</p><div class="atable"></div></details>
-      </article>
-      <article class="mcard" data-m="t2" data-goal="3">
-        <div class="mtop"><span class="mno">2</span><h4>비트 스위치로 글자 만들기</h4><span class="mprog"></span></div>
-        <p class="hint">스위치를 눌러 0과 1을 바꾸셈. 목표 글자의 아스키 코드를 만들면 성공. 번호는 아래 코드표에서 찾으셈. (3글자)</p>
-        <div class="row" style="align-items:center;gap:14px"><span style="font-weight:700">만들 글자</span><b id="t2-target" style="font-size:44px;line-height:1;font-family:var(--f-mono)"></b></div>
-        <div class="bitsw" id="t2-sw"></div>
-        <div class="dstep" id="t2-sum"></div>
-        <p class="fb" id="t2-fb"></p>
-        <div class="row"><button class="btn" id="t2-new">새 글자</button></div>
-        <details><summary>도움 자료: 아스키 코드표 (10진수)</summary><div class="atable"></div></details>
-      </article>
       <article class="mcard" data-m="t3" data-goal="3">
         <div class="mtop"><span class="mno">3</span><h4>문자 코드 퀴즈</h4><span class="mprog"></span></div>
         <p class="hint">아스키 코드는 글자당 7비트, 유니코드는 글자당 16비트로 계산함. 띄어쓰기도 한 글자. (3문제)</p>
@@ -356,6 +366,32 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <label class="ctl" for="res-file" style="font-weight:500;font-size:14px">내 사진으로 해 보기
         <input type="file" id="res-file" accept="image/*">
       </label>
+    </div>
+  </div>
+  <div class="panel missions" id="m-image">
+    <div class="mhead"><h3>🎯 활동 미션 · 이미지</h3><span class="mtot"></span></div>
+    <p class="hint">바로 위 실험 도구를 써도 됨. 미션마다 목표 개수를 채우면 ✓ 완료로 바뀜.</p>
+    <div class="mgrid">
+      <article class="mcard" data-m="i1" data-goal="2">
+        <div class="mtop"><span class="mno">1</span><h4>숨은 그림 그리기</h4><span class="mprog"></span></div>
+        <p class="hint">이진수 암호대로 <b>1은 칠하고 0은 비워 두셈</b>. 칸을 누르거나 끌면 칠해짐. 무슨 그림이 나올까? (2개)</p>
+        <div class="pix-wrap">
+          <div class="rows" id="i1-rows"></div>
+          <div class="pixgrid" id="i1-grid" aria-label="칠하기 판"></div>
+        </div>
+        <div class="row"><button class="btn primary" id="i1-ok">확인</button><button class="btn" id="i1-clear">모두 지우기</button><button class="btn" id="i1-new">새 그림</button></div>
+        <p class="fb" id="i1-fb"></p>
+      </article>
+      <article class="mcard" data-m="i2" data-goal="1">
+        <div class="mtop"><span class="mno">2</span><h4>그림을 이진수로</h4><span class="mprog"></span></div>
+        <p class="hint">거꾸로 해 보기. 칠한 칸은 1, 빈칸은 0으로 한 줄에 8자리씩 적으셈. (1개)</p>
+        <div class="pix-wrap">
+          <div class="pixgrid ro" id="i2-pic" aria-label="문제 그림"></div>
+          <div class="rowin" id="i2-rows"></div>
+        </div>
+        <div class="row"><button class="btn primary" id="i2-ok">확인</button><button class="btn" id="i2-new">새 그림</button></div>
+        <p class="fb" id="i2-fb"></p>
+      </article>
     </div>
   </div>
   <div class="panel">
@@ -412,30 +448,9 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       </div>
     </div>
   </div>
-  <div class="panel missions" id="m-image">
+  <div class="panel missions">
     <div class="mhead"><h3>🎯 활동 미션 · 이미지</h3><span class="mtot"></span></div>
-    <p class="hint">위 실험 도구를 써도 됨. 미션마다 목표 개수를 채우면 ✓ 완료로 바뀜.</p>
     <div class="mgrid">
-      <article class="mcard" data-m="i1" data-goal="2">
-        <div class="mtop"><span class="mno">1</span><h4>숨은 그림 그리기</h4><span class="mprog"></span></div>
-        <p class="hint">이진수 암호대로 <b>1은 칠하고 0은 비워 두셈</b>. 칸을 누르거나 끌면 칠해짐. 무슨 그림이 나올까? (2개)</p>
-        <div class="pix-wrap">
-          <div class="rows" id="i1-rows"></div>
-          <div class="pixgrid" id="i1-grid" aria-label="칠하기 판"></div>
-        </div>
-        <div class="row"><button class="btn primary" id="i1-ok">확인</button><button class="btn" id="i1-clear">모두 지우기</button><button class="btn" id="i1-new">새 그림</button></div>
-        <p class="fb" id="i1-fb"></p>
-      </article>
-      <article class="mcard" data-m="i2" data-goal="1">
-        <div class="mtop"><span class="mno">2</span><h4>그림을 이진수로</h4><span class="mprog"></span></div>
-        <p class="hint">거꾸로 해 보기. 칠한 칸은 1, 빈칸은 0으로 한 줄에 8자리씩 적으셈. (1개)</p>
-        <div class="pix-wrap">
-          <div class="pixgrid ro" id="i2-pic" aria-label="문제 그림"></div>
-          <div class="rowin" id="i2-rows"></div>
-        </div>
-        <div class="row"><button class="btn primary" id="i2-ok">확인</button><button class="btn" id="i2-new">새 그림</button></div>
-        <p class="fb" id="i2-fb"></p>
-      </article>
       <article class="mcard" data-m="i3" data-goal="4">
         <div class="mtop"><span class="mno">3</span><h4>이미지 퀴즈</h4><span class="mprog"></span></div>
         <p class="hint">용량 계산과 비트맵·벡터 구분 문제. 용량 = 화소 수 × 화소 하나의 비트 수. 8비트 = 1바이트. (4문제)</p>
@@ -472,6 +487,20 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <div class="stat"><small>높이 단계 수</small><b id="snd-levels"></b></div>
     </div>
     <p class="key" id="snd-key"></p>
+  </div>
+  <div class="panel missions" id="m-sound">
+    <div class="mhead"><h3>🎯 활동 미션 · 소리</h3><span class="mtot"></span></div>
+    <p class="hint">미션마다 목표 개수를 채우면 ✓ 완료로 바뀜. 2번 미션은 소리를 들어야 하므로 이어폰을 쓰면 좋음.</p>
+    <div class="mgrid">
+      <article class="mcard wide" data-m="s1" data-goal="1">
+        <div class="mtop"><span class="mno">1</span><h4>내가 디지털 변환기</h4><span class="mprog"></span></div>
+        <p class="hint"><b>① 표본화·양자화</b> 점선(측정 시각)마다 회색 파형과 가장 가까운 눈금을 눌러 점을 찍으셈. <b>② 부호화</b> 찍은 값(0~7)을 3비트 이진수로 바꾸셈.</p>
+        <canvas id="s1-cv" width="1000" height="380" style="width:100%;height:auto;cursor:pointer" aria-label="표본 찍기 판"></canvas>
+        <div id="s1-codes" class="sndcodes" hidden></div>
+        <div class="row"><button class="btn primary" id="s1-ok">① 양자화 확인</button><button class="btn" id="s1-new">새 파형</button></div>
+        <p class="fb" id="s1-fb"></p>
+      </article>
+    </div>
   </div>
   <div class="panel">
     <h3>직접 들어 보기</h3>
@@ -520,6 +549,16 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
     </div>
     <p class="key"><strong>정리</strong> 표본화 주파수와 비트 수를 높이면 원래 소리에 가까워지지만, 그만큼 저장할 데이터도 커짐.</p>
   </div>
+  <div class="panel missions">
+    <div class="mhead"><h3>🎯 활동 미션 · 소리</h3><span class="mtot"></span></div>
+    <div class="mgrid">
+      <article class="mcard" data-m="s2" data-goal="3">
+        <div class="mtop"><span class="mno">2</span><h4>소리 감별사</h4><span class="mprog"></span></div>
+        <p class="hint">문제 소리를 듣고 어떻게 디지털로 바꾼 소리인지 맞히셈. 원래 소리와 비교해 들어도 됨. (3문제)</p>
+        <div class="qwrap"></div>
+      </article>
+    </div>
+  </div>
   <div class="panel">
     <h3>헤르츠(Hz)가 낮으면 왜 음이 낮아질까? 눈으로 보기</h3>
     <p class="hint">회색은 실제 소리의 떨림, 파란 점은 컴퓨터가 측정해 저장한 값임. 컴퓨터는 <b>점만 알고 있으므로</b> 점들을 가장 자연스럽게 잇는 파형(주황 점선)으로 소리를 다시 만듦.</p>
@@ -556,23 +595,9 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
     </div>
     <p class="key">동영상에서 빠르게 도는 바퀴가 <strong>느리게 돌거나 거꾸로 도는 것처럼</strong> 보이는 것과 같은 원리임. 너무 듬성듬성 찍으면(측정하면) 빠른 움직임이 느린 움직임으로 잘못 기록됨.</p>
   </div>
-  <div class="panel missions" id="m-sound">
+  <div class="panel missions">
     <div class="mhead"><h3>🎯 활동 미션 · 소리</h3><span class="mtot"></span></div>
-    <p class="hint">미션마다 목표 개수를 채우면 ✓ 완료로 바뀜. 2번 미션은 소리를 들어야 하므로 이어폰을 쓰면 좋음.</p>
     <div class="mgrid">
-      <article class="mcard wide" data-m="s1" data-goal="1">
-        <div class="mtop"><span class="mno">1</span><h4>내가 디지털 변환기</h4><span class="mprog"></span></div>
-        <p class="hint"><b>① 표본화·양자화</b> 점선(측정 시각)마다 회색 파형과 가장 가까운 눈금을 눌러 점을 찍으셈. <b>② 부호화</b> 찍은 값(0~7)을 3비트 이진수로 바꾸셈.</p>
-        <canvas id="s1-cv" width="1000" height="380" style="width:100%;height:auto;cursor:pointer" aria-label="표본 찍기 판"></canvas>
-        <div id="s1-codes" class="sndcodes" hidden></div>
-        <div class="row"><button class="btn primary" id="s1-ok">① 양자화 확인</button><button class="btn" id="s1-new">새 파형</button></div>
-        <p class="fb" id="s1-fb"></p>
-      </article>
-      <article class="mcard" data-m="s2" data-goal="3">
-        <div class="mtop"><span class="mno">2</span><h4>소리 감별사</h4><span class="mprog"></span></div>
-        <p class="hint">문제 소리를 듣고 어떻게 디지털로 바꾼 소리인지 맞히셈. 원래 소리와 비교해 들어도 됨. (3문제)</p>
-        <div class="qwrap"></div>
-      </article>
       <article class="mcard" data-m="s3" data-goal="3">
         <div class="mtop"><span class="mno">3</span><h4>소리 데이터 퀴즈</h4><span class="mprog"></span></div>
         <p class="hint">표본화 주파수·비트 수·녹음 시간이 클수록 음질은 좋아지고 용량은 커짐. (3문제)</p>
@@ -619,6 +644,48 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <div class="stat"><small id="vid-calc"></small><b id="vid-size"></b></div>
       <p class="key">그래서 동영상은 <strong>코덱</strong>으로 압축해서 저장함 (MP4 등).</p>
     </div>
+  </div>
+  <div class="panel missions" id="m-video">
+    <div class="mhead"><h3>🎯 활동 미션 · 동영상</h3><span class="mtot"></span></div>
+    <p class="hint">미션마다 목표 개수를 채우면 ✓ 완료로 바뀜.</p>
+    <div class="mgrid">
+      <article class="mcard wide" data-m="v1" data-goal="1">
+        <div class="mtop"><span class="mno">1</span><h4>나만의 플립북 애니메이션</h4><span class="mprog"></span></div>
+        <p class="hint">프레임마다 그림을 조금씩 바꿔 그린 뒤 재생하셈. <b>그림이 있는 프레임 4장 이상</b>을 만들어 재생하면 완료. ‘앞 장 복사’를 누르고 조금만 고치면 쉬움.</p>
+        <div class="fbook">
+          <div style="display:grid;gap:10px;min-width:0">
+            <canvas id="v1-cv" width="480" height="300" style="width:100%;max-width:640px;aspect-ratio:8/5;touch-action:none;cursor:crosshair;background:#fff;border:1px solid var(--line)" aria-label="플립북 그리기 판"></canvas>
+            <div class="row">
+              <div class="seg" id="v1-tool" role="group" aria-label="도구"><button class="btn" data-t="pen" aria-pressed="true">✏️ 펜</button><button class="btn" data-t="eraser" aria-pressed="false">지우개</button></div>
+              <div class="pens" id="v1-pens" role="group" aria-label="펜 색"></div>
+              <button class="btn" id="v1-onion" aria-pressed="true">앞 장 겹쳐 보기</button>
+            </div>
+            <div class="row">
+              <button class="btn" id="v1-copy">앞 장 복사</button><button class="btn" id="v1-wipe">이 장 지우기</button><button class="btn" id="v1-add">+ 장 추가</button><button class="btn" id="v1-del">이 장 삭제</button>
+            </div>
+          </div>
+          <div style="display:grid;gap:10px;align-content:start;min-width:0">
+            <h3 style="font-size:16px;margin:0">프레임 <span id="v1-pos" class="mono"></span></h3>
+            <div class="fstrip" id="v1-strip"></div>
+            <div class="ctl"><span>재생 속도 (FPS)</span>
+              <div class="seg" id="v1-fps" role="group" aria-label="재생 프레임률"><button class="btn" data-f="2" aria-pressed="false">2</button><button class="btn" data-f="4" aria-pressed="true">4</button><button class="btn" data-f="8" aria-pressed="false">8</button><button class="btn" data-f="12" aria-pressed="false">12</button></div></div>
+            <div class="row"><button class="btn primary" id="v1-play">▶ 재생</button></div>
+            <p class="fb" id="v1-fb"></p>
+          </div>
+        </div>
+      </article>
+      <article class="mcard" data-m="v2" data-goal="3">
+        <div class="mtop"><span class="mno">2</span><h4>프레임률 감별사</h4><span class="mprog"></span></div>
+        <p class="hint">공이 움직이는 영상을 보고 프레임률(1초에 보여 주는 장면 수)을 맞히셈. (3문제)</p>
+        <div class="qwrap"></div>
+      </article>
+      <article class="mcard" data-m="v3" data-goal="3">
+        <div class="mtop"><span class="mno">3</span><h4>동영상 퀴즈</h4><span class="mprog"></span></div>
+        <p class="hint">프레임 수 = 프레임률 × 시간. 해상도·프레임률·길이가 클수록 용량이 커지고, 압축하면 작아짐. (3문제)</p>
+        <div class="qwrap"></div>
+      </article>
+    </div>
+    <div class="row" style="justify-content:flex-end"><button class="btn mreset">기록 지우기</button></div>
   </div>
   <div class="panel">
     <h3>프레임률(FPS)과 주사율(Hz) 비교하기</h3>
@@ -681,48 +748,6 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
       <p class="hint">위 줄: 영상이 만든 프레임(번호). 아래 줄: 모니터의 주사 한 번 한 번에 실제로 보여 준 프레임. ✕ = 한 번도 화면에 못 나온 프레임, ↻ = 앞과 같은 그림을 한 번 더 보여 줌, ⚡ = 두 프레임이 섞여 찢어짐.</p>
     </div>
     <div class="vr-why" id="vr-why"></div>
-  </div>
-  <div class="panel missions" id="m-video">
-    <div class="mhead"><h3>🎯 활동 미션 · 동영상</h3><span class="mtot"></span></div>
-    <p class="hint">미션마다 목표 개수를 채우면 ✓ 완료로 바뀜.</p>
-    <div class="mgrid">
-      <article class="mcard wide" data-m="v1" data-goal="1">
-        <div class="mtop"><span class="mno">1</span><h4>나만의 플립북 애니메이션</h4><span class="mprog"></span></div>
-        <p class="hint">프레임마다 그림을 조금씩 바꿔 그린 뒤 재생하셈. <b>그림이 있는 프레임 4장 이상</b>을 만들어 재생하면 완료. ‘앞 장 복사’를 누르고 조금만 고치면 쉬움.</p>
-        <div class="fbook">
-          <div style="display:grid;gap:10px;min-width:0">
-            <canvas id="v1-cv" width="480" height="300" style="width:100%;max-width:640px;aspect-ratio:8/5;touch-action:none;cursor:crosshair;background:#fff;border:1px solid var(--line)" aria-label="플립북 그리기 판"></canvas>
-            <div class="row">
-              <div class="seg" id="v1-tool" role="group" aria-label="도구"><button class="btn" data-t="pen" aria-pressed="true">✏️ 펜</button><button class="btn" data-t="eraser" aria-pressed="false">지우개</button></div>
-              <div class="pens" id="v1-pens" role="group" aria-label="펜 색"></div>
-              <button class="btn" id="v1-onion" aria-pressed="true">앞 장 겹쳐 보기</button>
-            </div>
-            <div class="row">
-              <button class="btn" id="v1-copy">앞 장 복사</button><button class="btn" id="v1-wipe">이 장 지우기</button><button class="btn" id="v1-add">+ 장 추가</button><button class="btn" id="v1-del">이 장 삭제</button>
-            </div>
-          </div>
-          <div style="display:grid;gap:10px;align-content:start;min-width:0">
-            <h3 style="font-size:16px;margin:0">프레임 <span id="v1-pos" class="mono"></span></h3>
-            <div class="fstrip" id="v1-strip"></div>
-            <div class="ctl"><span>재생 속도 (FPS)</span>
-              <div class="seg" id="v1-fps" role="group" aria-label="재생 프레임률"><button class="btn" data-f="2" aria-pressed="false">2</button><button class="btn" data-f="4" aria-pressed="true">4</button><button class="btn" data-f="8" aria-pressed="false">8</button><button class="btn" data-f="12" aria-pressed="false">12</button></div></div>
-            <div class="row"><button class="btn primary" id="v1-play">▶ 재생</button></div>
-            <p class="fb" id="v1-fb"></p>
-          </div>
-        </div>
-      </article>
-      <article class="mcard" data-m="v2" data-goal="3">
-        <div class="mtop"><span class="mno">2</span><h4>프레임률 감별사</h4><span class="mprog"></span></div>
-        <p class="hint">공이 움직이는 영상을 보고 프레임률(1초에 보여 주는 장면 수)을 맞히셈. (3문제)</p>
-        <div class="qwrap"></div>
-      </article>
-      <article class="mcard" data-m="v3" data-goal="3">
-        <div class="mtop"><span class="mno">3</span><h4>동영상 퀴즈</h4><span class="mprog"></span></div>
-        <p class="hint">프레임 수 = 프레임률 × 시간. 해상도·프레임률·길이가 클수록 용량이 커지고, 압축하면 작아짐. (3문제)</p>
-        <div class="qwrap"></div>
-      </article>
-    </div>
-    <div class="row" style="justify-content:flex-end"><button class="btn mreset">기록 지우기</button></div>
   </div>
 </section>
 </main>
