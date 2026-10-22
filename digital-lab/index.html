@@ -396,14 +396,16 @@ footer{color:var(--muted);font-size:13px;padding-block:0 32px}
   </div>
   <div class="panel">
     <h3>③ 확대해 보면: 비트맵 vs 벡터</h3>
+    <p class="hint">두 그림은 멀리서 보면 똑같음. <b>그림을 누르면 그 부분을 확대함</b> (빨간 점선 네모가 확대할 곳). 집 지붕, 햇살, 글자 테두리를 확대해 비교해 보셈.</p>
     <label class="ctl" for="zoom-sl">확대 배율 <span class="v" id="zoom-v">1배</span>
-      <input type="range" id="zoom-sl" min="1" max="12" step="1" value="1">
+      <input type="range" id="zoom-sl" min="1" max="20" step="1" value="1">
     </label>
+    <p class="hint mono" id="zoom-px" style="margin:0"></p>
     <div class="vs">
-      <figure><canvas id="bmp-cv" width="400" height="400" style="width:100%;aspect-ratio:1"></canvas>
-        <figcaption><b>비트맵 방식</b>40×40 화소마다 색을 저장 → 확대하면 경계가 계단처럼 깨짐(계단 현상)</figcaption></figure>
-      <figure><canvas id="vec-cv" width="400" height="400" style="width:100%;aspect-ratio:1"></canvas>
-        <figcaption><b>벡터 방식</b>원: 중심 (20, 20), 반지름 15 / 별: 꼭짓점 좌표 → 확대해도 다시 계산해 매끄러움</figcaption></figure>
+      <figure><canvas id="bmp-cv" width="600" height="600" style="width:100%;aspect-ratio:1;cursor:zoom-in"></canvas>
+        <figcaption><b>비트맵 방식</b>600×600 화소마다 색을 저장 → 원래 크기에선 매끄럽지만, 확대하면 화소가 커져 경계가 계단처럼 깨짐(계단 현상)</figcaption></figure>
+      <figure><canvas id="vec-cv" width="600" height="600" style="width:100%;aspect-ratio:1;cursor:zoom-in"></canvas>
+        <figcaption><b>벡터 방식</b>원의 중심·반지름, 다각형 꼭짓점 좌표, 글자 모양을 저장 → 확대할 때마다 다시 계산해 그려서 늘 매끄러움</figcaption></figure>
     </div>
   </div>
   <div class="panel">
@@ -904,20 +906,72 @@ $('#res-file').addEventListener('change',e=>{
 });
 
 /* ---------- 이미지: 비트맵 vs 벡터 ---------- */
-const B=40, bmpSrc=document.createElement('canvas');bmpSrc.width=bmpSrc.height=B;
-function star(g,cx,cy,R,r){g.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r:R;g.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a))}g.closePath();g.fill()}
-function shapes(g){g.fillStyle=T('blue');g.beginPath();g.arc(20,20,15,0,7);g.fill();g.fillStyle=T('orange');star(g,20,20,10,4.2)}
+// 그림 좌표: 가로·세로 0~100. 비트맵은 600×600 화소로 한 번 저장해 두고, 벡터는 매번 수식으로 다시 그림
+const ZC=600, ZB=600, zSrc=document.createElement('canvas');zSrc.width=zSrc.height=ZB;
+let zF={x:420,y:288};   // 확대할 곳(600 기준 좌표)
+function zPoly(g,pts,c){g.fillStyle=c;g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();g.fill()}
+function zCirc(g,x,y,r,c){g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fill()}
+function zScene(g){
+  const sky=g.createLinearGradient(0,0,0,62);sky.addColorStop(0,'#7cc4f5');sky.addColorStop(1,'#e6f5ff');
+  g.fillStyle=sky;g.fillRect(0,0,100,64);
+  // 해와 햇살
+  for(let i=0;i<12;i++){const a=i*Math.PI/6,b=0.17;zPoly(g,[[78+10*Math.cos(a-b),20+10*Math.sin(a-b)],[78+15.5*Math.cos(a),20+15.5*Math.sin(a)],[78+10*Math.cos(a+b),20+10*Math.sin(a+b)]],'#ffb020')}
+  zCirc(g,78,20,8.5,'#ffc93c');zCirc(g,75.5,17.5,2.4,'#ffe28a');
+  // 구름
+  [[16,14,4.5],[21,11,5.5],[27,13,5],[31,15.5,3.6],[20,16,4]].forEach(([x,y,r])=>zCirc(g,x,y,r,'#ffffff'));
+  // 산
+  zPoly(g,[[-6,64],[24,27],[56,64]],'#6f8fa6');
+  zPoly(g,[[24,27],[18.5,33.8],[21.3,32.6],[23,35.2],[25.4,32.4],[27.5,34.6],[29.5,33.6]],'#f5f8fb');
+  zPoly(g,[[34,64],[61,36],[92,64]],'#557891');
+  zPoly(g,[[61,36],[56.4,40.8],[59,40],[61,42.2],[63.2,39.8],[65.8,41]],'#f5f8fb');
+  // 땅
+  g.fillStyle='#79c06e';g.beginPath();g.moveTo(0,62);
+  for(let x=0;x<=100;x+=2)g.lineTo(x,61+1.4*Math.sin(x/6));g.lineTo(100,100);g.lineTo(0,100);g.closePath();g.fill();
+  g.fillStyle='#d9c49a';g.beginPath();g.moveTo(70,82);g.bezierCurveTo(68,90,60,94,54,100);g.lineTo(66,100);g.bezierCurveTo(70,94,74,90,76,82);g.closePath();g.fill();
+  // 나무
+  g.fillStyle='#7a4f2a';g.fillRect(17.5,60,4.5,22);
+  [[14,58,6.5],[26,58,6.5],[20,51,8.5],[15,51,5],[25,50,5.5]].forEach(([x,y,r])=>zCirc(g,x,y,r,'#2f8a46'));
+  [[17,49,1.3],[24,55,1.3],[13,57,1.2],[27,60,1.1]].forEach(([x,y,r])=>zCirc(g,x,y,r,'#e5484d'));
+  // 집
+  g.fillStyle='#8a4b2a';g.fillRect(71,42,4,10);
+  g.fillStyle='#f3e2c3';g.fillRect(53,58,27,24);
+  zPoly(g,[[49.5,59.5],[66.5,43.5],[83.5,59.5]],'#c2410c');
+  zPoly(g,[[49.5,59.5],[66.5,43.5],[66.5,45.6],[51.6,59.5]],'#e0601f');
+  g.fillStyle='#ffffff';g.fillRect(56,63,10,9);
+  g.fillStyle='#7cc8f0';g.fillRect(57,64,3.7,3.2);g.fillRect(61.3,64,3.7,3.2);g.fillRect(57,67.8,3.7,3.2);g.fillRect(61.3,67.8,3.7,3.2);
+  g.fillStyle='#8a5a2b';g.fillRect(69.5,67,8,15);zCirc(g,73.5,67,4,'#8a5a2b');
+  zCirc(g,76,75,0.8,'#ffc93c');
+  zCirc(g,66.5,53,2.2,'#ffffff');zCirc(g,66.5,53,1.6,'#7cc8f0');
+  // 꽃
+  [[34,88,'#e5484d'],[40,92,'#ffb020'],[44,86,'#c05ad1'],[86,90,'#e5484d'],[92,86,'#ffb020']].forEach(([x,y,c])=>{
+    for(let i=0;i<5;i++){const a=i*Math.PI*2/5;zCirc(g,x+1.4*Math.cos(a),y+1.4*Math.sin(a),1.1,c)}zCirc(g,x,y,0.8,'#fff3b0')});
+  // 글자
+  g.fillStyle='#1f2a44';g.font='700 8px "Pretendard","Noto Sans KR",sans-serif';g.textBaseline='alphabetic';g.fillText('정보 Info',3,97);
+}
+(function(){const g=zSrc.getContext('2d');g.scale(ZB/100,ZB/100);zScene(g)})();
+function zView(z){const v=ZC/z;return {v,ox:Math.min(Math.max(zF.x-v/2,0),ZC-v),oy:Math.min(Math.max(zF.y-v/2,0),ZC-v)}}
+function zMark(g){const v=ZC/8,x=Math.min(Math.max(zF.x-v/2,0),ZC-v),y=Math.min(Math.max(zF.y-v/2,0),ZC-v);
+  g.save();g.lineWidth=4;g.strokeStyle='#fff';g.strokeRect(x,y,v,v);g.setLineDash([10,7]);g.strokeStyle='#e5484d';g.strokeRect(x,y,v,v);g.restore()}
 function drawZoom(){
   const z=+$('#zoom-sl').value;$('#zoom-v').textContent=z+'배';
-  const bg=bmpSrc.getContext('2d');bg.clearRect(0,0,B,B);bg.fillStyle=T('surface');bg.fillRect(0,0,B,B);shapes(bg);
-  // 비트맵: 화소를 그대로 키움
-  const b=$('#bmp-cv').getContext('2d');b.imageSmoothingEnabled=false;
-  const view=B/z, off=(B-view)/2+ (z>1? view*0.18:0);
-  b.drawImage(bmpSrc,off,off,view,view,0,0,400,400);
-  // 벡터: 수식으로 다시 그림
-  const v=$('#vec-cv').getContext('2d');v.setTransform(1,0,0,1,0,0);v.fillStyle=T('surface');v.fillRect(0,0,400,400);
-  const s=400/B*z;v.setTransform(s,0,0,s,-off*s,-off*s);shapes(v);v.setTransform(1,0,0,1,0,0);
+  const {v,ox,oy}=zView(z);
+  // 비트맵: 저장된 화소를 그대로 크게 늘림 → 화소가 네모로 보임
+  const b=$('#bmp-cv').getContext('2d');b.setTransform(1,0,0,1,0,0);b.imageSmoothingEnabled=false;
+  b.clearRect(0,0,ZC,ZC);b.drawImage(zSrc,ox,oy,v,v,0,0,ZC,ZC);
+  if(z>=10){b.strokeStyle='rgba(0,0,0,.18)';b.lineWidth=1;b.beginPath();
+    for(let k=Math.ceil(ox);k<=ox+v;k++){const x=Math.round((k-ox)*z)+.5;b.moveTo(x,0);b.lineTo(x,ZC)}
+    for(let k=Math.ceil(oy);k<=oy+v;k++){const y=Math.round((k-oy)*z)+.5;b.moveTo(0,y);b.lineTo(ZC,y)}b.stroke()}
+  // 벡터: 좌표·수식으로 확대한 크기에 맞춰 다시 그림 → 항상 매끄러움
+  const g=$('#vec-cv').getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,ZC,ZC);
+  const s=ZC/100*z;g.setTransform(s,0,0,s,-ox*z,-oy*z);zScene(g);g.setTransform(1,0,0,1,0,0);
+  if(z===1){zMark(b);zMark(g)}
+  $('#zoom-px').textContent=z===1?'전체 그림':`가로·세로 ${Math.round(v)}화소를 ${ZC}칸에 표시 (화소 1개 = ${z}칸)`;
 }
+['#bmp-cv','#vec-cv'].forEach(id=>$(id).addEventListener('click',e=>{
+  const r=e.currentTarget.getBoundingClientRect(),z=+$('#zoom-sl').value,{v,ox,oy}=zView(z);
+  zF={x:ox+(e.clientX-r.left)/r.width*v,y:oy+(e.clientY-r.top)/r.height*v};
+  if(z===1){$('#zoom-sl').value=8}drawZoom();
+}));
 $('#zoom-sl').addEventListener('input',drawZoom);drawZoom();redrawers.push(drawZoom);
 
 /* ---------- 이미지: 벡터 그리기 ---------- */
