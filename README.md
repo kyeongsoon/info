@@ -19,8 +19,12 @@ Pages를 켜면 각 사이트는 아래 형식의 주소로 열립니다.
 - `https://kyeongsoon.github.io/info/ai-lesson1/`
 - `https://kyeongsoon.github.io/info/lesson-timer/`
 
-## 패들렛 연결 (ai-lesson1)
+## 반별 패들렛 연결 (ai-lesson1)
 
 - 선생님 설정은 주소 끝에 `#teacher`를 붙여 열면 보입니다. 예) `https://kyeongsoon.github.io/info/ai-lesson1/#teacher`
-- 설정에서 만든 학생용 링크(`?padlet=패들렛주소`)를 나눠 주면 학생 화면의 활동 3에 '복사하고 패들렛에 붙이기' 버튼이 생깁니다.
-- 또는 `ai-lesson1/index.html` 스크립트 맨 위의 `PADLET_URL`에 주소를 직접 적어도 됩니다.
+- 반 수를 넣고 '반 수만큼 줄 만들기' 또는 '+ 반 추가'로 반마다 패들렛 주소를 넣습니다.
+- 설정에서 만들어지는 링크
+  - 전체 반 공용 링크(`?padlets=…`): 학생이 활동 3에서 자기 반을 골라 제출
+  - 반별 링크(`?padlet=…&class=…`): 반이 정해져 있어 고를 필요 없음
+- 또는 `ai-lesson1/index.html` 스크립트 맨 위의 `PADLETS`에 `["반 이름", "패들렛 주소"]`를 적어 두면 링크 없이도 항상 적용됩니다.
+- 적용 순서: 학생용 링크 → 코드의 `PADLETS` → 그 기기에 저장한 목록
