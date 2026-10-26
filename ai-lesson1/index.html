@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인공지능 1차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 교과서식 단원 머리띠 + 큰 활동 탭, 아래에 활동 카드. 특성 다섯 개는 고유색으로 끝까지 일관되게 */
+:root{
+  --bg:#eef2f0; --surface:#ffffff; --surface-2:#f6f8f7; --ink:#16212b; --muted:#56636e; --line:#d3dbd7;
+  --accent:#0d6b62; --accent-ink:#ffffff; --accent-soft:#d8ece8;
+  --ok:#1d7f46; --ok-soft:#dcf1e4; --bad:#b8322a; --bad-soft:#f8e0dd; --mid:#9a6a10; --mid-soft:#f6ecd4;
+  --t-perc:#2459b8; --t-learn:#1d7f46; --t-opt:#a8650e; --t-auto:#b22e6f; --t-pred:#6a49c9;
+  --display:"Do Hyeon","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:980px;margin:0 auto}
+[data-t="perc"]{--tc:var(--t-perc)} [data-t="learn"]{--tc:var(--t-learn)} [data-t="opt"]{--tc:var(--t-opt)}
+[data-t="auto"]{--tc:var(--t-auto)} [data-t="pred"]{--tc:var(--t-pred)}
+header.top{padding-block:28px 18px;display:grid;gap:6px}
+.eyebrow{font-size:14px;letter-spacing:.06em;color:var(--muted);font-weight:500}
+.eyebrow b{color:var(--accent)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);line-height:1.15;margin:0;text-wrap:balance}
+.goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.goal{font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted)}
+.goal b{color:var(--ink);font-weight:500}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tab{font:inherit;cursor:pointer;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 14px;display:grid;gap:0;min-width:0}
+.tab small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.tab span{font-family:var(--display);font-size:21px;line-height:1.25}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-selected="true"] small{color:var(--accent-ink);opacity:.85}
+.tab:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.panel{padding-top:22px;display:grid;gap:18px}
+.intro{display:grid;gap:4px}
+.intro h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0;line-height:1.2}
+.intro p{margin:0;color:var(--muted);max-width:68ch}
+.link-note{font-size:14.5px;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:8px 12px;max-width:max-content}
+.link-note b{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.score{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px}
+.btn{font:inherit;font-weight:500;cursor:pointer;border-radius:10px;padding:9px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* 활동 1 */
+.grid1{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px;align-content:start;min-width:0}
+.card .thing{font-size:13.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.card .desc{margin:0;font-size:16.5px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice button{font:inherit;cursor:pointer;border-radius:10px;padding:8px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);font-weight:500}
+.choice button[aria-pressed="true"]{border-color:var(--ink)}
+.card.right{border-color:var(--ok);background:linear-gradient(var(--ok-soft),var(--ok-soft)) top/100% 4px no-repeat,var(--surface)}
+.card.wrong{border-color:var(--bad);background:linear-gradient(var(--bad-soft),var(--bad-soft)) top/100% 4px no-repeat,var(--surface)}
+.fb{font-size:15px;border-radius:8px;padding:8px 10px}
+.fb.ok{background:var(--ok-soft)} .fb.no{background:var(--bad-soft)}
+.fb b{display:block}
+.rule{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule > div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.rule h3{margin:0 0 4px;font-size:16px}
+.rule p{margin:0;font-size:15px;color:var(--muted)}
+/* 특성 참고 */
+details.ref{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details.ref summary{cursor:pointer;font-weight:500}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+.refgrid div{border-left:4px solid var(--tc);padding:2px 0 2px 10px;font-size:14.5px;min-width:0}
+.refgrid b{color:var(--tc);display:block;font-size:15.5px}
+/* 활동 2 */
+.casepick{display:flex;flex-wrap:wrap;gap:8px}
+.casepick button{font:inherit;cursor:pointer;border-radius:999px;padding:6px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.casepick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.casetext{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;font-size:18px;line-height:1.95;max-width:none}
+.clue{border-bottom:2px dashed var(--muted);padding:1px 2px;border-radius:4px}
+.clue sup{font-size:12px;font-weight:700;color:var(--accent);margin-right:2px}
+.clue.tagged{border-bottom:3px solid var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent)}
+.rows{display:grid;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
+.row q{font-weight:500}
+.row q::before{content:attr(data-n) "  ";color:var(--accent);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:15px;cursor:pointer;border-radius:999px;padding:5px 12px;border:1.5px solid var(--tc);background:transparent;color:var(--tc);font-weight:500}
+.chip[aria-pressed="true"]{background:var(--tc);color:var(--surface)}
+.mark{font-size:15px;border-radius:8px;padding:6px 10px}
+.mark.ok{background:var(--ok-soft)} .mark.no{background:var(--bad-soft)} .mark.mid{background:var(--mid-soft)}
+/* 활동 3 */
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.step{display:grid;gap:8px}
+.step h3{margin:0;font-size:16px;display:flex;gap:8px;align-items:baseline}
+.step h3 i{font-style:normal;color:var(--accent);font-family:var(--display);font-size:20px;font-weight:400}
+.prompt{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:15.5px}
+.pairsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairsel > div{display:grid;gap:6px;min-width:0}
+.pairsel label{font-size:14px;color:var(--muted);font-weight:500}
+textarea{font:inherit;font-size:16px;width:100%;min-height:92px;resize:vertical;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink)}
+textarea.rel{min-height:120px}
+.starter{font-size:14px;color:var(--muted)}
+.check{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
+.check h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.check ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.check li{display:grid;grid-template-columns:24px 1fr;gap:6px;font-size:15px;align-items:start}
+.check li .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);margin-top:3px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.check li.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.check li .hint{display:block;color:var(--muted);font-size:13.5px}
+.level{border-radius:10px;padding:10px 12px;font-weight:500}
+.level small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.model{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:15.5px}
+.model p{margin:0 0 6px}
+.toast{font-size:14px;color:var(--ok);min-height:1.2em}
+footer{margin-top:28px;font-size:13.5px;color:var(--muted);display:grid;gap:12px}
+footer p{margin:0}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.teacher{color:var(--ink);font-size:15px}
+.tset{display:grid;gap:10px;margin-top:10px}
+.trow{display:flex;flex-wrap:wrap;gap:8px}
+.trow input{font:inherit;flex:1 1 260px;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);color:var(--ink)}
+.trow input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tstatus{font-weight:500;min-height:1.2em}
+.tstatus.ok{color:var(--ok)} .tstatus.no{color:var(--bad)}
+.tbox{display:grid;gap:6px;background:var(--surface-2);border-radius:10px;padding:10px 12px;min-width:0}
+.tbox code,.tset code{font-size:13.5px;word-break:break-all;overflow-wrap:anywhere}
+@media (max-width:760px){
+  .two{grid-template-columns:minmax(0,1fr)} .check{position:static}
+  .tab span{font-size:17px} .tab{padding:8px 10px}
+  .rule{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:440px){ .pairsel{grid-template-columns:minmax(0,1fr)} .tab small{display:none} }
+@media (prefers-reduced-motion:no-preference){ .card,.clue,.chip,.tab{transition:background-color .15s,border-color .15s} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 1. 인공지능과 학습 · 1차시 · 교과서 164~169쪽</div>
+    <h1>인공지능의 개념과 특성</h1>
+    <div class="goals">
+      <span class="goal"><b>목표 1</b> 인공지능의 개념과 특성을 설명할 수 있다</span>
+      <span class="goal"><b>목표 2</b> 인공지능 소프트웨어와 아닌 소프트웨어를 구분할 수 있다</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="활동">
+    <button class="tab" role="tab" id="tab-ai-or-not" aria-controls="ai-or-not" data-k="ai-or-not"><small>활동 1</small><span>AI일까 아닐까?</span></button>
+    <button class="tab" role="tab" id="tab-detective" aria-controls="detective" data-k="detective"><small>활동 2</small><span>특성 탐정</span></button>
+    <button class="tab" role="tab" id="tab-connect" aria-controls="connect" data-k="connect"><small>활동 3</small><span>특성 연결 글쓰기</span></button>
+  </nav>
+
+  <!-- 활동 1 -->
+  <section class="panel" id="ai-or-not" role="tabpanel" aria-labelledby="tab-ai-or-not">
+    <div class="intro">
+      <h2>이 기능, 인공지능일까?</h2>
+      <p>생활 속 기능 10가지를 보고 인공지능이면 <b>AI ○</b>, 아니면 <b>AI 아님 ×</b>를 눌러 보세요. 누르면 바로 이유가 나와요.</p>
+    </div>
+    <div class="rule">
+      <div><h3>‘지각’과 ‘인식’은 달라요</h3><p>센서로 무엇이 ‘있다’는 것만 아는 건 <b>지각</b>, 그것이 ‘무엇인지’ 이해하는 건 <b>인식</b>이에요. 인식은 인공지능의 특성이에요.</p></div>
+      <div><h3>입력이 같으면 결과도 같을까?</h3><p>정해진 규칙만 반복하면 인공지능이 아니에요. 인공지능은 데이터를 학습해서 상황에 따라 다르게 판단해요.</p></div>
+    </div>
+    <div class="bar">
+      <span class="score" id="s1">0 / 10 맞힘</span>
+      <button class="btn" id="reset1">처음부터 다시</button>
+    </div>
+    <div class="grid1" id="grid1"></div>
+  </section>
+
+  <!-- 활동 2 -->
+  <section class="panel" id="detective" role="tabpanel" aria-labelledby="tab-detective" hidden>
+    <div class="intro">
+      <h2>사례 속 근거를 찾아 특성 붙이기</h2>
+      <p>사례 글에서 점선 밑줄 친 부분이 단서예요. 아래에서 단서마다 어떤 특성이 드러나는지 골라 보고 <b>채점하기</b>를 누르세요.</p>
+    </div>
+    <p class="link-note"><b>수행평가 연결</b> 문항 1은 사례 속 <b>어떤 부분</b>에서 특성을 판단했는지 근거를 쓰는 문제예요. 단서 문장을 찾는 연습이 곧 근거 쓰기 연습이에요.</p>
+    <details class="ref"><summary>다섯 가지 특성 한눈에 보기</summary><div class="refgrid" id="ref2"></div></details>
+    <div class="casepick" id="pick2" aria-label="사례 고르기"></div>
+    <div class="casetext" id="text2"></div>
+    <div class="rows" id="rows2"></div>
+    <div class="bar">
+      <button class="btn primary" id="grade2">채점하기</button>
+      <button class="btn" id="reset2">다시 하기</button>
+      <span class="score" id="s2"></span>
+    </div>
+  </section>
+
+  <!-- 활동 3 -->
+  <section class="panel" id="connect" role="tabpanel" aria-labelledby="tab-connect" hidden>
+    <div class="intro">
+      <h2>특성 두 개를 근거와 함께 연결해 쓰기</h2>
+      <p>수행평가 문항 1과 같은 형식이에요. 사례와 질문 유형을 고르고, 특성 2개와 근거, 두 특성의 관계를 써 보세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
+    </div>
+    <p class="link-note"><b>채점기준 5점</b> 특성 2가지를 정확히 찾고 · 사례 속 구체적 근거로 설명하고 · 두 특성의 관계(연결·순서·없을 때의 문제)를 논리적으로 서술</p>
+    <div class="two">
+      <div class="step" style="gap:18px">
+        <div class="step">
+          <h3><i>1</i> 사례 고르기</h3>
+          <div class="casepick" id="pick3"></div>
+          <div class="casetext" id="text3" style="font-size:17px;line-height:1.8"></div>
+        </div>
+        <div class="step">
+          <h3><i>2</i> 질문 유형 고르기</h3>
+          <div class="casepick" id="relpick"></div>
+          <div class="prompt" id="prompt3"></div>
+        </div>
+        <div class="step">
+          <h3><i>3</i> 특성 2가지와 근거</h3>
+          <div class="pairsel">
+            <div><label>첫 번째 특성</label><div class="chips" id="t1"></div></div>
+            <div><label>두 번째 특성</label><div class="chips" id="t2"></div></div>
+          </div>
+          <label for="ev1" class="starter">첫 번째 특성의 근거: 사례의 어느 부분에서 그렇게 판단했나요? 사례 속 표현을 그대로 가져와 쓰면 좋아요.</label>
+          <textarea id="ev1" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
+          <label for="ev2" class="starter">두 번째 특성의 근거</label>
+          <textarea id="ev2" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
+        </div>
+        <div class="step">
+          <h3><i>4</i> 두 특성의 관계</h3>
+          <label for="rel" class="starter" id="starter3"></label>
+          <textarea id="rel" class="rel"></textarea>
+        </div>
+        <div class="bar">
+          <a class="btn primary" id="padlet3" target="_blank" rel="noopener" hidden>복사하고 패들렛에 붙이기 ↗</a>
+          <button class="btn" id="copy3">내 답안 복사하기</button>
+          <button class="btn" id="model3">예시 답안 보기</button>
+          <button class="btn" id="clear3">지우기</button>
+          <span class="toast" id="toast3" aria-live="polite"></span>
+        </div>
+        <p class="starter" id="padletHelp" hidden>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛에서 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
+        <div class="model" id="modelbox" hidden></div>
+      </div>
+      <aside class="check" aria-live="polite">
+        <h3>자가 점검표</h3>
+        <ul id="checks"></ul>
+        <div class="level" id="level"></div>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <p>출처: 교과서 164~169쪽, 교사용 지도서 190~193쪽 내용을 바탕으로 만든 활동이에요. 쓴 내용은 이 기기의 브라우저에만 임시로 저장돼요.</p>
+    <details class="ref teacher" id="teacher" hidden>
+      <summary>선생님 설정 · 패들렛 연결</summary>
+      <div class="tset">
+        <p>활동 3의 답안을 붙여 넣을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요.</p>
+        <div class="trow">
+          <input id="padletUrl" type="url" inputmode="url" placeholder="https://padlet.com/아이디/패들렛이름" autocomplete="off">
+          <button class="btn primary" id="padletSave">연결</button>
+          <button class="btn" id="padletClear">연결 해제</button>
+        </div>
+        <p class="tstatus" id="padletStatus" aria-live="polite"></p>
+        <div class="tbox" id="shareBox" hidden>
+          <b>학생용 링크</b>
+          <code id="shareLink"></code>
+          <button class="btn" id="shareCopy">링크 복사</button>
+          <span class="starter">이 링크로 들어온 학생에게는 선생님의 패들렛이 자동으로 연결돼요. 깃허브 페이지처럼 직접 올린 사이트에서 쓰는 링크예요.</span>
+        </div>
+        <p class="starter">이 설정 칸은 사이트 주소 끝에 <code>#teacher</code>를 붙여 열 때만 보여요. 학생 화면과 학생용 링크에서는 보이지 않아요.</p>
+        <p class="starter">주소를 정하는 방법은 세 가지예요. ① 위에서 만든 <b>학생용 링크</b>(주소 끝에 <code>?padlet=…</code>)를 학생에게 나눠 주기 ② HTML 파일 맨 아래 스크립트의 <code>PADLET_URL</code>에 주소를 직접 적어 두기 ③ 전자칠판처럼 한 기기에서만 쓸 때는 위 칸에 넣고 연결(이 기기에만 저장). 여러 개가 있으면 ①→②→③ 순서로 적용돼요.</p>
+      </div>
+    </details>
+  </footer>
+</div>
+
+<script>
+/* ===== 선생님 설정 =====
+   학생 답안을 받을 패들렛 주소를 따옴표 안에 넣으세요. 비워 두면 사이트 아래 '선생님 설정'에서 정할 수 있어요.
+   예) const PADLET_URL = "https://padlet.com/teacher/ai-class";  */
+const PADLET_URL = "";
+/* ====================== */
+const TRAITS=[
+ {id:'perc',name:'상황 인식 및 이해',def:'센서·카메라로 주변 정보를 받아들이고 그것이 무엇인지 이해함'},
+ {id:'learn',name:'학습',def:'데이터를 바탕으로 배워서 점점 더 잘하게 됨'},
+ {id:'opt',name:'최적화',def:'여러 조건을 따져 가장 좋은 답을 찾음'},
+ {id:'auto',name:'자율성',def:'사람이 시키지 않아도 스스로 결정하고 행동함'},
+ {id:'pred',name:'예측',def:'학습한 데이터로 앞으로 일어날 일을 미리 알아내고 대비함'}];
+const TN=Object.fromEntries(TRAITS.map(t=>[t.id,t.name]));
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem('ai1-'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('ai1-'+k,JSON.stringify(v))}catch(e){}}};
+
+/* 탭 */
+const KEYS=['ai-or-not','detective','connect'];
+function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
+  KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
+  store.set('tab',k); }
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.k); try{history.replaceState(null,'','#'+b.dataset.k)}catch(e){} window.scrollTo({top:0})}));
+{ const h=(location.hash||'').slice(1); showTab(KEYS.includes(h)?h:store.get('tab','ai-or-not')); }
+
+/* 활동 1 */
+const ITEMS=[
+ {th:'냉장고',d:'문을 1분 넘게 열어 두면 경고음이 울린다.',ai:false,w:'문이 열린 시간을 재다가 정해진 시간이 지나면 울리는 규칙일 뿐이에요. 무엇이 들어 있는지 이해하지 않아요.'},
+ {th:'냉장고',d:'카메라로 안에 든 식품이 무엇인지 알아보고, 유통기한이 가까운 재료로 만들 메뉴를 추천한다.',ai:true,w:'식품이 ‘무엇인지’ 알아보는 인식이 있고, 상황에 맞는 메뉴를 판단해요.'},
+ {th:'스마트폰 키보드',d:'내가 평소 쓰는 말투를 배워서 다음에 쓸 단어를 추천한다.',ai:true,w:'내가 쓴 문장 데이터를 학습해서 다음 단어를 예측해요. 사람마다 추천이 달라요.'},
+ {th:'계산기 앱',d:'같은 수식을 넣으면 언제나 같은 답을 보여 준다.',ai:false,w:'입력이 같으면 결과가 항상 같아요. 미리 정해진 규칙대로 계산하는 소프트웨어예요.'},
+ {th:'자동문',d:'센서 앞에 물체가 감지되면 문이 열린다.',ai:false,w:'무엇이 ‘있다’는 것만 아는 지각이에요. 사람인지 상자인지는 구별하지 않아요.'},
+ {th:'학교 CCTV',d:'영상 속에서 쓰러진 사람을 알아보고 관리실에 알린다.',ai:true,w:'장면이 ‘쓰러진 사람’이라는 것을 이해하는 인식이에요.'},
+ {th:'엘리베이터',d:'버튼이 눌린 순서대로 층에 멈춘다.',ai:false,w:'버튼 순서라는 정해진 규칙만 따라요.'},
+ {th:'엘리베이터',d:'시간대별 이용 기록을 학습해서 출근 시간 전에 미리 1층에 내려가 기다린다.',ai:true,w:'이용 기록을 학습해서 사람이 몰릴 때를 예측하고, 스스로 움직여요.'},
+ {th:'번역 앱',d:'사진 속 외국어 간판 글자를 알아보고 우리말로 바꿔 보여 준다.',ai:true,w:'사진 속 글자를 알아보고 뜻을 이해해서 번역해요.'},
+ {th:'전자칠판 타이머',d:'설정한 시간이 끝나면 알람이 울린다.',ai:false,w:'설정한 시간이 지나면 울리는 정해진 명령이에요.'}];
+let a1=store.get('a1',{});
+function render1(){
+  const g=$('#grid1'); g.innerHTML='';
+  let ok=0;
+  ITEMS.forEach((it,i)=>{
+    const pick=a1[i]; const answered=pick!==undefined; const right=answered&&pick===it.ai; if(right)ok++;
+    const c=document.createElement('div'); c.className='card'+(answered?(right?' right':' wrong'):'');
+    c.innerHTML=`<span class="thing">${esc(it.th)}</span><p class="desc">${esc(it.d)}</p>
+      <div class="choice"><button data-v="1" aria-pressed="${pick===true}">AI ○</button><button data-v="0" aria-pressed="${pick===false}">AI 아님 ×</button></div>
+      ${answered?`<div class="fb ${right?'ok':'no'}"><b>${right?'맞았어요':'다시 생각해 봐요'} · 정답: ${it.ai?'인공지능 ○':'인공지능 아님 ×'}</b>${esc(it.w)}</div>`:''}`;
+    c.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{a1[i]=b.dataset.v==='1';store.set('a1',a1);render1();}));
+    g.appendChild(c);
+  });
+  const n=Object.keys(a1).length;
+  $('#s1').textContent=`${ok} / 10 맞힘`+(n<10?` · ${10-n}개 남음`:' · 완료!');
+}
+$('#reset1').addEventListener('click',()=>{a1={};store.set('a1',a1);render1();});
+render1();
+
+/* 사례 */
+const CASES=[
+ {id:'nav',name:'AI 내비게이션',
+  parts:['AI 내비게이션은 ',{c:'실시간 교통 정보와 사고 소식을 받아들여 지금 도로 상황을 파악',a:'perc',why:'센서·통신으로 받은 정보를 바탕으로 지금 도로가 어떤 상황인지 이해해요.'},'하고, ',
+   {c:'과거 같은 요일·시간대의 교통량 데이터를 바탕으로 30분 뒤 막힐 구간을 미리 알아낸다',a:'pred',alt:['learn'],why:'앞으로 일어날 일(30분 뒤 정체)을 미리 알아내므로 예측이에요. 과거 데이터를 쓴다는 점에서 학습과도 이어져요.'},'. 그리고 ',
+   {c:'여러 경로 가운데 도착 시간이 가장 빠른 경로를 골라',a:'opt',why:'여러 선택지를 비교해 가장 좋은 답을 고르므로 최적화예요.'},' 안내하며, 길이 막히기 시작하면 ',
+   {c:'운전자가 다시 설정하지 않아도 스스로 새 경로로 바꿔',a:'auto',why:'사람의 개입 없이 스스로 결정해서 행동하므로 자율성이에요.'},' 안내한다.'],
+  has:['perc','pred','opt','auto','learn']},
+ {id:'aircon',name:'스마트 에어컨',
+  parts:['스마트 에어컨은 ',{c:'카메라와 센서로 방 안 어디에 사람이 몇 명 있는지 알아본다',a:'perc',why:'센서로 주변을 살피고 ‘사람이 어디에 몇 명’인지 이해하므로 상황 인식 및 이해예요.'},'. 또 ',
+   {c:'가족이 평소 좋아하는 온도와 바람 세기를 여러 날 동안 기록해 배운다',a:'learn',why:'쌓인 데이터를 바탕으로 배우므로 학습이에요.'},'. 이를 바탕으로 ',
+   {c:'전기 요금은 아끼면서 모두가 쾌적하게 느끼는 온도를 찾아',a:'opt',why:'전기 요금과 쾌적함이라는 여러 조건을 함께 따져 가장 좋은 온도를 찾으므로 최적화예요.'},' 맞추고, ',
+   {c:'사람이 리모컨을 누르지 않아도 스스로 바람 방향을 사람 쪽으로 바꾼다',a:'auto',why:'사람이 시키지 않아도 스스로 행동하므로 자율성이에요.'},'.'],
+  has:['perc','learn','opt','auto']},
+ {id:'store',name:'무인 편의점',
+  parts:['무인 편의점의 ',{c:'천장 카메라는 손님이 집은 물건이 무엇인지 알아본다',a:'perc',why:'카메라로 본 물건이 ‘무엇인지’ 이해하므로 상황 인식 및 이해예요.'},'. 손님이 ',
+   {c:'계산대에 들르지 않고 그냥 나가도 시스템이 스스로 결제를 마친다',a:'auto',why:'직원이나 손님이 시키지 않아도 스스로 결제를 결정하므로 자율성이에요.'},'. 또 ',
+   {c:'요일별·날씨별 판매 기록을 학습하여',a:'learn',why:'판매 기록 데이터를 바탕으로 배우므로 학습이에요.'},' ',
+   {c:'다음 주에 많이 팔릴 상품을 미리 예상해',a:'pred',why:'앞으로 팔릴 상품을 미리 알아내므로 예측이에요.'},' 주문해 둔다.'],
+  has:['perc','auto','learn','pred']}];
+const clues=cs=>cs.parts.filter(p=>typeof p==='object');
+function caseHTML(cs,tags,numbered){ let n=0;
+  return cs.parts.map(p=>{ if(typeof p==='string')return esc(p); n++; const t=tags&&tags[n-1];
+    return `<span class="clue${t?' tagged':''}"${t?` data-t="${t}"`:''}>${numbered?`<sup>${'①②③④⑤'[n-1]}</sup>`:''}${esc(p.c)}</span>`;}).join('');}
+function refGrid(el){ el.innerHTML=TRAITS.map(t=>`<div data-t="${t.id}"><b>${t.name}</b>${t.def}</div>`).join(''); }
+refGrid($('#ref2'));
+
+/* 활동 2 */
+let c2=store.get('c2',0), a2=store.get('a2',{}), graded2=false;
+function pickers(el,cur,on){ el.innerHTML=CASES.map((c,i)=>`<button aria-pressed="${i===cur}" data-i="${i}">${c.name}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>on(+b.dataset.i))); }
+function render2(){
+  const cs=CASES[c2], cl=clues(cs), ans=a2[cs.id]||[];
+  pickers($('#pick2'),c2,i=>{c2=i;store.set('c2',i);graded2=false;render2();});
+  $('#text2').innerHTML=caseHTML(cs,ans,true);
+  const rows=$('#rows2'); rows.innerHTML='';
+  let ok=0;
+  cl.forEach((p,i)=>{
+    const r=document.createElement('div'); r.className='row';
+    let mk='';
+    if(graded2){ const v=ans[i];
+      if(v===p.a){ok++; mk=`<div class="mark ok"><b>정답</b> · ${esc(p.why)}</div>`;}
+      else if(p.alt&&p.alt.includes(v)){ok+=.5; mk=`<div class="mark mid"><b>부분 정답</b> · 더 잘 맞는 특성은 ‘${TN[p.a]}’이에요. ${esc(p.why)}</div>`;}
+      else mk=`<div class="mark no"><b>${v?'아쉬워요':'고르지 않았어요'}</b> · 정답은 ‘${TN[p.a]}’. ${esc(p.why)}</div>`; }
+    r.innerHTML=`<q data-n="${'①②③④⑤'[i]}">${esc(p.c)}</q><div class="chips">${TRAITS.map(t=>`<button class="chip" data-t="${t.id}" aria-pressed="${ans[i]===t.id}">${t.name}</button>`).join('')}</div>${mk}`;
+    r.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{const a=a2[cs.id]||[];a[i]=b.dataset.t;a2[cs.id]=a;store.set('a2',a2);graded2=false;render2();}));
+    rows.appendChild(r);
+  });
+  $('#s2').textContent=graded2?`${ok} / ${cl.length}`:'';
+}
+$('#grade2').addEventListener('click',()=>{graded2=true;render2();});
+$('#reset2').addEventListener('click',()=>{a2[CASES[c2].id]=[];store.set('a2',a2);graded2=false;render2();});
+render2();
+
+/* 활동 3 */
+const RELS=[
+ {id:'link',name:'연결해서 설명하기',q:'두 특성이 이 사례에서 어떻게 서로 연결되어 작동하는지 서술하시오.',st:'시작 문장 예) ○○ 특성으로 ~한 결과가 △△ 특성의 바탕이 되어 ~할 수 있다.',kw:['바탕','이용','덕분','결과','이어','연결','그래서','때문','통해','활용']},
+ {id:'order',name:'순서 관계 쓰기',q:'두 특성 중 무엇이 먼저 이루어져야 다른 하나가 가능한지, 그 순서 관계를 서술하시오.',st:'시작 문장 예) ○○이(가) 먼저 이루어져야 △△이(가) 가능하다. 왜냐하면 ~',kw:['먼저','해야','있어야','다음','그 후','뒤에','때문','되어야']},
+ {id:'lack',name:'하나가 없다면?',q:'두 특성 중 하나가 없다면 어떤 문제가 생길 수 있을지 예를 들어 서술하시오.',st:'시작 문장 예) 만약 ○○ 특성이 없다면 ~ 문제가 생긴다. 예를 들어 ~',kw:['없다면','없으면','없어서','못','않','문제','불편','위험']}];
+const MODEL={
+ nav:{pair:['pred','opt'],
+  ev:['예측 특성은 ‘과거 같은 요일·시간대의 교통량 데이터를 바탕으로 30분 뒤 막힐 구간을 미리 알아낸다’는 부분에서 나타난다. 아직 일어나지 않은 정체를 미리 알아내기 때문이다.','최적화 특성은 ‘여러 경로 가운데 도착 시간이 가장 빠른 경로를 고른다’는 부분에서 나타난다. 여러 선택지를 비교해 가장 좋은 답을 찾기 때문이다.'],
+  link:'내비게이션은 먼저 30분 뒤 막힐 구간을 예측하고, 그 예측 결과를 경로를 고르는 조건으로 사용해 가장 빠른 경로를 찾는다. 예측한 결과가 최적화의 재료가 되어 두 특성이 이어져 작동한다.',
+  order:'예측이 먼저 이루어져야 최적화가 가능하다. 앞으로 어느 구간이 막힐지 알아야 그 구간을 피하는 가장 빠른 경로를 고를 수 있기 때문이다.',
+  lack:'예측 특성이 없다면 지금은 뚫려 있지만 곧 막힐 길을 가장 빠른 경로라고 안내할 수 있다. 그러면 운전자는 가는 도중에 정체에 갇혀 오히려 더 늦게 도착하게 된다.'},
+ aircon:{pair:['learn','opt'],
+  ev:['학습 특성은 ‘가족이 평소 좋아하는 온도와 바람 세기를 여러 날 동안 기록해 배운다’는 부분에서 나타난다. 쌓인 데이터를 바탕으로 배우기 때문이다.','최적화 특성은 ‘전기 요금은 아끼면서 모두가 쾌적하게 느끼는 온도를 찾는다’는 부분에서 나타난다. 전기 요금과 쾌적함이라는 여러 조건을 함께 따져 가장 좋은 온도를 찾기 때문이다.'],
+  link:'에어컨은 학습으로 알게 된 가족의 선호 온도와 바람 세기를 기준으로 삼아, 전기 요금까지 고려한 가장 알맞은 온도를 찾는다. 학습한 결과가 최적화의 기준이 되어 두 특성이 연결된다.',
+  order:'학습이 먼저 이루어져야 최적화가 가능하다. 가족이 어떤 온도를 쾌적하게 느끼는지 먼저 배워야 그 기준에 맞는 가장 좋은 온도를 찾을 수 있기 때문이다.',
+  lack:'학습 특성이 없다면 에어컨은 모든 집에 똑같은 기본 온도를 맞춘다. 예를 들어 추위를 많이 타는 가족에게는 너무 춥고, 필요 이상으로 세게 틀어 전기 요금도 낭비될 수 있다.'},
+ store:{pair:['perc','auto'],
+  ev:['상황 인식 및 이해 특성은 ‘천장 카메라는 손님이 집은 물건이 무엇인지 알아본다’는 부분에서 나타난다. 물건이 있다는 것만이 아니라 무엇인지 이해하기 때문이다.','자율성 특성은 ‘계산대에 들르지 않고 그냥 나가도 시스템이 스스로 결제를 마친다’는 부분에서 나타난다. 사람이 시키지 않아도 스스로 결제를 결정하기 때문이다.'],
+  link:'카메라가 손님이 집은 물건이 무엇인지 인식하면, 시스템은 그 결과를 바탕으로 직원 없이 스스로 결제 금액을 정해 결제한다. 인식한 정보가 자율적인 판단의 바탕이 되어 두 특성이 이어져 작동한다.',
+  order:'상황 인식 및 이해가 먼저 이루어져야 자율성이 가능하다. 손님이 무엇을 집었는지 알아야 사람의 도움 없이 스스로 얼마를 결제할지 결정할 수 있기 때문이다.',
+  lack:'상황 인식 및 이해 특성이 없다면 시스템은 손님이 무엇을 집었는지 알 수 없어 결제를 하지 못하거나 잘못된 금액을 결제한다. 결국 직원이 다시 계산해야 해서 무인으로 운영할 수 없게 된다.'}};
+let d3=store.get('d3',{c:0,r:0,t1:null,t2:null,ev1:'',ev2:'',rel:''});
+function chipRow(el,key){ el.innerHTML=TRAITS.map(t=>`<button class="chip" data-t="${t.id}" aria-pressed="${d3[key]===t.id}">${t.name}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{d3[key]=d3[key]===b.dataset.t?null:b.dataset.t;save3();render3();})); }
+function save3(){store.set('d3',d3);}
+function render3(){
+  const cs=CASES[d3.c], rel=RELS[d3.r];
+  pickers($('#pick3'),d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
+  $('#text3').innerHTML=caseHTML(cs,null,false).replace(/class="clue"/g,'');
+  $('#relpick').innerHTML=RELS.map((r,i)=>`<button aria-pressed="${i===d3.r}" data-i="${i}">${r.name}</button>`).join('');
+  $('#relpick').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{d3.r=+b.dataset.i;save3();$('#modelbox').hidden=true;render3();}));
+  $('#prompt3').innerHTML=`인공지능의 특성(상황 인식 및 이해, 학습, 최적화, 자율성, 예측) 중 이 사례에서 나타나는 특성을 2가지 찾아 각각 어떤 부분에서 그렇게 판단했는지 근거를 들어 설명하시오. 그리고 <b>${esc(rel.q)}</b>`;
+  $('#starter3').textContent=rel.st;
+  $('#rel').placeholder=rel.st.replace('시작 문장 예) ','');
+  chipRow($('#t1'),'t1'); chipRow($('#t2'),'t2');
+  ['ev1','ev2','rel'].forEach(k=>{ if($('#'+k).value!==d3[k]) $('#'+k).value=d3[k]; });
+  checks3();
+}
+const norm=s=>s.replace(/[\s'"‘’“”.,·]/g,'');
+function quotes(text,cs){ const src=norm(cs.parts.map(p=>typeof p==='string'?p:p.c).join('')); const t=norm(text);
+  for(let i=0;i+7<=t.length;i++){ if(src.includes(t.slice(i,i+7))) return true; } return false; }
+function checks3(){
+  const cs=CASES[d3.c], rel=RELS[d3.r];
+  const both=d3.t1&&d3.t2&&d3.t1!==d3.t2;
+  const inCase=both&&cs.has.includes(d3.t1)&&cs.has.includes(d3.t2);
+  const e1=d3.ev1.trim().length>=15&&quotes(d3.ev1,cs), e2=d3.ev2.trim().length>=15&&quotes(d3.ev2,cs);
+  const r=d3.rel.trim(); const kw=rel.kw.some(k=>r.includes(k)); const relOk=r.length>=40&&kw;
+  const nameIn=both&&[d3.t1,d3.t2].every(t=>r.includes(TN[t].split(' ')[0]));
+  const items=[
+   [inCase,'특성 2가지를 정확히 골랐어요',both?(inCase?'두 특성 모두 이 사례에 나타나요.':'고른 특성 중 이 사례에 잘 드러나지 않는 것이 있어요. 사례를 다시 읽어 보세요.'):'서로 다른 특성 2개를 골라 주세요.'],
+   [e1,'첫 번째 근거에 사례 속 표현이 들어 있어요',e1?'좋아요.':'사례 문장 일부를 따옴표로 가져와 “○○ 부분에서”처럼 써 보세요.'],
+   [e2,'두 번째 근거에 사례 속 표현이 들어 있어요',e2?'좋아요.':'두 번째 특성도 사례 속 표현을 근거로 들어 주세요.'],
+   [relOk,'두 특성의 관계를 이유와 함께 썼어요',relOk?(nameIn?'두 특성 이름도 들어가 있어요.':'관계 문장에 두 특성 이름을 직접 넣으면 더 분명해요.'):(r.length<40?'40자 이상으로 자세히 써 보세요.':`‘${rel.kw.slice(0,3).join('’, ‘')}’ 같은 말로 두 특성을 이어 보세요.`)]];
+  $('#checks').innerHTML=items.map(([ok,t,h])=>`<li class="${ok?'done':''}"><span class="dot">${ok?'✓':''}</span><span>${t}<span class="hint">${h}</span></span></li>`).join('');
+  const n=items.filter(x=>x[0]).length; const lv=$('#level');
+  let txt,bg;
+  if(n===4){txt='5점 수준에 가까워요';bg='var(--ok-soft)';}
+  else if(inCase&&n>=2){txt='4점 수준: 근거나 관계를 조금 더 보강해요';bg='var(--mid-soft)';}
+  else {txt='아직 3점 수준: 특성 판단과 근거부터 채워요';bg='var(--surface-2)';}
+  lv.style.background=bg; lv.innerHTML=`${txt}<small>자가 점검용 예상이에요. 실제 점수는 선생님이 채점기준표로 매겨요.</small>`;
+}
+['ev1','ev2','rel'].forEach(k=>$('#'+k).addEventListener('input',e=>{d3[k]=e.target.value;save3();checks3();}));
+$('#model3').addEventListener('click',()=>{
+  const cs=CASES[d3.c], m=MODEL[cs.id], rel=RELS[d3.r], box=$('#modelbox');
+  if(!box.hidden){box.hidden=true;return;}
+  box.innerHTML=`<p><b>예시 답안 · ${cs.name} · ${TN[m.pair[0]]} + ${TN[m.pair[1]]}</b></p><p>${esc(m.ev[0])}</p><p>${esc(m.ev[1])}</p><p><b>${rel.name}</b> ${esc(m[rel.id])}</p><p class="starter">다른 특성 조합도 사례 속 근거가 분명하면 정답이 될 수 있어요. 먼저 내 답을 쓰고 비교해 보세요.</p>`;
+  box.hidden=false;
+});
+function answerText(){ const cs=CASES[d3.c], rel=RELS[d3.r];
+  return `[사례] ${cs.name} / [질문 유형] ${rel.name}\n특성 1: ${d3.t1?TN[d3.t1]:''}\n근거: ${d3.ev1}\n특성 2: ${d3.t2?TN[d3.t2]:''}\n근거: ${d3.ev2}\n관계: ${d3.rel}`; }
+async function copyAnswer(okMsg){
+  try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
+  catch(e){const ta=$('#rel');ta.focus();ta.select();$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
+  setTimeout(()=>$('#toast3').textContent='',4000);
+}
+$('#copy3').addEventListener('click',()=>copyAnswer('복사했어요. 제출할 곳에 붙여 넣으세요.'));
+$('#padlet3').addEventListener('click',()=>{ copyAnswer('복사했어요. 새 탭의 패들렛에 붙여 넣으세요.'); });
+
+/* 패들렛 연결 */
+function cleanPadlet(u){ if(!u)return null; try{ const x=new URL(String(u).trim()); const h=x.hostname.toLowerCase();
+  if(x.protocol!=='https:')return null; if(!(h==='padlet.com'||h.endsWith('.padlet.com')||h==='padlet.org'||h.endsWith('.padlet.org')))return null; return x.href; }catch(e){return null;} }
+function queryPadlet(){ try{ return new URLSearchParams(location.search).get('padlet'); }catch(e){ return null; } }
+function localPadlet(){ try{ return localStorage.getItem('ai-padlet'); }catch(e){ return null; } }
+function currentPadlet(){
+  const q=cleanPadlet(queryPadlet()); if(q) return {url:q,src:'학생용 링크'};
+  const c=cleanPadlet(PADLET_URL); if(c) return {url:c,src:'코드에 적힌 주소'};
+  const l=cleanPadlet(localPadlet()); if(l) return {url:l,src:'이 기기에 저장한 주소'};
+  return null; }
+function studentLink(url){ try{ const x=new URL(location.href); x.hash=''; x.searchParams.set('padlet',url); return x.href; }catch(e){ return ''; } }
+function setStatus(msg,ok){ const s=$('#padletStatus'); s.textContent=msg; s.className='tstatus'+(ok===true?' ok':ok===false?' no':''); }
+function renderPadlet(){
+  const p=currentPadlet(), a=$('#padlet3');
+  a.hidden=!p; $('#padletHelp').hidden=!p;
+  if(p){ a.href=p.url; setStatus(`연결됨 (${p.src}): ${p.url}`,true); $('#padletUrl').value=p.url;
+    const link=studentLink(p.url); $('#shareBox').hidden=!link; $('#shareLink').textContent=link; }
+  else { a.removeAttribute('href'); setStatus('아직 연결된 패들렛이 없어요. 학생 화면에는 ‘내 답안 복사하기’ 버튼만 보여요.',null); $('#shareBox').hidden=true; }
+  if(queryPadlet()&&!cleanPadlet(queryPadlet())) setStatus('링크에 들어 있는 주소가 패들렛 주소가 아니라서 연결하지 않았어요.',false);
+}
+$('#padletSave').addEventListener('click',()=>{
+  const u=cleanPadlet($('#padletUrl').value);
+  if(!u){ setStatus('padlet.com으로 시작하는 https 주소를 넣어 주세요. 예) https://padlet.com/teacher/ai-class',false); return; }
+  try{ localStorage.setItem('ai-padlet',u); }catch(e){}
+  renderPadlet();
+  if(cleanPadlet(queryPadlet())||cleanPadlet(PADLET_URL)) setStatus('저장했지만, 학생용 링크나 코드에 적힌 주소가 먼저 적용되고 있어요.',null);
+  const link=studentLink(u); $('#shareBox').hidden=!link; $('#shareLink').textContent=link;
+});
+$('#padletClear').addEventListener('click',()=>{ try{ localStorage.removeItem('ai-padlet'); }catch(e){} $('#padletUrl').value=''; renderPadlet(); });
+$('#shareCopy').addEventListener('click',async()=>{ const t=$('#shareLink').textContent;
+  try{ await navigator.clipboard.writeText(t); $('#shareCopy').textContent='복사했어요'; }
+  catch(e){ const r=document.createRange(); r.selectNodeContents($('#shareLink')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $('#shareCopy').textContent='선택됨, Ctrl+C'; }
+  setTimeout(()=>$('#shareCopy').textContent='링크 복사',2500); });
+renderPadlet();
+/* 선생님 설정 칸: 주소 끝에 #teacher가 있고, 학생용 링크(?padlet=)로 들어온 게 아닐 때만 보임 */
+function teacherMode(){
+  const on=(location.hash||'')==='#teacher' && !queryPadlet();
+  const t=$('#teacher'); t.hidden=!on;
+  if(on){ t.open=true; setTimeout(()=>t.scrollIntoView({block:'start'}),50); }
+}
+window.addEventListener('hashchange',teacherMode);
+teacherMode();
+const clr=$('#clear3'); let armed=false;
+clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armed=false;clr.textContent='지우기';},3000);return;}
+  Object.assign(d3,{t1:null,t2:null,ev1:'',ev2:'',rel:''});save3();armed=false;clr.textContent='지우기';$('#modelbox').hidden=true;render3();});
+render3();
+</script>
+
+</body>
+</html>
