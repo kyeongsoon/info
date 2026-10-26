@@ -291,7 +291,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
         <p class="starter" id="activeNow"></p>
         <div class="tbox" id="shareBox" hidden>
           <b>전체 반 공용 링크</b>
-          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요.</span>
+          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
           <code id="shareLink"></code>
           <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
           <b>반별 링크</b>
@@ -515,10 +515,15 @@ function fromQuery(){ const q=qp();
   if(q.get('padlet')){ const u=cleanPadlet(q.get('padlet')); if(u) return [{name:(q.get('class')||'').trim(),url:u}]; return 'bad'; }
   return null; }
 function fromLocal(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets')||'[]')); }catch(e){ return []; } }
+/* 공용 링크(?padlets=)로 한 번 들어오면 그 기기에 반 목록을 기억해, 다음에 그냥 주소로 와도 패들렛 버튼이 나오게 함.
+   반별 링크는 기억하지 않음(여러 반이 같이 쓰는 태블릿에서 다른 반 패들렛에 올리는 일을 막기 위해). */
+function fromRemember(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets-link')||'[]')); }catch(e){ return []; } }
 function source(){ const q=fromQuery();
-  if(Array.isArray(q)) return {list:q,src:'학생용 링크'};
+  if(Array.isArray(q)){ if(qp().get('padlets')){ try{ localStorage.setItem('ai-padlets-link',JSON.stringify(q.map(v=>[v.name,v.url]))); }catch(e){} }
+    return {list:q,src:'학생용 링크'}; }
   const c=cleanList(PADLETS); if(c.length) return {list:c,src:'코드에 적은 PADLETS'};
   const l=fromLocal(); if(l.length) return {list:l,src:'이 기기에 저장한 목록'};
+  const r=fromRemember(); if(r.length) return {list:r,src:'이 기기가 기억한 공용 링크'};
   return {list:[],src:null,bad:q==='bad'}; }
 let SRC=source();
 function getClass(){ try{ return localStorage.getItem('ai-class'); }catch(e){ return null; } }
@@ -581,7 +586,7 @@ $('#saveRows').addEventListener('click',()=>{ const V=validRows();
   setStatus(V.length?`${V.length}개 반을 이 기기에 저장했어요.`+(SRC.src!=='이 기기에 저장한 목록'?` 다만 지금은 ${SRC.src}이(가) 먼저 적용되고 있어요.`:''):'저장할 주소가 없어서 이 기기의 목록을 비웠어요.', V.length?true:null); });
 const clrR=$('#clearRows'); let armedR=false;
 clrR.addEventListener('click',()=>{ if(!armedR){armedR=true;clrR.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armedR=false;clrR.textContent='모두 지우기';},3000);return;}
-  armedR=false; clrR.textContent='모두 지우기'; try{ localStorage.removeItem('ai-padlets'); }catch(e){}
+  armedR=false; clrR.textContent='모두 지우기'; try{ localStorage.removeItem('ai-padlets'); localStorage.removeItem('ai-padlets-link'); }catch(e){}
   rows=[{name:'1반',url:''}]; SRC=source(); renderStudent(); renderRows(); });
 $('#shareBox').addEventListener('click',async e=>{ const b=e.target.closest('[data-copy]'); if(!b) return; const el=document.getElementById(b.dataset.copy), t=el.textContent, old=b.textContent;
   try{ await navigator.clipboard.writeText(t); b.textContent='복사했어요'; }
