@@ -176,12 +176,12 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
   </header>
 
   <nav class="tabs" role="tablist" aria-label="활동">
-    <button class="tab" role="tab" id="tab-ai-or-not" aria-controls="ai-or-not" data-k="ai-or-not"><small>활동 1</small><span>AI일까 아닐까?</span></button>
-    <button class="tab" role="tab" id="tab-detective" aria-controls="detective" data-k="detective"><small>활동 2</small><span>특성 탐정</span></button>
-    <button class="tab" role="tab" id="tab-connect" aria-controls="connect" data-k="connect"><small>활동 3</small><span>특성 연결 글쓰기</span></button>
+    <button class="tab" role="tab" id="tab-detective" aria-controls="detective" data-k="detective"><small>활동 1</small><span>특성 탐정</span></button>
+    <button class="tab" role="tab" id="tab-connect" aria-controls="connect" data-k="connect"><small>활동 2</small><span>특성 연결 글쓰기</span></button>
+    <button class="tab" role="tab" id="tab-ai-or-not" aria-controls="ai-or-not" data-k="ai-or-not"><small>활동 3</small><span>AI일까 아닐까?</span></button>
   </nav>
 
-  <!-- 활동 1 -->
+  <!-- 활동 3: AI일까 아닐까? -->
   <section class="panel" id="ai-or-not" role="tabpanel" aria-labelledby="tab-ai-or-not">
     <div class="intro">
       <h2>이 기능, 인공지능일까?</h2>
@@ -198,7 +198,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
     <div class="grid1" id="grid1"></div>
   </section>
 
-  <!-- 활동 2 -->
+  <!-- 활동 1: 특성 탐정 -->
   <section class="panel" id="detective" role="tabpanel" aria-labelledby="tab-detective" hidden>
     <div class="intro">
       <h2>사례 속 근거를 찾아 특성 붙이기</h2>
@@ -216,7 +216,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
     </div>
   </section>
 
-  <!-- 활동 3 -->
+  <!-- 활동 2: 특성 연결 글쓰기 -->
   <section class="panel" id="connect" role="tabpanel" aria-labelledby="tab-connect" hidden>
     <div class="intro">
       <h2>특성 두 개를 근거와 함께 연결해 쓰기</h2>
@@ -276,7 +276,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
     <details class="ref teacher" id="teacher" hidden>
       <summary>선생님 설정 · 반별 패들렛 연결</summary>
       <div class="tset">
-        <p>반마다 활동 3 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
+        <p>반마다 활동 2(특성 연결 글쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
         <div class="trow">
           <label for="classCount" class="starter">반 수</label>
           <input id="classCount" class="num" type="number" min="1" max="30" value="9">
@@ -292,7 +292,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
         <p class="starter" id="activeNow"></p>
         <div class="tbox" id="shareBox" hidden>
           <b>전체 반 공용 링크</b>
-          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
+          <span class="starter">학생이 활동 2에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
           <code id="shareLink"></code>
           <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
           <b>반별 링크</b>
@@ -334,12 +334,12 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 const store={get(k,d){try{const v=localStorage.getItem('ai1-'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('ai1-'+k,JSON.stringify(v))}catch(e){}}};
 
 /* 탭 */
-const KEYS=['ai-or-not','detective','connect'];
+const KEYS=['detective','connect','ai-or-not'];
 function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
   KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
   store.set('tab',k); }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.k); try{history.replaceState(null,'','#'+b.dataset.k)}catch(e){} window.scrollTo({top:0})}));
-{ const h=(location.hash||'').slice(1); showTab(KEYS.includes(h)?h:store.get('tab','ai-or-not')); }
+{ const h=(location.hash||'').slice(1); showTab(KEYS.includes(h)?h:store.get('tab','detective')); }
 
 /* 활동 1 */
 const ITEMS=[
