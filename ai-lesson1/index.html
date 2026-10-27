@@ -259,6 +259,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
           <button class="btn" id="clear3">지우기</button>
           <span class="toast" id="toast3" aria-live="polite"></span>
         </div>
+        <p class="mark no" id="padletBad" hidden>선생님이 준 링크가 중간에 잘려서 우리 반 패들렛 목록을 불러오지 못했어요. 노션 수업 링크나 QR 코드로 다시 들어와 주세요.</p>
         <p class="starter" id="padletHelp" hidden><span id="classHint">우리 반을 고른 뒤 </span>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛에서 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
         <div class="model" id="modelbox" hidden></div>
       </div>
@@ -510,7 +511,21 @@ function cleanList(arr){ if(!Array.isArray(arr))return [];
 const b64e=s=>{ let b=''; new TextEncoder().encode(s).forEach(c=>b+=String.fromCharCode(c)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
 const b64d=s=>{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='='; return new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0))); };
 function qp(){ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(); } }
+/* 짧은 형식: ?pb=패들렛아이디&pl=주섰1.주섰2.… (이름이 'N반'이 아니면 이름~주소) */
+const SLUG=/^[A-Za-z0-9_-]+$/;
+function fromShort(q){ const u=q.get('pb'), l=q.get('pl'); if(!u||!l||!SLUG.test(u)) return 'bad';
+  const out=l.split('.').filter(Boolean).map((s,i)=>{ const k=s.indexOf('~'); const name=k>=0?s.slice(0,k):`${i+1}반`, slug=k>=0?s.slice(k+1):s;
+    return SLUG.test(slug)?{name,url:`https://padlet.com/${u}/${slug}`}:null; });
+  const ok=cleanList(out.filter(Boolean)); const n=parseInt(q.get('pn'),10);
+  /* pn(반 개수)은 링크 맨 끝에 붙음. 링크가 잘리면 pn이 없거나 개수가 맞지 않아 잘린 것을 알 수 있음 */
+  return ok.length&&ok.length===out.length&&n===out.length?ok:'bad'; }
+function shortParams(V){ let user=null; const parts=[];
+  for(const [i,v] of V.entries()){ const m=v.url.match(/^https:\/\/padlet\.com\/([A-Za-z0-9_-]+)\/([A-Za-z0-9_-]+)\/?$/); if(!m) return null;
+    if(user&&user!==m[1]) return null; user=m[1]; if(/[.~]/.test(v.name)) return null;
+    parts.push(v.name===`${i+1}반`?m[2]:`${v.name}~${m[2]}`); }
+  return user?{pb:user,pl:parts.join('.')}:null; }
 function fromQuery(){ const q=qp();
+  if(q.get('pl')||q.get('pb')) return fromShort(q);
   if(q.get('padlets')){ try{ const l=cleanList(JSON.parse(b64d(q.get('padlets')))); if(l.length) return l; }catch(e){} return 'bad'; }
   if(q.get('padlet')){ const u=cleanPadlet(q.get('padlet')); if(u) return [{name:(q.get('class')||'').trim(),url:u}]; return 'bad'; }
   return null; }
@@ -519,7 +534,7 @@ function fromLocal(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-
    반별 링크는 기억하지 않음(여러 반이 같이 쓰는 태블릿에서 다른 반 패들렛에 올리는 일을 막기 위해). */
 function fromRemember(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets-link')||'[]')); }catch(e){ return []; } }
 function source(){ const q=fromQuery();
-  if(Array.isArray(q)){ if(qp().get('padlets')){ try{ localStorage.setItem('ai-padlets-link',JSON.stringify(q.map(v=>[v.name,v.url]))); }catch(e){} }
+  if(Array.isArray(q)){ if(qp().get('padlets')||qp().get('pl')){ try{ localStorage.setItem('ai-padlets-link',JSON.stringify(q.map(v=>[v.name,v.url]))); }catch(e){} }
     return {list:q,src:'학생용 링크'}; }
   const c=cleanList(PADLETS); if(c.length) return {list:c,src:'코드에 적은 PADLETS'};
   const l=fromLocal(); if(l.length) return {list:l,src:'이 기기에 저장한 목록'};
@@ -531,7 +546,7 @@ function setClass(v){ try{ v?localStorage.setItem('ai-class',v):localStorage.rem
 function chosen(){ const L=SRC.list; if(L.length===1) return L[0]; const n=getClass(); return L.find(x=>x.name===n)||null; }
 function renderStudent(){
   const L=SRC.list, a=$('#padlet3'), w=$('#classWrap'), sel=$('#classSel');
-  a.hidden=!L.length; $('#padletHelp').hidden=!L.length; w.hidden=L.length<2; $('#classHint').hidden=L.length<2;
+  a.hidden=!L.length; $('#padletHelp').hidden=!L.length; $('#padletBad').hidden=!SRC.bad; w.hidden=L.length<2; $('#classHint').hidden=L.length<2;
   if(L.length>=2){ const cur=chosen();
     sel.innerHTML='<option value="">반 고르기</option>'+L.map(x=>`<option value="${esc(x.name)}"${cur&&cur.name===x.name?' selected':''}>${esc(x.name)}</option>`).join(''); }
   const c=chosen();
@@ -572,7 +587,9 @@ function renderOutputs(){
   setStatus(msg, V.length&&!bad&&!dup.length?true:(bad||dup.length?false:null));
   $('#activeNow').textContent = SRC.src?`지금 학생 화면에 적용 중: ${SRC.src} (${SRC.list.length}개 반)`:'지금 학생 화면에는 연결된 패들렛이 없어서 ‘내 답안 복사하기’ 버튼만 보여요.';
   const base=baseURL(); $('#shareBox').hidden=!(V.length&&base); if(!V.length||!base) return;
-  const all=new URL(base); all.searchParams.set('padlets',b64e(JSON.stringify(V.map(v=>[v.name,v.url])))); $('#shareLink').textContent=all.href;
+  const all=new URL(base), sp=shortParams(V);
+  if(sp){ all.searchParams.set('pb',sp.pb); all.searchParams.set('pl',sp.pl); all.searchParams.set('pn',String(V.length)); } else all.searchParams.set('padlets',b64e(JSON.stringify(V.map(v=>[v.name,v.url]))));
+  $('#shareLink').textContent=all.href;
   $('#classLinks').innerHTML=V.map((v,i)=>{ const one=new URL(base); one.searchParams.set('padlet',v.url); one.searchParams.set('class',v.name);
     return `<li><b>${esc(v.name)}</b><code id="clink-${i}">${esc(one.href)}</code><button class="btn sm" data-copy="clink-${i}">복사</button></li>`; }).join('');
   $('#codeSnippet').textContent='const PADLETS = [\n'+V.map(v=>`  [${JSON.stringify(v.name)}, ${JSON.stringify(v.url)}],`).join('\n')+'\n];';
