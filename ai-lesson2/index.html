@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인공지능 2차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 교과서식 단원 머리띠 + 큰 활동 탭, 아래에 활동 카드. 분류·회귀·군집과 데이터 문제 유형은 고유색으로 끝까지 일관되게 */
+:root{
+  --bg:#eef2f0; --surface:#ffffff; --surface-2:#f6f8f7; --ink:#16212b; --muted:#56636e; --line:#d3dbd7;
+  --accent:#0d6b62; --accent-ink:#ffffff; --accent-soft:#d8ece8;
+  --ok:#1d7f46; --ok-soft:#dcf1e4; --bad:#b8322a; --bad-soft:#f8e0dd; --mid:#9a6a10; --mid-soft:#f6ecd4;
+  --t-perc:#2459b8; --t-learn:#1d7f46; --t-opt:#a8650e; --t-auto:#b22e6f; --t-pred:#6a49c9;
+  --display:"Do Hyeon","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:980px;margin:0 auto}
+[data-t="perc"]{--tc:var(--t-perc)} [data-t="learn"]{--tc:var(--t-learn)} [data-t="opt"]{--tc:var(--t-opt)}
+[data-t="auto"]{--tc:var(--t-auto)} [data-t="pred"]{--tc:var(--t-pred)}
+header.top{padding-block:28px 18px;display:grid;gap:6px}
+.eyebrow{font-size:14px;letter-spacing:.06em;color:var(--muted);font-weight:500}
+.eyebrow b{color:var(--accent)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);line-height:1.15;margin:0;text-wrap:balance}
+.goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.goal{font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted)}
+.goal b{color:var(--ink);font-weight:500}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tab{font:inherit;cursor:pointer;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 14px;display:grid;gap:0;min-width:0}
+.tab small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.tab span{font-family:var(--display);font-size:21px;line-height:1.25}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-selected="true"] small{color:var(--accent-ink);opacity:.85}
+.tab:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.panel{padding-top:22px;display:grid;gap:18px}
+.intro{display:grid;gap:4px}
+.intro h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0;line-height:1.2}
+.intro p{margin:0;color:var(--muted);max-width:68ch}
+.link-note{font-size:14.5px;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:8px 12px;max-width:max-content}
+.link-note b{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.score{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px}
+.btn{font:inherit;font-weight:500;cursor:pointer;border-radius:10px;padding:9px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* 활동 1 */
+.grid1{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px;align-content:start;min-width:0}
+.card .thing{font-size:13.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.card .desc{margin:0;font-size:16.5px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice button{font:inherit;cursor:pointer;border-radius:10px;padding:8px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);font-weight:500}
+.choice button[aria-pressed="true"]{border-color:var(--ink)}
+.card.right{border-color:var(--ok);background:linear-gradient(var(--ok-soft),var(--ok-soft)) top/100% 4px no-repeat,var(--surface)}
+.card.wrong{border-color:var(--bad);background:linear-gradient(var(--bad-soft),var(--bad-soft)) top/100% 4px no-repeat,var(--surface)}
+.fb{font-size:15px;border-radius:8px;padding:8px 10px}
+.fb.ok{background:var(--ok-soft)} .fb.no{background:var(--bad-soft)}
+.fb b{display:block}
+.rule{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule > div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.rule h3{margin:0 0 4px;font-size:16px}
+.rule p{margin:0;font-size:15px;color:var(--muted)}
+/* 특성 참고 */
+details.ref{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details.ref summary{cursor:pointer;font-weight:500}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+.refgrid div{border-left:4px solid var(--tc);padding:2px 0 2px 10px;font-size:14.5px;min-width:0}
+.refgrid b{color:var(--tc);display:block;font-size:15.5px}
+/* 활동 2 */
+.casepick{display:flex;flex-wrap:wrap;gap:8px}
+.casepick button{font:inherit;cursor:pointer;border-radius:999px;padding:6px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.casepick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.casetext{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;font-size:18px;line-height:1.95;max-width:none}
+.clue{border-bottom:2px dashed var(--muted);padding:1px 2px;border-radius:4px}
+.clue sup{font-size:12px;font-weight:700;color:var(--accent);margin-right:2px}
+.clue.tagged{border-bottom:3px solid var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent)}
+.rows{display:grid;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
+.row q{font-weight:500}
+.row q::before{content:attr(data-n) "  ";color:var(--accent);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:15px;cursor:pointer;border-radius:999px;padding:5px 12px;border:1.5px solid var(--tc);background:transparent;color:var(--tc);font-weight:500}
+.chip[aria-pressed="true"]{background:var(--tc);color:var(--surface)}
+.mark{font-size:15px;border-radius:8px;padding:6px 10px}
+.mark.ok{background:var(--ok-soft)} .mark.no{background:var(--bad-soft)} .mark.mid{background:var(--mid-soft)}
+/* 활동 3 */
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.step{display:grid;gap:8px}
+.step h3{margin:0;font-size:16px;display:flex;gap:8px;align-items:baseline}
+.step h3 i{font-style:normal;color:var(--accent);font-family:var(--display);font-size:20px;font-weight:400}
+.prompt{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:15.5px}
+.pairsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairsel > div{display:grid;gap:6px;min-width:0}
+.pairsel label{font-size:14px;color:var(--muted);font-weight:500}
+textarea{font:inherit;font-size:16px;width:100%;min-height:92px;resize:vertical;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink)}
+textarea.rel{min-height:120px}
+.starter{font-size:14px;color:var(--muted)}
+.check{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
+.check h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.check ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.check li{display:grid;grid-template-columns:24px 1fr;gap:6px;font-size:15px;align-items:start}
+.check li .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);margin-top:3px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.check li.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.check li .hint{display:block;color:var(--muted);font-size:13.5px}
+.level{border-radius:10px;padding:10px 12px;font-weight:500}
+.level small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.model{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:15.5px}
+.model p{margin:0 0 6px}
+.toast{font-size:14px;color:var(--ok);min-height:1.2em}
+footer{margin-top:28px;font-size:13.5px;color:var(--muted);display:grid;gap:12px}
+footer p{margin:0}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.teacher{color:var(--ink);font-size:15px}
+.tset{display:grid;gap:10px;margin-top:10px}
+.trow{display:flex;flex-wrap:wrap;gap:8px}
+.trow input{font:inherit;flex:1 1 260px;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);color:var(--ink)}
+.trow input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tstatus{font-weight:500;min-height:1.2em}
+.tstatus.ok{color:var(--ok)} .tstatus.no{color:var(--bad)}
+.tbox{display:grid;gap:6px;background:var(--surface-2);border-radius:10px;padding:10px 12px;min-width:0}
+.tbox code,.tset code{font-size:13.5px;word-break:break-all;overflow-wrap:anywhere}
+.trow label{align-self:center}
+.trow input.num{flex:0 0 5.5em}
+.btn.sm{padding:5px 10px;font-size:14px}
+.classpick{display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.classpick select{font:inherit;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface);color:var(--ink)}
+.classpick select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.crows{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:6.5em minmax(0,1fr) auto;gap:6px}
+.crow input{font:inherit;font-size:15px;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--surface);color:var(--ink)}
+.crow input:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.crow input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.clinks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.clinks li{display:grid;grid-template-columns:4.5em minmax(0,1fr) auto;gap:8px;align-items:center}
+.snippet{margin:0;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-x:auto;white-space:pre;color:var(--ink)}
+@media (max-width:760px){
+  .two{grid-template-columns:minmax(0,1fr)} .check{position:static}
+  .tab span{font-size:17px} .tab{padding:8px 10px}
+  .rule{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:440px){ .pairsel{grid-template-columns:minmax(0,1fr)} .tab small{display:none} }
+@media (prefers-reduced-motion:no-preference){ .card,.clue,.chip,.tab{transition:background-color .15s,border-color .15s} }
+[data-t="cls"]{--tc:var(--t-perc)} [data-t="reg"]{--tc:var(--t-opt)} [data-t="clu"]{--tc:var(--t-learn)} [data-t="lab"]{--tc:var(--t-auto)}
+.rule3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rule3 > div{border-top:4px solid var(--tc)}
+.rule3 h3{color:var(--tc)}
+.pick{display:grid;gap:4px}
+.pl{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.item3{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+textarea.sm{min-height:64px}
+.casetext{white-space:normal}
+@media (max-width:760px){ .rule3{grid-template-columns:minmax(0,1fr)} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 1. 인공지능과 학습 · 2차시 · 교과서 170~177쪽</div>
+    <h1>데이터와 학습</h1>
+    <div class="goals">
+      <span class="goal"><b>목표 1</b> 학습에 필요한 데이터를 수집하여 분류할 수 있다</span>
+      <span class="goal"><b>목표 2</b> 인공지능 학습에서 데이터의 중요성을 설명할 수 있다</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="활동">
+    <button class="tab" role="tab" id="tab-types" aria-controls="types" data-k="types"><small>활동 1</small><span>결과로 구분하기</span></button>
+    <button class="tab" role="tab" id="tab-clinic" aria-controls="clinic" data-k="clinic"><small>활동 2</small><span>데이터 진단 클리닉</span></button>
+    <button class="tab" role="tab" id="tab-fix" aria-controls="fix" data-k="fix"><small>활동 3</small><span>개선 방안 쓰기</span></button>
+  </nav>
+
+  <!-- 활동 1: 결과로 구분하기 -->
+  <section class="panel" id="types" role="tabpanel" aria-labelledby="tab-types">
+    <div class="intro">
+      <h2>예측 결과의 모양을 보면 방법이 보여요</h2>
+      <p>상황마다 먼저 <b>결과가 어떤 모양인지</b> 고르고, 그다음 <b>분류·회귀·군집</b> 중 알맞은 방법을 고르세요. 둘 다 고르면 바로 해설이 나와요.</p>
+    </div>
+    <p class="link-note"><b>수행평가 연결</b> 문항 3은 분류·회귀·군집을 고르고 <b>예측 결과의 형태</b>를 근거로 이유를 쓰는 문제예요.</p>
+    <div class="rule rule3">
+      <div data-t="cls"><h3>분류</h3><p>결과가 <b>정해진 범주 중 하나</b>예요. 예) 스팸 / 일반</p></div>
+      <div data-t="reg"><h3>회귀</h3><p>결과가 <b>숫자(수치)</b>예요. 예) 판매량 몇 개</p></div>
+      <div data-t="clu"><h3>군집</h3><p>정답 없이 <b>비슷한 것끼리 묶은 그룹</b>이에요. 예) 비슷한 성향 고객 묶기</p></div>
+    </div>
+    <div class="bar">
+      <span class="score" id="s1">0 / 12 맞힘</span>
+      <button class="btn" id="reset1">처음부터 다시</button>
+    </div>
+    <div class="grid1" id="grid1"></div>
+  </section>
+
+  <!-- 활동 2: 데이터 진단 클리닉 -->
+  <section class="panel" id="clinic" role="tabpanel" aria-labelledby="tab-clinic" hidden>
+    <div class="intro">
+      <h2>이 데이터, 어디가 아플까?</h2>
+      <p>사례를 읽고 데이터나 평가 방법에 있는 문제를 <b>모두</b> 골라 <b>진단하기</b>를 누르세요. 문제가 없는 항목은 고르지 않아요.</p>
+    </div>
+    <p class="link-note"><b>수행평가 연결</b> 문항 2는 <b>평가 방법 · 데이터 양 · 데이터 구성(다양성)</b>의 문제를 찾고 개선 방안을 쓰는 문제예요.</p>
+    <div class="casepick" id="pick2" aria-label="사례 고르기"></div>
+    <div class="casetext" id="text2"></div>
+    <div class="rows" id="rows2"></div>
+    <div class="bar">
+      <button class="btn primary" id="grade2">진단하기</button>
+      <button class="btn" id="reset2">다시 하기</button>
+      <span class="score" id="s2"></span>
+    </div>
+  </section>
+
+  <!-- 활동 3: 개선 방안 쓰기 -->
+  <section class="panel" id="fix" role="tabpanel" aria-labelledby="tab-fix" hidden>
+    <div class="intro">
+      <h2>문제 3가지와 개선 방안 쓰기</h2>
+      <p>수행평가 문항 2와 같은 형식이에요. 사례를 고르고, 세 가지 문제를 각각 설명한 뒤 개선 방안을 쓰세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
+    </div>
+    <p class="link-note"><b>채점기준 9점</b> 평가 방법 · 데이터 양 · 데이터 구성의 문제 3가지를 모두 정확히 설명하고, 각각 타당한 개선 방안을 제시</p>
+    <div class="two">
+      <div class="step" style="gap:18px">
+        <div class="step">
+          <h3><i>1</i> 사례 고르기</h3>
+          <div class="casepick" id="pick3"></div>
+          <div class="casetext" id="text3" style="font-size:17px;line-height:1.8"></div>
+        </div>
+        <div class="step" id="items3"></div>
+        <div class="bar">
+          <label class="classpick" id="classWrap" hidden>우리 반 <select id="classSel"></select></label>
+          <a class="btn primary" id="padlet3" target="_blank" rel="noopener" hidden>복사하고 패들렛에 붙이기 ↗</a>
+          <button class="btn" id="copy3">내 답안 복사하기</button>
+          <button class="btn" id="model3">예시 답안 보기</button>
+          <button class="btn" id="clear3">지우기</button>
+          <span class="toast" id="toast3" aria-live="polite"></span>
+        </div>
+        <p class="mark no" id="padletBad" hidden>선생님이 준 링크가 중간에 잘려서 우리 반 패들렛 목록을 불러오지 못했어요. 노션 수업 링크나 QR 코드로 다시 들어와 주세요.</p>
+        <p class="starter" id="padletHelp" hidden><span id="classHint">우리 반을 고른 뒤 </span>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛에서 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
+        <div class="model" id="modelbox" hidden></div>
+      </div>
+      <aside class="check" aria-live="polite">
+        <h3>자가 점검표</h3>
+        <ul id="checks"></ul>
+        <div class="level" id="level"></div>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <p>출처: 교과서 170~177쪽, 교사용 지도서 195~199쪽 내용을 바탕으로 만든 활동이에요. 쓴 내용은 이 기기의 브라우저에만 임시로 저장돼요.</p>
+    <details class="ref teacher" id="teacher" hidden>
+      <summary>선생님 설정 · 반별 패들렛 연결</summary>
+      <div class="tset">
+        <p>반마다 활동 3(개선 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
+        <div class="trow">
+          <label for="classCount" class="starter">반 수</label>
+          <input id="classCount" class="num" type="number" min="1" max="30" value="9">
+          <button class="btn" id="makeRows">반 수만큼 줄 만들기</button>
+        </div>
+        <div class="crows" id="classRows"></div>
+        <div class="trow">
+          <button class="btn" id="addRow">+ 반 추가</button>
+          <button class="btn primary" id="saveRows">이 기기에 저장</button>
+          <button class="btn" id="clearRows">모두 지우기</button>
+        </div>
+        <p class="tstatus" id="padletStatus" aria-live="polite"></p>
+        <p class="starter" id="activeNow"></p>
+        <div class="tbox" id="shareBox" hidden>
+          <b>전체 반 공용 링크</b>
+          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
+          <code id="shareLink"></code>
+          <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
+          <b>반별 링크</b>
+          <span class="starter">반이 정해진 링크라서 학생이 반을 고를 필요가 없어요. 반마다 다른 곳(클래스룸 등)에 올릴 때 좋아요.</span>
+          <ul class="clinks" id="classLinks"></ul>
+          <b>코드에 넣을 설정</b>
+          <span class="starter">index.html 스크립트 맨 위의 <code>PADLETS</code> 부분을 이 내용으로 바꾸면, 링크에 아무것도 붙이지 않아도 이 반 목록이 항상 적용돼요.</span>
+          <pre class="snippet" id="codeSnippet"></pre>
+          <div><button class="btn sm" data-copy="codeSnippet">설정 복사</button></div>
+        </div>
+        <p class="starter">이 설정 칸은 사이트 주소 끝에 <code>#teacher</code>를 붙여 열 때만 보여요. 학생 화면과 학생용 링크에서는 보이지 않아요.</p>
+        <p class="starter">적용 순서: ① 학생용 링크(공용·반별) → ② 코드에 적은 <code>PADLETS</code> → ③ 이 기기에 저장한 목록(전자칠판처럼 한 기기에서만 쓸 때).</p>
+      </div>
+    </details>
+  </footer>
+</div>
+</div>
+
+<script>
+/* ===== 선생님 설정: 반별 패들렛 =====
+   ["반 이름", "패들렛 주소"] 를 한 줄에 하나씩 넣으세요. 반 수는 학교에 맞게 줄을 늘리거나 줄이면 돼요.
+   비워 두면 사이트 주소 끝에 #teacher 를 붙여 연 '선생님 설정'에서 정할 수 있어요.
+   예)
+   const PADLETS = [
+     ["1반", "https://padlet.com/teacher/ai-1"],
+     ["2반", "https://padlet.com/teacher/ai-2"],
+   ];  */
+const PADLETS = [
+];
+/* =================================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem('ai2-'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('ai2-'+k,JSON.stringify(v))}catch(e){}}};
+
+/* 탭 */
+const KEYS=['types','clinic','fix'];
+function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
+  KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
+  store.set('tab',k); }
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.k); try{history.replaceState(null,'','#'+b.dataset.k)}catch(e){} window.scrollTo({top:0})}));
+{ const h=(location.hash||'').slice(1); showTab(KEYS.includes(h)?h:store.get('tab','types')); }
+
+/* 활동 1: 결과로 구분하기 */
+const FORMS=[{id:'cat',name:'정해진 범주 중 하나',t:'cls'},{id:'num',name:'숫자(수치)',t:'reg'},{id:'grp',name:'비슷한 것끼리 묶은 그룹',t:'clu'}];
+const TYPES=[{id:'cls',name:'분류'},{id:'reg',name:'회귀'},{id:'clu',name:'군집'}];
+const TYN=Object.fromEntries(TYPES.map(t=>[t.id,t.name]));
+const SITS=[
+ {d:'택배 상자의 무게와 보내는 거리를 보고 배송비(원)를 예측한다.',a:'reg',w:'결과가 ‘몇 원’이라는 숫자예요. 숫자를 예측하니 회귀예요.'},
+ {d:'학교 분실물 사진을 보고 ‘전자기기 / 옷 / 학용품’ 중 무엇인지 나눈다.',a:'cls',w:'결과가 미리 정해 둔 세 범주 중 하나예요. 그래서 분류예요.'},
+ {d:'웹툰 열람 기록을 분석해 취향이 비슷한 독자끼리 묶는다.',a:'clu',w:'정해진 정답 없이 비슷한 독자끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'어제까지의 기온과 습도로 내일의 미세 먼지 농도(㎍/㎥)를 예측한다.',a:'reg',w:'결과가 농도라는 숫자 값이에요. 그래서 회귀예요.'},
+ {d:'손으로 쓴 숫자 사진이 0부터 9 중 어떤 숫자인지 알아낸다.',a:'cls',w:'결과가 0~9라는 10개의 정해진 범주 중 하나예요. 숫자 모양이지만 ‘값의 크기’를 예측하는 게 아니라 범주를 고르는 것이라 분류예요.'},
+ {d:'편의점 고객의 구매 내역으로 구매 습관이 비슷한 고객끼리 묶는다.',a:'clu',w:'미리 정한 범주 없이 비슷한 고객끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'아파트의 넓이와 층수를 보고 집값을 예측한다.',a:'reg',w:'결과가 가격이라는 숫자예요. 그래서 회귀예요.'},
+ {d:'강아지 울음소리가 ‘경계 / 반가움 / 배고픔’ 중 어떤 뜻인지 알아낸다.',a:'cls',w:'결과가 정해 둔 세 가지 뜻 중 하나예요. 그래서 분류예요.'},
+ {d:'별의 밝기와 색깔 데이터로 성질이 비슷한 별끼리 묶는다.',a:'clu',w:'정답 없이 비슷한 별끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'버스에 탄 승객 수를 보고 다음 정류장까지 걸리는 시간(분)을 예측한다.',a:'reg',w:'결과가 ‘몇 분’이라는 숫자예요. 그래서 회귀예요.'},
+ {d:'인터넷 댓글이 ‘악성 댓글’인지 ‘일반 댓글’인지 판단한다.',a:'cls',w:'결과가 두 범주 중 하나예요. 그래서 분류예요.'},
+ {d:'교통사고가 난 위치 데이터를 분석해 사고가 많이 나는 구역끼리 묶는다.',a:'clu',w:'정해진 정답 없이 위치가 비슷한 사고끼리 구역으로 묶어요. 그래서 군집이에요.'}];
+const FORM_OF={cls:'cat',reg:'num',clu:'grp'};
+let a1=store.get('a1',{});
+function render1(){
+  const g=$('#grid1'); g.innerHTML=''; let ok=0, done=0;
+  SITS.forEach((it,i)=>{
+    const s=a1[i]||{}; const both=s.f&&s.t; if(both)done++;
+    const right=both&&s.t===it.a&&s.f===FORM_OF[it.a]; if(right)ok++;
+    const c=document.createElement('div'); c.className='card'+(both?(right?' right':' wrong'):'');
+    let fb='';
+    if(both){ const fRight=s.f===FORM_OF[it.a], tRight=s.t===it.a;
+      const head=right?'맞았어요':(tRight&&!fRight?'방법은 맞았지만 결과 모양을 다시 봐요':(!tRight&&fRight?'결과 모양은 맞았어요. 방법을 다시 골라 봐요':'다시 생각해 봐요'));
+      fb=`<div class="fb ${right?'ok':'no'}"><b>${head} · 정답: ${FORMS.find(f=>f.id===FORM_OF[it.a]).name} → ${TYN[it.a]}</b>${esc(it.w)}</div>`; }
+    c.innerHTML=`<span class="thing">상황 ${i+1}</span><p class="desc">${esc(it.d)}</p>
+      <div class="pick"><span class="pl">결과 모양</span><div class="chips">${FORMS.map(f=>`<button class="chip" data-t="${f.t}" data-f="${f.id}" aria-pressed="${s.f===f.id}">${f.name}</button>`).join('')}</div></div>
+      <div class="pick"><span class="pl">방법</span><div class="chips">${TYPES.map(t=>`<button class="chip" data-t="${t.id}" data-ty="${t.id}" aria-pressed="${s.t===t.id}">${t.name}</button>`).join('')}</div></div>${fb}`;
+    c.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),f:b.dataset.f};store.set('a1',a1);render1();}));
+    c.querySelectorAll('[data-ty]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),t:b.dataset.ty};store.set('a1',a1);render1();}));
+    g.appendChild(c);
+  });
+  $('#s1').textContent=`${ok} / 12 맞힘`+(done<12?` · ${12-done}개 남음`:' · 완료!');
+}
+$('#reset1').addEventListener('click',()=>{a1={};store.set('a1',a1);render1();});
+render1();
+
+/* 활동 2: 데이터 진단 클리닉 */
+const PROBS=[{id:'eval',name:'평가 방법',t:'cls'},{id:'amount',name:'데이터 양',t:'reg'},{id:'div',name:'데이터 구성(다양성)',t:'clu'},{id:'label',name:'레이블(정답) 오류',t:'lab'}];
+const PN=Object.fromEntries(PROBS.map(p=>[p.id,p.name]));
+const CLINIC=[
+ {id:'apple',name:'서준 · 사과 vs 배',text:'서준이는 ‘사과 vs 배’ 분류 모델을 만들려고 마트 과일 코너, 집, 급식실 등 여러 곳에서 사과 사진 60장과 배 사진 60장을 여러 각도로 찍었다. 120장을 모두 학습에 쓴 뒤, 같은 120장으로 평가했더니 정확도가 98%였다.',
+  has:{eval:'학습에 쓴 120장으로 그대로 평가했어요. 이미 본 사진이라 실력보다 점수가 높게 나와요. → 사진을 훈련 데이터와 테스트 데이터로 8:2(또는 7:3) 정도로 나누고, 학습에 쓰지 않은 테스트 데이터로 평가해요.'},
+  no:{amount:'사과와 배가 60장씩으로 양이 같아요.',div:'여러 장소와 각도에서 찍어 다양해요.',label:'레이블이 잘못 붙었다는 내용은 없어요.'}},
+ {id:'mask',name:'하은 · 마스크 착용 vs 미착용',text:'하은이는 ‘마스크 착용 vs 미착용’ 모델을 만들려고 반 친구 20명의 사진을 교실, 복도, 운동장에서 찍었다. 마스크를 쓴 사진은 200장, 쓰지 않은 사진은 15장이었다. 모은 사진을 8:2로 나눠 학습과 평가에 썼다.',
+  has:{amount:'착용 200장, 미착용 15장으로 한쪽이 훨씬 많아요. 모델이 무엇이든 ‘착용’이라고 답하기 쉬워요. → 미착용 사진을 더 모아 두 클래스의 양을 비슷하게 맞춰요.'},
+  no:{eval:'8:2로 나눠 학습과 평가에 따로 썼어요.',div:'여러 친구와 여러 장소에서 찍어 다양해요.',label:'레이블이 잘못 붙었다는 내용은 없어요.'}},
+ {id:'pencil',name:'지호 · 연필 vs 볼펜',text:'지호는 ‘연필 vs 볼펜’ 모델을 만들려고 자기 필통에 있는 연필 2자루와 볼펜 2자루를 흰 책상 위에 올려놓고 각각 100장씩 찍었다. 8:2로 나눠 평가하니 정확도 99%가 나왔지만, 친구 책상 위의 연필은 잘 알아보지 못했다.',
+  has:{div:'같은 흰 책상 위에서 같은 연필·볼펜만 찍어서 다양하지 않아요. 새로운 배경이나 다른 모양의 연필은 알아보지 못해요. → 여러 장소·배경·조명에서, 여러 종류의 연필과 볼펜을 찍어요.'},
+  no:{eval:'8:2로 나눠 평가했어요.',amount:'100장씩으로 양이 같아요.',label:'레이블이 잘못 붙었다는 내용은 없어요.'}},
+ {id:'sky',name:'민지 · 맑은 하늘 vs 흐린 하늘',text:'민지는 학교 옥상에서 오후 3시에만 맑은 하늘 사진 8장과 흐린 하늘 사진 7장을 찍었다. 15장을 모두 학습에 쓰고, 같은 15장으로 평가했다.',
+  has:{eval:'학습에 쓴 15장으로 그대로 평가했어요. → 훈련 데이터와 테스트 데이터를 나누고, 학습에 쓰지 않은 사진으로 평가해요.',amount:'모두 합쳐 15장뿐이라 학습하기에 너무 적어요. → 사진을 훨씬 더 많이 모아요.',div:'한 장소에서 같은 시각에만 찍었어요. → 여러 장소, 여러 시간대(아침·저녁), 여러 계절에 찍어요.'},
+  no:{label:'레이블이 잘못 붙었다는 내용은 없어요.'}},
+ {id:'banana',name:'도윤 · 익은 바나나 vs 덜 익은 바나나',text:'도윤이는 여러 마트와 집에서 다양한 조명으로 익은 바나나 150장, 덜 익은 바나나 150장을 찍어 8:2로 나눴다. 그런데 정리하다 보니 덜 익은 바나나 사진 30장에 ‘익은 바나나’라는 레이블이 붙어 있었다.',
+  has:{label:'덜 익은 바나나 30장에 정답이 잘못 붙어 있어요. 틀린 정답을 배우면 모델도 틀리게 판단해요. → 레이블을 하나씩 확인해 바르게 고쳐요.'},
+  no:{eval:'8:2로 나눴어요.',amount:'150장씩으로 양이 같아요.',div:'여러 장소와 조명에서 찍었어요.'}}];
+let c2=store.get('c2',0), a2=store.get('a2',{}), graded2=false;
+function pickers(el,list,cur,on){ el.innerHTML=list.map((c,i)=>`<button aria-pressed="${i===cur}" data-i="${i}">${esc(c.name)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>on(+b.dataset.i))); }
+function render2(){
+  const cs=CLINIC[c2], sel=a2[cs.id]||[];
+  pickers($('#pick2'),CLINIC,c2,i=>{c2=i;store.set('c2',i);graded2=false;render2();});
+  $('#text2').textContent=cs.text;
+  const rows=$('#rows2'); rows.innerHTML='';
+  const r=document.createElement('div'); r.className='row';
+  r.innerHTML=`<b>문제가 있는 항목을 모두 고르세요</b><div class="chips">${PROBS.map(p=>`<button class="chip" data-t="${p.t}" data-p="${p.id}" aria-pressed="${sel.includes(p.id)}">${p.name}</button>`).join('')}</div>`;
+  r.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{ let s=a2[cs.id]||[]; const p=b.dataset.p; s=s.includes(p)?s.filter(x=>x!==p):[...s,p]; a2[cs.id]=s; store.set('a2',a2); graded2=false; render2(); }));
+  rows.appendChild(r);
+  let ok=0;
+  if(graded2){
+    PROBS.forEach(p=>{ const truth=!!cs.has[p.id], pick=sel.includes(p.id), right=truth===pick; if(right)ok++;
+      const m=document.createElement('div'); m.className='mark '+(right?'ok':(truth?'no':'mid'));
+      const head=truth?(pick?'문제 있음 · 잘 찾았어요':'문제 있음 · 놓쳤어요'):(pick?'문제 없음 · 고르지 않아야 해요':'문제 없음 · 맞아요');
+      m.innerHTML=`<b>${p.name}: ${head}</b><br>${esc(truth?cs.has[p.id]:cs.no[p.id])}`;
+      rows.appendChild(m); });
+  }
+  $('#s2').textContent=graded2?`${ok} / 4 항목 정확`:'';
+}
+$('#grade2').addEventListener('click',()=>{graded2=true;render2();});
+$('#reset2').addEventListener('click',()=>{a2[CLINIC[c2].id]=[];store.set('a2',a2);graded2=false;render2();});
+render2();
+
+/* 활동 3: 개선 방안 쓰기 */
+const WCASES=[
+ {id:'spoon',name:'예린 · 젓가락 vs 숟가락',text:'예린이는 ‘젓가락 vs 숟가락’ 분류 모델을 만들기 위해 사진을 수집했다. 시간이 부족했던 예린이는 자기 집 식탁 매트 위에서만 젓가락 85장, 숟가락 15장, 총 100장을 찍었다(모든 사진의 배경이 같은 식탁 매트였다). 예린이는 100장을 모두 학습에 사용했고, 학습에 썼던 100장을 그대로 다시 사용해 평가했더니 “정확도 100%”가 나와 무척 뿌듯해했다.',
+  model:{eval:['학습에 사용한 100장을 그대로 평가에 다시 사용했다. 모델이 이미 학습한 사진이라 정답을 기억해서 맞힐 수 있으므로, 정확도 100%는 실제 실력보다 높게 나온 결과이다.','사진을 훈련 데이터와 테스트 데이터로 8:2 정도로 나누고, 학습에 사용하지 않은 테스트 데이터로 평가해야 한다.'],
+   amount:['젓가락은 85장, 숟가락은 15장으로 두 클래스의 데이터 양 차이가 크다. 모델이 데이터가 많은 젓가락으로 예측하는 경향이 생길 수 있다.','숟가락 사진을 더 모아서 두 클래스의 데이터 양을 비슷하게 맞춘다.'],
+   div:['모든 사진을 같은 식탁 매트 위에서만 찍어 배경이 똑같다. 모델이 물건이 아니라 배경을 보고 판단할 수 있고, 다른 장소에서는 잘 알아보지 못한다.','여러 장소와 배경, 다양한 조명과 각도에서, 여러 종류의 젓가락과 숟가락을 찍어 데이터를 다양하게 만든다.']}},
+ {id:'ball',name:'태민 · 축구공 vs 농구공',text:'태민이는 ‘축구공 vs 농구공’ 분류 모델을 만들기 위해 학교 체육관 바닥에서만 축구공 사진 70장과 농구공 사진 10장을 찍었다. 80장을 모두 학습시킨 뒤, 그중 20장을 골라 다시 평가했더니 “정확도 100%”가 나왔다.',
+  model:{eval:['학습에 사용한 80장 중에서 20장을 골라 평가했다. 이미 학습한 사진으로 평가했기 때문에 정확도가 실제보다 높게 나온다.','처음부터 사진을 훈련 데이터와 테스트 데이터로 나누고, 학습에 쓰지 않은 사진으로 평가한다.'],
+   amount:['축구공 70장, 농구공 10장으로 데이터 양이 한쪽으로 치우쳐 있다. 농구공을 잘 구분하지 못할 수 있다.','농구공 사진을 더 모아 두 클래스의 양을 비슷하게 맞춘다.'],
+   div:['체육관 바닥에서만 찍어 배경이 모두 같다. 운동장이나 교실처럼 다른 곳에 있는 공은 알아보지 못할 수 있다.','운동장, 교실, 집 등 여러 장소와 배경에서, 다양한 각도와 여러 종류의 공을 찍는다.']}},
+ {id:'signal',name:'수아 · 빨간불 vs 초록불',text:'수아는 ‘보행 신호 빨간불 vs 초록불’ 분류 모델을 만들기 위해 집 앞 횡단보도 한 곳에서 낮에만 빨간불 사진 90장과 초록불 사진 30장을 찍었다. 120장을 모두 학습에 쓰고, 같은 120장으로 평가했더니 “정확도 100%”가 나왔다.',
+  model:{eval:['학습에 쓴 120장으로 그대로 평가했다. 이미 학습한 사진이라 정답을 기억해서 맞힐 수 있으므로 정확도가 과대 평가된다.','사진을 훈련 데이터와 테스트 데이터로 7:3 정도로 나누고, 테스트 데이터는 학습에 쓰지 않고 평가에만 사용한다.'],
+   amount:['빨간불 90장, 초록불 30장으로 데이터 양 차이가 커서, 모델이 빨간불 쪽으로 판단하기 쉽다.','초록불 사진을 더 찍어서 두 클래스의 데이터 양을 비슷하게 맞춘다.'],
+   div:['한 횡단보도에서 낮에만 찍어 장소와 시간이 다양하지 않다. 밤이나 비 오는 날, 다른 횡단보도의 신호는 잘 알아보지 못할 수 있다.','여러 횡단보도에서 낮과 밤, 맑은 날과 비 오는 날 등 다양한 상황의 사진을 모은다.']}}];
+const ITEMS3=[
+ {id:'eval',name:'① 평가 방법의 문제',kp:['같은사진','같은데이터','그대로','학습에사용한','학습에쓴','학습에썼던','학습한','훈련데이터로','이미본','이미학습','외워','기억','과대'],kf:['테스트데이터','나누','나눠','분리','7:3','8:2','학습에쓰지않은','학습에사용하지않은','새로운사진','새로운데이터','처음보는'],
+  hp:'어떤 사진으로 평가했는지, 그게 왜 문제인지 써 보세요.',hf:'훈련 데이터와 테스트 데이터를 어떻게 나눌지 써 보세요.'},
+ {id:'amount',name:'② 데이터 양의 문제',kp:['적','불균형','차이','한쪽','치우','비율','많고','부족','장밖에'],kf:['더모','더찍','늘리','늘려','비슷','균형','맞추','맞춰','추가'],
+  hp:'두 클래스의 양이 어떤지, 그러면 어떤 일이 생기는지 써 보세요.',hf:'양을 어떻게 맞출지 써 보세요.'},
+ {id:'div',name:'③ 데이터 구성(다양성)의 문제',kp:['배경','장소','한곳','같은곳','조명','시간','낮에만','각도','종류','다양'],kf:['다양한','여러','다른장소','다른배경','각도','종류','밤','조명'],
+  hp:'사진이 어떤 점에서 다양하지 않은지 써 보세요.',hf:'어떻게 다양하게 모을지 써 보세요.'}];
+let d3=store.get('d3',{c:0,ans:{}});
+const norm=s=>String(s||'').replace(/[\s'"‘’“”.,·]/g,'');
+function key(id,part){ return `${WCASES[d3.c].id}:${id}:${part}`; }
+function val(id,part){ return (d3.ans||{})[key(id,part)]||''; }
+function save3(){store.set('d3',d3);}
+function render3(){
+  const cs=WCASES[d3.c];
+  pickers($('#pick3'),WCASES,d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
+  $('#text3').textContent=cs.text;
+  const box=$('#items3'); box.innerHTML=`<h3><i>2</i> 세 가지 문제와 개선 방안</h3>`;
+  ITEMS3.forEach(it=>{
+    const d=document.createElement('div'); d.className='item3';
+    d.innerHTML=`<b>${it.name}</b>
+      <label class="starter" for="p-${it.id}">문제 설명 · ${it.hp}</label><textarea id="p-${it.id}" class="sm"></textarea>
+      <label class="starter" for="f-${it.id}">개선 방안 · ${it.hf}</label><textarea id="f-${it.id}" class="sm"></textarea>`;
+    box.appendChild(d);
+    const p=d.querySelector('#p-'+it.id), f=d.querySelector('#f-'+it.id);
+    p.value=val(it.id,'p'); f.value=val(it.id,'f');
+    p.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'p')]=p.value; save3(); checks3(); });
+    f.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'f')]=f.value; save3(); checks3(); });
+  });
+  checks3();
+}
+function hit(text,kws){ const t=norm(text); return t.length>=12&&kws.some(k=>t.includes(k)); }
+function checks3(){
+  let full=0; const lis=[];
+  ITEMS3.forEach(it=>{ const p=hit(val(it.id,'p'),it.kp), f=hit(val(it.id,'f'),it.kf); if(p&&f)full++;
+    const hint=p&&f?'문제와 개선 방안을 모두 썼어요.':(!p?`문제 설명이 부족해요. ${it.hp}`:`개선 방안이 부족해요. ${it.hf}`);
+    lis.push(`<li class="${p&&f?'done':''}"><span class="dot">${p&&f?'✓':(p||f?'½':'')}</span><span>${it.name.slice(2)}<span class="hint">${hint}</span></span></li>`); });
+  $('#checks').innerHTML=lis.join('');
+  let txt,bg;
+  if(full===3){txt='9점 수준에 가까워요';bg='var(--ok-soft)';}
+  else if(full===2||(full===1&&ITEMS3.some(it=>hit(val(it.id,'p'),it.kp)&&!hit(val(it.id,'f'),it.kf)))){txt='6점 수준: 빠진 문제나 개선 방안을 채워요';bg='var(--mid-soft)';}
+  else {txt='아직 3점 수준: 세 가지 문제를 하나씩 찾아 써요';bg='var(--surface-2)';}
+  $('#level').style.background=bg; $('#level').innerHTML=`${txt}<small>자가 점검용 예상이에요. 실제 점수는 선생님이 채점기준표로 매겨요.</small>`;
+}
+$('#model3').addEventListener('click',()=>{
+  const cs=WCASES[d3.c], box=$('#modelbox'); if(!box.hidden){box.hidden=true;return;}
+  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p>`+ITEMS3.map(it=>`<p><b>${it.name}</b><br>문제: ${esc(cs.model[it.id][0])}<br>개선: ${esc(cs.model[it.id][1])}</p>`).join('')+`<p class="starter">먼저 내 답을 쓰고 비교해 보세요. 표현이 달라도 같은 내용이면 괜찮아요.</p>`;
+  box.hidden=false;
+});
+function answerText(){ const cs=WCASES[d3.c];
+  return `[사례] ${cs.name}\n`+ITEMS3.map(it=>`${it.name}\n- 문제: ${val(it.id,'p')}\n- 개선: ${val(it.id,'f')}`).join('\n'); }
+async function copyAnswer(okMsg){
+  try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
+  catch(e){const ta=$('#p-eval');if(ta){ta.focus();ta.select();}$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
+  setTimeout(()=>$('#toast3').textContent='',4000);
+}
+$('#copy3').addEventListener('click',()=>copyAnswer('복사했어요. 제출할 곳에 붙여 넣으세요.'));
+
+/* ===== 반별 패들렛 연결 ===== */
+function cleanPadlet(u){ if(!u)return null; try{ const x=new URL(String(u).trim()); const h=x.hostname.toLowerCase();
+  if(x.protocol!=='https:')return null; if(!(h==='padlet.com'||h.endsWith('.padlet.com')||h==='padlet.org'||h.endsWith('.padlet.org')))return null; return x.href; }catch(e){return null;} }
+function cleanList(arr){ if(!Array.isArray(arr))return [];
+  return arr.map(x=>Array.isArray(x)?{name:String(x[0]??'').trim(),url:cleanPadlet(x[1])}:{name:String((x&&x.name)??'').trim(),url:cleanPadlet(x&&x.url)})
+    .filter(x=>x.url).map((x,i)=>({name:x.name||`${i+1}반`,url:x.url})); }
+const b64e=s=>{ let b=''; new TextEncoder().encode(s).forEach(c=>b+=String.fromCharCode(c)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+const b64d=s=>{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='='; return new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0))); };
+function qp(){ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(); } }
+/* 짧은 형식: ?pb=패들렛아이디&pl=주섰1.주섰2.… (이름이 'N반'이 아니면 이름~주소) */
+const SLUG=/^[A-Za-z0-9_-]+$/;
+function fromShort(q){ const u=q.get('pb'), l=q.get('pl'); if(!u||!l||!SLUG.test(u)) return 'bad';
+  const out=l.split('.').filter(Boolean).map((s,i)=>{ const k=s.indexOf('~'); const name=k>=0?s.slice(0,k):`${i+1}반`, slug=k>=0?s.slice(k+1):s;
+    return SLUG.test(slug)?{name,url:`https://padlet.com/${u}/${slug}`}:null; });
+  const ok=cleanList(out.filter(Boolean)); const n=parseInt(q.get('pn'),10);
+  /* pn(반 개수)은 링크 맨 끝에 붙음. 링크가 잘리면 pn이 없거나 개수가 맞지 않아 잘린 것을 알 수 있음 */
+  return ok.length&&ok.length===out.length&&n===out.length?ok:'bad'; }
+function shortParams(V){ let user=null; const parts=[];
+  for(const [i,v] of V.entries()){ const m=v.url.match(/^https:\/\/padlet\.com\/([A-Za-z0-9_-]+)\/([A-Za-z0-9_-]+)\/?$/); if(!m) return null;
+    if(user&&user!==m[1]) return null; user=m[1]; if(/[.~]/.test(v.name)) return null;
+    parts.push(v.name===`${i+1}반`?m[2]:`${v.name}~${m[2]}`); }
+  return user?{pb:user,pl:parts.join('.')}:null; }
+function fromQuery(){ const q=qp();
+  if(q.get('pl')||q.get('pb')) return fromShort(q);
+  if(q.get('padlets')){ try{ const l=cleanList(JSON.parse(b64d(q.get('padlets')))); if(l.length) return l; }catch(e){} return 'bad'; }
+  if(q.get('padlet')){ const u=cleanPadlet(q.get('padlet')); if(u) return [{name:(q.get('class')||'').trim(),url:u}]; return 'bad'; }
+  return null; }
+function fromLocal(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets')||'[]')); }catch(e){ return []; } }
+/* 공용 링크(?padlets=)로 한 번 들어오면 그 기기에 반 목록을 기억해, 다음에 그냥 주소로 와도 패들렛 버튼이 나오게 함.
+   반별 링크는 기억하지 않음(여러 반이 같이 쓰는 태블릿에서 다른 반 패들렛에 올리는 일을 막기 위해). */
+function fromRemember(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets-link')||'[]')); }catch(e){ return []; } }
+function source(){ const q=fromQuery();
+  if(Array.isArray(q)){ if(qp().get('padlets')||qp().get('pl')){ try{ localStorage.setItem('ai-padlets-link',JSON.stringify(q.map(v=>[v.name,v.url]))); }catch(e){} }
+    return {list:q,src:'학생용 링크'}; }
+  const c=cleanList(PADLETS); if(c.length) return {list:c,src:'코드에 적은 PADLETS'};
+  const l=fromLocal(); if(l.length) return {list:l,src:'이 기기에 저장한 목록'};
+  const r=fromRemember(); if(r.length) return {list:r,src:'이 기기가 기억한 공용 링크'};
+  return {list:[],src:null,bad:q==='bad'}; }
+let SRC=source();
+function getClass(){ try{ return localStorage.getItem('ai-class'); }catch(e){ return null; } }
+function setClass(v){ try{ v?localStorage.setItem('ai-class',v):localStorage.removeItem('ai-class'); }catch(e){} }
+function chosen(){ const L=SRC.list; if(L.length===1) return L[0]; const n=getClass(); return L.find(x=>x.name===n)||null; }
+function renderStudent(){
+  const L=SRC.list, a=$('#padlet3'), w=$('#classWrap'), sel=$('#classSel');
+  a.hidden=!L.length; $('#padletHelp').hidden=!L.length; $('#padletBad').hidden=!SRC.bad; w.hidden=L.length<2; $('#classHint').hidden=L.length<2;
+  if(L.length>=2){ const cur=chosen();
+    sel.innerHTML='<option value="">반 고르기</option>'+L.map(x=>`<option value="${esc(x.name)}"${cur&&cur.name===x.name?' selected':''}>${esc(x.name)}</option>`).join(''); }
+  const c=chosen();
+  if(c){ a.href=c.url; a.textContent=`복사하고 ${c.name?c.name+' ':''}패들렛에 붙이기 ↗`; }
+  else { a.removeAttribute('href'); a.textContent='복사하고 패들렛에 붙이기 ↗'; }
+}
+$('#classSel').addEventListener('change',e=>{ setClass(e.target.value||null); renderStudent(); });
+$('#padlet3').addEventListener('click',e=>{
+  if(!$('#padlet3').getAttribute('href')){ e.preventDefault(); $('#toast3').textContent='먼저 우리 반을 골라 주세요.'; $('#classSel').focus(); setTimeout(()=>$('#toast3').textContent='',3000); return; }
+  copyAnswer('복사했어요. 새 탭의 패들렛에 붙여 넣으세요.'); });
+
+/* 선생님 설정: 반 목록 편집 */
+let rows=[];
+function initRows(){ const l=fromLocal(), c=cleanList(PADLETS);
+  rows=(l.length?l:c.length?c:[{name:'1반',url:''}]).map(x=>({name:x.name,url:x.url})); }
+function baseURL(){ try{ const x=new URL(location.href); x.search=''; x.hash=''; return x; }catch(e){ return null; } }
+function setStatus(msg,ok){ const s=$('#padletStatus'); s.textContent=msg; s.className='tstatus'+(ok===true?' ok':ok===false?' no':''); }
+function renderRows(){
+  const box=$('#classRows'); box.innerHTML='';
+  rows.forEach((r,i)=>{
+    const d=document.createElement('div'); d.className='crow';
+    d.innerHTML=`<input class="cname" id="cname-${i}" aria-label="${i+1}번째 반 이름" value="${esc(r.name)}"><input class="curl" id="curl-${i}" type="url" inputmode="url" autocomplete="off" aria-label="${i+1}번째 반 패들렛 주소" placeholder="https://padlet.com/아이디/패들렛이름" value="${esc(r.url)}"><button class="btn sm" aria-label="${esc(r.name||'이')} 줄 지우기">✕</button>`;
+    const [n,u,x]=d.children;
+    n.addEventListener('input',()=>{ rows[i].name=n.value; renderOutputs(); });
+    u.addEventListener('input',()=>{ rows[i].url=u.value.trim(); u.classList.toggle('bad',!!rows[i].url&&!cleanPadlet(rows[i].url)); renderOutputs(); });
+    u.classList.toggle('bad',!!r.url&&!cleanPadlet(r.url));
+    x.addEventListener('click',()=>{ rows.splice(i,1); if(!rows.length) rows.push({name:'1반',url:''}); renderRows(); });
+    box.appendChild(d);
+  });
+  renderOutputs();
+}
+function validRows(){ return rows.map(r=>({name:r.name.trim(),url:cleanPadlet(r.url)})).filter(r=>r.url).map((r,i)=>({name:r.name||`${i+1}반`,url:r.url})); }
+function renderOutputs(){
+  const V=validRows(), bad=rows.filter(r=>r.url&&!cleanPadlet(r.url)).length, empty=rows.filter(r=>!r.url).length;
+  const names=V.map(v=>v.name), dup=names.filter((n,i)=>names.indexOf(n)!==i);
+  let msg=`주소가 들어간 반 ${V.length}개`; if(empty) msg+=` · 빈 줄 ${empty}개`; if(bad) msg+=` · 패들렛 주소가 아닌 줄 ${bad}개(빨간 칸)`;
+  if(dup.length) msg+=` · 반 이름이 겹쳐요: ${[...new Set(dup)].join(', ')}`;
+  setStatus(msg, V.length&&!bad&&!dup.length?true:(bad||dup.length?false:null));
+  $('#activeNow').textContent = SRC.src?`지금 학생 화면에 적용 중: ${SRC.src} (${SRC.list.length}개 반)`:'지금 학생 화면에는 연결된 패들렛이 없어서 ‘내 답안 복사하기’ 버튼만 보여요.';
+  const base=baseURL(); $('#shareBox').hidden=!(V.length&&base); if(!V.length||!base) return;
+  const all=new URL(base), sp=shortParams(V);
+  if(sp){ all.searchParams.set('pb',sp.pb); all.searchParams.set('pl',sp.pl); all.searchParams.set('pn',String(V.length)); } else all.searchParams.set('padlets',b64e(JSON.stringify(V.map(v=>[v.name,v.url]))));
+  $('#shareLink').textContent=all.href;
+  $('#classLinks').innerHTML=V.map((v,i)=>{ const one=new URL(base); one.searchParams.set('padlet',v.url); one.searchParams.set('class',v.name);
+    return `<li><b>${esc(v.name)}</b><code id="clink-${i}">${esc(one.href)}</code><button class="btn sm" data-copy="clink-${i}">복사</button></li>`; }).join('');
+  $('#codeSnippet').textContent='const PADLETS = [\n'+V.map(v=>`  [${JSON.stringify(v.name)}, ${JSON.stringify(v.url)}],`).join('\n')+'\n];';
+}
+$('#makeRows').addEventListener('click',()=>{ const n=Math.max(1,Math.min(30,parseInt($('#classCount').value,10)||1));
+  rows=Array.from({length:n},(_,i)=>({name:rows[i]&&rows[i].name.trim()?rows[i].name:`${i+1}반`,url:rows[i]?rows[i].url:''})); renderRows(); });
+$('#addRow').addEventListener('click',()=>{ rows.push({name:`${rows.length+1}반`,url:''}); renderRows(); const l=$('#classRows').lastElementChild; if(l) l.children[1].focus(); });
+$('#saveRows').addEventListener('click',()=>{ const V=validRows();
+  try{ V.length?localStorage.setItem('ai-padlets',JSON.stringify(V.map(v=>[v.name,v.url]))):localStorage.removeItem('ai-padlets'); }catch(e){}
+  SRC=source(); renderStudent(); renderOutputs();
+  setStatus(V.length?`${V.length}개 반을 이 기기에 저장했어요.`+(SRC.src!=='이 기기에 저장한 목록'?` 다만 지금은 ${SRC.src}이(가) 먼저 적용되고 있어요.`:''):'저장할 주소가 없어서 이 기기의 목록을 비웠어요.', V.length?true:null); });
+const clrR=$('#clearRows'); let armedR=false;
+clrR.addEventListener('click',()=>{ if(!armedR){armedR=true;clrR.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armedR=false;clrR.textContent='모두 지우기';},3000);return;}
+  armedR=false; clrR.textContent='모두 지우기'; try{ localStorage.removeItem('ai-padlets'); localStorage.removeItem('ai-padlets-link'); }catch(e){}
+  rows=[{name:'1반',url:''}]; SRC=source(); renderStudent(); renderRows(); });
+$('#shareBox').addEventListener('click',async e=>{ const b=e.target.closest('[data-copy]'); if(!b) return; const el=document.getElementById(b.dataset.copy), t=el.textContent, old=b.textContent;
+  try{ await navigator.clipboard.writeText(t); b.textContent='복사했어요'; }
+  catch(err){ const r=document.createRange(); r.selectNodeContents(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='선택됨, Ctrl+C'; }
+  setTimeout(()=>b.textContent=old,2500); });
+renderStudent(); initRows(); renderRows();
+if(SRC.bad) setStatus('링크에 들어 있는 주소가 패들렛 주소가 아니라서 연결하지 않았어요.',false);
+/* 선생님 설정 칸: 주소 끝에 #teacher가 있고, 학생용 링크로 들어온 게 아닐 때만 보임 */
+function teacherMode(){
+  const on=(location.hash||'')==='#teacher' && fromQuery()===null;
+  const t=$('#teacher'); t.hidden=!on;
+  if(on){ t.open=true; setTimeout(()=>t.scrollIntoView({block:'start'}),50); }
+}
+window.addEventListener('hashchange',teacherMode);
+teacherMode();
+const clr=$('#clear3'); let armed=false;
+clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armed=false;clr.textContent='지우기';},3000);return;}
+  const id=WCASES[d3.c].id; Object.keys(d3.ans||{}).forEach(k=>{ if(k.startsWith(id+':')) delete d3.ans[k]; }); save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
+render3();
+</script>
+
+</body>
+</html>
