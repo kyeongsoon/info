@@ -169,6 +169,12 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .pl{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
 .item3{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
 textarea.sm{min-height:64px}
+.evpick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.evpick .pl{width:100%;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.evchip{font:inherit;font-size:14.5px;line-height:1.45;text-align:left;cursor:pointer;border:1.5px dashed var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 10px;max-width:100%}
+.evchip:hover{border-color:var(--accent)}
+.evchip[aria-pressed="true"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.evchip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .casetext{white-space:normal}
 @media (max-width:760px){ .rule3{grid-template-columns:minmax(0,1fr)} }
 </style>
@@ -414,15 +420,15 @@ render2();
 
 /* 활동 3: 개선 방안 쓰기 */
 const WCASES=[
- {id:'spoon',name:'예린 · 젓가락 vs 숟가락',text:'예린이는 ‘젓가락 vs 숟가락’ 분류 모델을 만들기 위해 사진을 수집했다. 시간이 부족했던 예린이는 자기 집 식탁 매트 위에서만 젓가락 85장, 숟가락 15장, 총 100장을 찍었다(모든 사진의 배경이 같은 식탁 매트였다). 예린이는 100장을 모두 학습에 사용했고, 학습에 썼던 100장을 그대로 다시 사용해 평가했더니 “정확도 100%”가 나와 무척 뿌듯해했다.',
+ {id:'spoon',name:'예린 · 젓가락 vs 숟가락',chunks:['자기 집 식탁 매트 위에서만','젓가락 85장, 숟가락 15장, 총 100장을 찍었다','모든 사진의 배경이 같은 식탁 매트였다','100장을 모두 학습에 사용했고','학습에 썼던 100장을 그대로 다시 사용해 평가했더니','“정확도 100%”가 나와 무척 뿌듯해했다'],text:'예린이는 ‘젓가락 vs 숟가락’ 분류 모델을 만들기 위해 사진을 수집했다. 시간이 부족했던 예린이는 자기 집 식탁 매트 위에서만 젓가락 85장, 숟가락 15장, 총 100장을 찍었다(모든 사진의 배경이 같은 식탁 매트였다). 예린이는 100장을 모두 학습에 사용했고, 학습에 썼던 100장을 그대로 다시 사용해 평가했더니 “정확도 100%”가 나와 무척 뿌듯해했다.',
   model:{eval:['학습에 사용한 100장을 그대로 평가에 다시 사용했다. 모델이 이미 학습한 사진이라 정답을 기억해서 맞힐 수 있으므로, 정확도 100%는 실제 실력보다 높게 나온 결과이다.','사진을 훈련 데이터와 테스트 데이터로 8:2 정도로 나누고, 학습에 사용하지 않은 테스트 데이터로 평가해야 한다.'],
    amount:['젓가락은 85장, 숟가락은 15장으로 두 클래스의 데이터 양 차이가 크다. 모델이 데이터가 많은 젓가락으로 예측하는 경향이 생길 수 있다.','숟가락 사진을 더 모아서 두 클래스의 데이터 양을 비슷하게 맞춘다.'],
    div:['모든 사진을 같은 식탁 매트 위에서만 찍어 배경이 똑같다. 모델이 물건이 아니라 배경을 보고 판단할 수 있고, 다른 장소에서는 잘 알아보지 못한다.','여러 장소와 배경, 다양한 조명과 각도에서, 여러 종류의 젓가락과 숟가락을 찍어 데이터를 다양하게 만든다.']}},
- {id:'ball',name:'태민 · 축구공 vs 농구공',text:'태민이는 ‘축구공 vs 농구공’ 분류 모델을 만들기 위해 학교 체육관 바닥에서만 축구공 사진 70장과 농구공 사진 10장을 찍었다. 80장을 모두 학습시킨 뒤, 그중 20장을 골라 다시 평가했더니 “정확도 100%”가 나왔다.',
+ {id:'ball',name:'태민 · 축구공 vs 농구공',chunks:['학교 체육관 바닥에서만','축구공 사진 70장과 농구공 사진 10장을 찍었다','80장을 모두 학습시킨 뒤','그중 20장을 골라 다시 평가했더니','“정확도 100%”가 나왔다'],text:'태민이는 ‘축구공 vs 농구공’ 분류 모델을 만들기 위해 학교 체육관 바닥에서만 축구공 사진 70장과 농구공 사진 10장을 찍었다. 80장을 모두 학습시킨 뒤, 그중 20장을 골라 다시 평가했더니 “정확도 100%”가 나왔다.',
   model:{eval:['학습에 사용한 80장 중에서 20장을 골라 평가했다. 이미 학습한 사진으로 평가했기 때문에 정확도가 실제보다 높게 나온다.','처음부터 사진을 훈련 데이터와 테스트 데이터로 나누고, 학습에 쓰지 않은 사진으로 평가한다.'],
    amount:['축구공 70장, 농구공 10장으로 데이터 양이 한쪽으로 치우쳐 있다. 농구공을 잘 구분하지 못할 수 있다.','농구공 사진을 더 모아 두 클래스의 양을 비슷하게 맞춘다.'],
    div:['체육관 바닥에서만 찍어 배경이 모두 같다. 운동장이나 교실처럼 다른 곳에 있는 공은 알아보지 못할 수 있다.','운동장, 교실, 집 등 여러 장소와 배경에서, 다양한 각도와 여러 종류의 공을 찍는다.']}},
- {id:'signal',name:'수아 · 빨간불 vs 초록불',text:'수아는 ‘보행 신호 빨간불 vs 초록불’ 분류 모델을 만들기 위해 집 앞 횡단보도 한 곳에서 낮에만 빨간불 사진 90장과 초록불 사진 30장을 찍었다. 120장을 모두 학습에 쓰고, 같은 120장으로 평가했더니 “정확도 100%”가 나왔다.',
+ {id:'signal',name:'수아 · 빨간불 vs 초록불',chunks:['집 앞 횡단보도 한 곳에서','낮에만','빨간불 사진 90장과 초록불 사진 30장을 찍었다','120장을 모두 학습에 쓰고','같은 120장으로 평가했더니','“정확도 100%”가 나왔다'],text:'수아는 ‘보행 신호 빨간불 vs 초록불’ 분류 모델을 만들기 위해 집 앞 횡단보도 한 곳에서 낮에만 빨간불 사진 90장과 초록불 사진 30장을 찍었다. 120장을 모두 학습에 쓰고, 같은 120장으로 평가했더니 “정확도 100%”가 나왔다.',
   model:{eval:['학습에 쓴 120장으로 그대로 평가했다. 이미 학습한 사진이라 정답을 기억해서 맞힐 수 있으므로 정확도가 과대 평가된다.','사진을 훈련 데이터와 테스트 데이터로 7:3 정도로 나누고, 테스트 데이터는 학습에 쓰지 않고 평가에만 사용한다.'],
    amount:['빨간불 90장, 초록불 30장으로 데이터 양 차이가 커서, 모델이 빨간불 쪽으로 판단하기 쉽다.','초록불 사진을 더 찍어서 두 클래스의 데이터 양을 비슷하게 맞춘다.'],
    div:['한 횡단보도에서 낮에만 찍어 장소와 시간이 다양하지 않다. 밤이나 비 오는 날, 다른 횡단보도의 신호는 잘 알아보지 못할 수 있다.','여러 횡단보도에서 낮과 밤, 맑은 날과 비 오는 날 등 다양한 상황의 사진을 모은다.']}}];
@@ -446,26 +452,40 @@ function render3(){
   ITEMS3.forEach(it=>{
     const d=document.createElement('div'); d.className='item3';
     d.innerHTML=`<b>${it.name}</b>
-      <label class="starter" for="p-${it.id}">문제 설명 · ${it.hp}</label><textarea id="p-${it.id}" class="sm"></textarea>
+      <label class="starter" for="p-${it.id}">문제 설명 · 지문에서 문제가 되는 부분을 누르고, 왜 문제인지 이어 쓰세요.</label><div class="evpick" id="ep-${it.id}"></div><textarea id="p-${it.id}" class="sm"></textarea>
       <label class="starter" for="f-${it.id}">개선 방안 · ${it.hf}</label><textarea id="f-${it.id}" class="sm"></textarea>`;
     box.appendChild(d);
     const p=d.querySelector('#p-'+it.id), f=d.querySelector('#f-'+it.id);
-    p.value=val(it.id,'p'); f.value=val(it.id,'f');
+    p.value=val(it.id,'p'); f.value=val(it.id,'f'); bindPick(it,p);
     p.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'p')]=p.value; save3(); checks3(); });
     f.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'f')]=f.value; save3(); checks3(); });
   });
   checks3();
 }
 function hit(text,kws){ const t=norm(text); return t.length>=12&&kws.some(k=>t.includes(k)); }
+/* 문제 설명은 따옴표 속 지문과 자동 문구를 빼고, 학생이 직접 쓴 이유만 보고 점검 */
+function stripQ(s){ return String(s||'').replace(/‘[^’]*’/g,'').replace(/이?라는 부분(이|도) 문제이다\.?|왜냐하면|또한/g,''); }
+/* 받침에 따라 '이라는/라는' */
+function rn(s){ const ch=[...String(s).replace(/[\s'"‘’“”.,·)%]+$/,'')].pop()||''; const c=ch.charCodeAt(0); return (c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?'이라는':'라는'; }
+function pHit(it){ const t=norm(stripQ(val(it.id,'p'))); return t.length>=6&&it.kp.some(k=>t.includes(k)); }
+/* 지문 조각을 눌러 문제 부분 넣기 */
+function bindPick(it,p){ const cs=WCASES[d3.c], el=document.getElementById('ep-'+it.id);
+  const draw=()=>{ const v=val(it.id,'p');
+    el.innerHTML='<span class="pl">지문에서 문제 부분 고르기</span>'+cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${v.includes(c)}">${esc(c)}</button>`).join('');
+    el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cs.chunks[+b.dataset.i]; let v=val(it.id,'p'); if(v.includes(c)) return;
+      const t=v.trimEnd(), add=`또한 ‘${c}’${rn(c)} 부분도 문제이다.`;
+      v=t.endsWith('왜냐하면')?t.slice(0,-4).trimEnd()+` ${add} 왜냐하면 `:(v.trim()?t+` ${add}`:`‘${c}’${rn(c)} 부분이 문제이다. 왜냐하면 `);
+      d3.ans=d3.ans||{}; d3.ans[key(it.id,'p')]=v; save3(); p.value=v; draw(); checks3(); p.focus(); try{p.setSelectionRange(v.length,v.length);}catch(e){} })); };
+  draw(); p.addEventListener('input',draw); }
 function checks3(){
   let full=0; const lis=[];
-  ITEMS3.forEach(it=>{ const p=hit(val(it.id,'p'),it.kp), f=hit(val(it.id,'f'),it.kf); if(p&&f)full++;
+  ITEMS3.forEach(it=>{ const p=pHit(it), f=hit(val(it.id,'f'),it.kf); if(p&&f)full++;
     const hint=p&&f?'문제와 개선 방안을 모두 썼어요.':(!p?`문제 설명이 부족해요. ${it.hp}`:`개선 방안이 부족해요. ${it.hf}`);
     lis.push(`<li class="${p&&f?'done':''}"><span class="dot">${p&&f?'✓':(p||f?'½':'')}</span><span>${it.name.slice(2)}<span class="hint">${hint}</span></span></li>`); });
   $('#checks').innerHTML=lis.join('');
   let txt,bg;
   if(full===3){txt='9점 수준에 가까워요';bg='var(--ok-soft)';}
-  else if(full===2||(full===1&&ITEMS3.some(it=>hit(val(it.id,'p'),it.kp)&&!hit(val(it.id,'f'),it.kf)))){txt='6점 수준: 빠진 문제나 개선 방안을 채워요';bg='var(--mid-soft)';}
+  else if(full===2||(full===1&&ITEMS3.some(it=>pHit(it)&&!hit(val(it.id,'f'),it.kf)))){txt='6점 수준: 빠진 문제나 개선 방안을 채워요';bg='var(--mid-soft)';}
   else {txt='아직 3점 수준: 세 가지 문제를 하나씩 찾아 써요';bg='var(--surface-2)';}
   $('#level').style.background=bg; $('#level').innerHTML=`${txt}<small>자가 점검용 예상이에요. 실제 점수는 선생님이 채점기준표로 매겨요.</small>`;
 }

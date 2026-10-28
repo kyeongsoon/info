@@ -473,14 +473,16 @@ function render3(){
   renderEvPick();
   checks3();
 }
+/* 받침에 따라 '이라는/라는' */
+function rn(s){ const ch=[...String(s).replace(/[\s'"‘’“”.,·)%]+$/,'')].pop()||''; const c=ch.charCodeAt(0); return (c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?'이라는':'라는'; }
 /* 지문 조각을 눌러 근거 넣기 */
 function renderEvPick(){ const cl=clues(CASES[d3.c]);
   [['evpick1','ev1','t1'],['evpick2','ev2','t2']].forEach(([pid,ek,tk])=>{ const el=$('#'+pid);
     el.innerHTML='<span class="pl">지문에서 근거 고르기</span>'+cl.map((p,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${(d3[ek]||'').includes(p.c)}">${esc(p.c)}</button>`).join('');
     el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cl[+b.dataset.i].c; let v=d3[ek]||''; if(v.includes(c)) return;
       const nm=d3[tk]?TN[d3[tk]]:'○○';
-      const add=`또한 ‘${c}’라는 부분에서도 알 수 있다.`, t=v.trimEnd();
-      v=t.endsWith('왜냐하면')?t.slice(0,-4).trimEnd()+` ${add} 왜냐하면 `:v.trim()?t+` ${add}`:`‘${c}’라는 부분에서 ${nm} 특성이 나타난다.`;
+      const add=`또한 ‘${c}’${rn(c)} 부분에서도 알 수 있다.`, t=v.trimEnd();
+      v=t.endsWith('왜냐하면')?t.slice(0,-4).trimEnd()+` ${add} 왜냐하면 `:v.trim()?t+` ${add}`:`‘${c}’${rn(c)} 부분에서 ${nm} 특성이 나타난다.`;
       d3[ek]=v; save3(); render3(); const ta=$('#'+ek); ta.focus(); try{ta.setSelectionRange(v.length,v.length);}catch(e){} }));
   }); }
 const norm=s=>s.replace(/[\s'"‘’“”.,·]/g,'');
