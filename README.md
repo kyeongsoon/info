@@ -9,6 +9,7 @@
 | [data-practice](data-practice/) | 데이터 수행평가 연습실 | Ⅱ. 데이터 · 수행평가(데이터의 표현·분석) 대비 | 개념 정리, 낱말 조각을 끌어다 놓는 서술형 답안 조립, 채점기준 자동 채점과 예시답안 (연습문제: 사물함 대여 · 문제 풀이와 단원평가) |
 | [ai-lesson1](ai-lesson1/) | 인공지능 1차시 | Ⅳ. 인공지능 · 1. 인공지능과 학습 · 1차시 | ① 사례 속 근거로 특성 찾기(특성 탐정) ② 수행평가 문항 1 형식의 특성 연결 글쓰기(자가 점검표·예시답안·반별 패들렛 제출) ③ AI인지 아닌지 판별 — 1차시 PPT 순서와 같음 |
 | [ai-lesson2](ai-lesson2/) | 인공지능 2차시 | Ⅳ. 인공지능 · 1. 인공지능과 학습 · 2차시 | ① 결과 모양으로 분류·회귀·군집 구분하기 ② 데이터 진단 클리닉(평가 방법·양·다양성·레이블) ③ 수행평가 문항 2 형식의 개선 방안 쓰기(자가 점검표·예시답안·반별 패들렛 제출) — 2차시 PPT 순서와 같음 |
+| [ai-lesson3](ai-lesson3/) | 인공지능 3차시 | Ⅳ. 인공지능 · 2. 인공지능과 문제 해결 · 3차시 | ① 개인 정보 동의서 고치기(필요한 항목·목적·보유 기간) ② 데이터 편향 탐지기(O/X와 이유) ③ 수행평가 문항 4(2) 형식의 편향 피해와 해결 방안 쓰기(자가 점검표·예시답안·반별 패들렛 제출) — 3차시 PPT 순서와 같음 |
 | [lesson-timer](lesson-timer/) | 수업 타이머 | 교사용 (모든 차시) | 도입·전개·정리 활동별 타이머, 원형 타이머·작게 보기·예약 시작. 윈도우 exe와 웹 버전 |
 
 ## GitHub Pages 주소
@@ -19,9 +20,10 @@ Pages를 켜면 각 사이트는 아래 형식의 주소로 열립니다.
 - `https://kyeongsoon.github.io/info/data-practice/`
 - `https://kyeongsoon.github.io/info/ai-lesson1/`
 - `https://kyeongsoon.github.io/info/ai-lesson2/`
+- `https://kyeongsoon.github.io/info/ai-lesson3/`
 - `https://kyeongsoon.github.io/info/lesson-timer/`
 
-## 반별 패들렛 연결 (ai-lesson1, ai-lesson2)
+## 반별 패들렛 연결 (ai-lesson1, ai-lesson2, ai-lesson3)
 
 - 선생님 설정은 주소 끝에 `#teacher`를 붙여 열면 보입니다. 예) `https://kyeongsoon.github.io/info/ai-lesson1/#teacher`
 - 반 수를 넣고 '반 수만큼 줄 만들기' 또는 '+ 반 추가'로 반마다 패들렛 주소를 넣습니다.

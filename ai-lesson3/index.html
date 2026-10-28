@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인공지능 3차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 교과서식 단원 머리띠 + 큰 활동 탭, 아래에 활동 카드. 선택 칩과 정답·오답 표시 색을 끝까지 일관되게 */
+:root{
+  --bg:#eef2f0; --surface:#ffffff; --surface-2:#f6f8f7; --ink:#16212b; --muted:#56636e; --line:#d3dbd7;
+  --accent:#0d6b62; --accent-ink:#ffffff; --accent-soft:#d8ece8;
+  --ok:#1d7f46; --ok-soft:#dcf1e4; --bad:#b8322a; --bad-soft:#f8e0dd; --mid:#9a6a10; --mid-soft:#f6ecd4;
+  --t-perc:#2459b8; --t-learn:#1d7f46; --t-opt:#a8650e; --t-auto:#b22e6f; --t-pred:#6a49c9;
+  --display:"Do Hyeon","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --surface:#19221f; --surface-2:#1f2a27; --ink:#e6ece9; --muted:#9caaa5; --line:#31403b;
+  --accent:#4fc2b4; --accent-ink:#06201c; --accent-soft:#163a35;
+  --ok:#5cc98a; --ok-soft:#183626; --bad:#f07a70; --bad-soft:#3d1d1a; --mid:#e3b45a; --mid-soft:#3a2e14;
+  --t-perc:#78a6f5; --t-learn:#5cc98a; --t-opt:#e3a957; --t-auto:#f07ab3; --t-pred:#a993f5; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:980px;margin:0 auto}
+[data-t="perc"]{--tc:var(--t-perc)} [data-t="learn"]{--tc:var(--t-learn)} [data-t="opt"]{--tc:var(--t-opt)}
+[data-t="auto"]{--tc:var(--t-auto)} [data-t="pred"]{--tc:var(--t-pred)}
+header.top{padding-block:28px 18px;display:grid;gap:6px}
+.eyebrow{font-size:14px;letter-spacing:.06em;color:var(--muted);font-weight:500}
+.eyebrow b{color:var(--accent)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);line-height:1.15;margin:0;text-wrap:balance}
+.goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.goal{font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted)}
+.goal b{color:var(--ink);font-weight:500}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tab{font:inherit;cursor:pointer;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 14px;display:grid;gap:0;min-width:0}
+.tab small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.tab span{font-family:var(--display);font-size:21px;line-height:1.25}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-selected="true"] small{color:var(--accent-ink);opacity:.85}
+.tab:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.panel{padding-top:22px;display:grid;gap:18px}
+.intro{display:grid;gap:4px}
+.intro h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0;line-height:1.2}
+.intro p{margin:0;color:var(--muted);max-width:68ch}
+.link-note{font-size:14.5px;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:8px 12px;max-width:max-content}
+.link-note b{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.score{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px}
+.btn{font:inherit;font-weight:500;cursor:pointer;border-radius:10px;padding:9px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* 활동 1 */
+.grid1{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px;align-content:start;min-width:0}
+.card .thing{font-size:13.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.card .desc{margin:0;font-size:16.5px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice button{font:inherit;cursor:pointer;border-radius:10px;padding:8px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);font-weight:500}
+.choice button[aria-pressed="true"]{border-color:var(--ink)}
+.card.right{border-color:var(--ok);background:linear-gradient(var(--ok-soft),var(--ok-soft)) top/100% 4px no-repeat,var(--surface)}
+.card.wrong{border-color:var(--bad);background:linear-gradient(var(--bad-soft),var(--bad-soft)) top/100% 4px no-repeat,var(--surface)}
+.fb{font-size:15px;border-radius:8px;padding:8px 10px}
+.fb.ok{background:var(--ok-soft)} .fb.no{background:var(--bad-soft)}
+.fb b{display:block}
+.rule{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule > div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.rule h3{margin:0 0 4px;font-size:16px}
+.rule p{margin:0;font-size:15px;color:var(--muted)}
+/* 특성 참고 */
+details.ref{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details.ref summary{cursor:pointer;font-weight:500}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+.refgrid div{border-left:4px solid var(--tc);padding:2px 0 2px 10px;font-size:14.5px;min-width:0}
+.refgrid b{color:var(--tc);display:block;font-size:15.5px}
+/* 활동 2 */
+.casepick{display:flex;flex-wrap:wrap;gap:8px}
+.casepick button{font:inherit;cursor:pointer;border-radius:999px;padding:6px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.casepick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.casetext{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;font-size:18px;line-height:1.95;max-width:none}
+.clue{border-bottom:2px dashed var(--muted);padding:1px 2px;border-radius:4px}
+.clue sup{font-size:12px;font-weight:700;color:var(--accent);margin-right:2px}
+.clue.tagged{border-bottom:3px solid var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent)}
+.rows{display:grid;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
+.row q{font-weight:500}
+.row q::before{content:attr(data-n) "  ";color:var(--accent);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:15px;cursor:pointer;border-radius:999px;padding:5px 12px;border:1.5px solid var(--tc);background:transparent;color:var(--tc);font-weight:500}
+.chip[aria-pressed="true"]{background:var(--tc);color:var(--surface)}
+.mark{font-size:15px;border-radius:8px;padding:6px 10px}
+.mark.ok{background:var(--ok-soft)} .mark.no{background:var(--bad-soft)} .mark.mid{background:var(--mid-soft)}
+/* 활동 3 */
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.step{display:grid;gap:8px}
+.step h3{margin:0;font-size:16px;display:flex;gap:8px;align-items:baseline}
+.step h3 i{font-style:normal;color:var(--accent);font-family:var(--display);font-size:20px;font-weight:400}
+.prompt{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:15.5px}
+.pairsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairsel > div{display:grid;gap:6px;min-width:0}
+.pairsel label{font-size:14px;color:var(--muted);font-weight:500}
+textarea{font:inherit;font-size:16px;width:100%;min-height:92px;resize:vertical;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink)}
+textarea.rel{min-height:120px}
+.starter{font-size:14px;color:var(--muted)}
+.check{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
+.check h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.check ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.check li{display:grid;grid-template-columns:24px 1fr;gap:6px;font-size:15px;align-items:start}
+.check li .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);margin-top:3px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.check li.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.check li .hint{display:block;color:var(--muted);font-size:13.5px}
+.level{border-radius:10px;padding:10px 12px;font-weight:500}
+.level small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.model{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:15.5px}
+.model p{margin:0 0 6px}
+.toast{font-size:14px;color:var(--ok);min-height:1.2em}
+footer{margin-top:28px;font-size:13.5px;color:var(--muted);display:grid;gap:12px}
+footer p{margin:0}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.teacher{color:var(--ink);font-size:15px}
+.tset{display:grid;gap:10px;margin-top:10px}
+.trow{display:flex;flex-wrap:wrap;gap:8px}
+.trow input{font:inherit;flex:1 1 260px;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);color:var(--ink)}
+.trow input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tstatus{font-weight:500;min-height:1.2em}
+.tstatus.ok{color:var(--ok)} .tstatus.no{color:var(--bad)}
+.tbox{display:grid;gap:6px;background:var(--surface-2);border-radius:10px;padding:10px 12px;min-width:0}
+.tbox code,.tset code{font-size:13.5px;word-break:break-all;overflow-wrap:anywhere}
+.trow label{align-self:center}
+.trow input.num{flex:0 0 5.5em}
+.btn.sm{padding:5px 10px;font-size:14px}
+.classpick{display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.classpick select{font:inherit;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface);color:var(--ink)}
+.classpick select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.crows{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:6.5em minmax(0,1fr) auto;gap:6px}
+.crow input{font:inherit;font-size:15px;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--surface);color:var(--ink)}
+.crow input:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.crow input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.clinks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.clinks li{display:grid;grid-template-columns:4.5em minmax(0,1fr) auto;gap:8px;align-items:center}
+.snippet{margin:0;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-x:auto;white-space:pre;color:var(--ink)}
+@media (max-width:760px){
+  .two{grid-template-columns:minmax(0,1fr)} .check{position:static}
+  .tab span{font-size:17px} .tab{padding:8px 10px}
+  .rule{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:440px){ .pairsel{grid-template-columns:minmax(0,1fr)} .tab small{display:none} }
+@media (prefers-reduced-motion:no-preference){ .card,.clue,.chip,.tab{transition:background-color .15s,border-color .15s} }
+[data-t="cls"]{--tc:var(--t-perc)} [data-t="reg"]{--tc:var(--t-opt)} [data-t="clu"]{--tc:var(--t-learn)} [data-t="lab"]{--tc:var(--t-auto)}
+.rule3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rule3 > div{border-top:4px solid var(--tc)}
+.rule3 h3{color:var(--tc)}
+.pick{display:grid;gap:4px}
+.pl{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.item3{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+textarea.sm{min-height:64px}
+.evpick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.evpick .pl{width:100%;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.evchip{font:inherit;font-size:14.5px;line-height:1.45;text-align:left;cursor:pointer;border:1.5px dashed var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 10px;max-width:100%}
+.evchip:hover{border-color:var(--accent)}
+.evchip[aria-pressed="true"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.evchip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.casetext{white-space:normal}
+@media (max-width:760px){ .rule3{grid-template-columns:minmax(0,1fr)} }
+
+.consent{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
+.consent h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.consent table{width:100%;border-collapse:collapse;font-size:15px}
+.consent th{width:6.5em;white-space:nowrap;text-align:left;vertical-align:top;background:var(--surface-2);padding:8px 10px;border:1px solid var(--line);font-weight:700}
+.consent td{padding:8px 10px;border:1px solid var(--line)}
+@media (max-width:760px){ .consent{position:static} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 2. 인공지능과 문제 해결 · 3차시 · 교과서 199~204쪽</div>
+    <h1>인공지능의 윤리적 문제 해결</h1>
+    <div class="goals">
+      <span class="goal"><b>목표 1</b> 인공지능의 사회적 역할과 가치를 판단할 수 있다</span>
+      <span class="goal"><b>목표 2</b> 데이터를 수집·활용할 때 생기는 윤리적 문제의 해결 방안을 제시할 수 있다</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="활동">
+    <button class="tab" role="tab" id="tab-consent" aria-controls="consent" data-k="consent"><small>활동 1</small><span>동의서 고치기</span></button>
+    <button class="tab" role="tab" id="tab-bias" aria-controls="bias" data-k="bias"><small>활동 2</small><span>편향 탐지기</span></button>
+    <button class="tab" role="tab" id="tab-solve" aria-controls="solve" data-k="solve"><small>활동 3</small><span>해결 방안 쓰기</span></button>
+  </nav>
+
+  <!-- 활동 1: 동의서 고치기 -->
+  <section class="panel" id="consent" role="tabpanel" aria-labelledby="tab-consent">
+    <div class="intro">
+      <h2>꼭 필요한 개인 정보만 모으는 동의서</h2>
+      <p>인공지능 서비스를 고르고, 동의서에서 <b>꼭 필요한 수집 항목</b>과 <b>알맞은 목적</b>만 남긴 뒤 <b>보유 기간</b>을 하나 고르세요. 그다음 <b>점검하기</b>를 누르세요.</p>
+    </div>
+    <p class="link-note"><b>기억하기</b> 개인 정보는 목적에 꼭 필요한 것만, 동의를 받고, 쓰고 나면 파기하거나 비식별화해요.</p>
+    <div class="casepick" id="pick1" aria-label="서비스 고르기"></div>
+    <div class="two">
+      <div class="step" style="gap:14px">
+        <div class="casetext" id="text1"></div>
+        <div class="row"><b>수집 항목 · 꼭 필요한 것만 고르세요</b><div class="chips" id="items1"></div></div>
+        <div class="row"><b>수집 목적 · 알맞은 목적만 고르세요</b><div class="chips" id="purp1"></div></div>
+        <div class="row"><b>보유 기간 · 하나만 고르세요</b><div class="chips" id="keep1"></div></div>
+        <div class="bar">
+          <button class="btn primary" id="grade1">점검하기</button>
+          <button class="btn" id="reset1">다시 하기</button>
+          <span class="score" id="s1"></span>
+        </div>
+        <div class="rows" id="fb1"></div>
+      </div>
+      <aside class="consent" aria-live="polite">
+        <h3>고쳐 쓴 동의서</h3>
+        <table><tbody id="form1"></tbody></table>
+        <p class="starter">위의 개인 정보 수집·이용 동의를 거부할 권리가 있습니다.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 활동 2: 편향 탐지기 -->
+  <section class="panel" id="bias" role="tabpanel" aria-labelledby="tab-bias" hidden>
+    <div class="intro">
+      <h2>이 데이터, 한쪽으로 치우쳤을까?</h2>
+      <p>사례마다 데이터 편향이 생길 가능성이 있으면 <b>편향 O</b>, 아니면 <b>편향 X</b>를 누르세요. 누르면 바로 이유가 나와요.</p>
+    </div>
+    <p class="link-note"><b>수행평가 연결</b> 문항 4(1)은 사례마다 데이터 편향 여부를 O, X로 판단하고 <b>이유</b>를 쓰는 문제예요.</p>
+    <div class="rule">
+      <div><h3>누가 빠졌는지 찾아요</h3><p>그 인공지능을 쓸 사람은 누구인지 먼저 떠올리고, 데이터에 그 사람들이 <b>골고루</b> 들어 있는지 확인해요.</p></div>
+      <div><h3>‘~만’, ‘~위주로’를 조심해요</h3><p>한 집단, 한 장소, 한 시기의 데이터만 쓰면 다른 사람이나 상황에서는 틀리기 쉬워요.</p></div>
+    </div>
+    <div class="bar">
+      <span class="score" id="s2">0 / 10 맞힘</span>
+      <button class="btn" id="reset2">처음부터 다시</button>
+    </div>
+    <div class="grid1" id="grid2"></div>
+  </section>
+
+  <!-- 활동 3: 해결 방안 쓰기 -->
+  <section class="panel" id="solve" role="tabpanel" aria-labelledby="tab-solve" hidden>
+    <div class="intro">
+      <h2>편향이 일으키는 피해와 해결 방안 쓰기</h2>
+      <p>수행평가 문항 4(2)와 같은 형식이에요. 편향이 있는 사례를 골라 ① 실제로 어떤 피해가 생기는지, ② 데이터를 어떻게 다시 모아야 하는지 쓰세요.</p>
+    </div>
+    <p class="link-note"><b>채점기준 5점</b> 구체적 피해를 논리적으로 서술하고, 실현 가능한 개선 방안(데이터 다시 수집)을 제시</p>
+    <div class="two">
+      <div class="step" style="gap:18px">
+        <div class="step">
+          <h3><i>1</i> 사례 고르기</h3>
+          <div class="casepick" id="pick3"></div>
+          <div class="casetext" id="text3" style="font-size:17px;line-height:1.8"></div>
+        </div>
+        <div class="step item3">
+          <b>① 이 편향이 일으키는 문제(피해)</b>
+          <label class="starter" for="harm">지문에서 편향이 생긴 부분을 누르고, 누가 어떤 피해를 입는지 이어 쓰세요.</label>
+          <div class="evpick" id="ep-harm"></div>
+          <textarea id="harm"></textarea>
+        </div>
+        <div class="step item3">
+          <b>② 데이터를 다시 수집하는 방법</b>
+          <label class="starter" for="fixd">어떤 데이터를 더 모으거나 어떻게 골고루 모을지 구체적으로 쓰세요.</label>
+          <textarea id="fixd"></textarea>
+        </div>
+        <div class="bar">
+          <label class="classpick" id="classWrap" hidden>우리 반 <select id="classSel"></select></label>
+          <a class="btn primary" id="padlet3" target="_blank" rel="noopener" hidden>복사하고 패들렛에 붙이기 ↗</a>
+          <button class="btn" id="copy3">내 답안 복사하기</button>
+          <button class="btn" id="model3">예시 답안 보기</button>
+          <button class="btn" id="clear3">지우기</button>
+          <span class="toast" id="toast3" aria-live="polite"></span>
+        </div>
+        <p class="mark no" id="padletBad" hidden>선생님이 준 링크가 중간에 잘려서 우리 반 패들렛 목록을 불러오지 못했어요. 노션 수업 링크나 QR 코드로 다시 들어와 주세요.</p>
+        <p class="starter" id="padletHelp" hidden><span id="classHint">우리 반을 고른 뒤 </span>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛의 <b>‘편향 해결 방안 쓰기’ 섹션</b> 아래 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
+        <div class="model" id="modelbox" hidden></div>
+      </div>
+      <aside class="check" aria-live="polite">
+        <h3>자가 점검표</h3>
+        <ul id="checks"></ul>
+        <div class="level" id="level"></div>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <p>출처: 교과서 199~204쪽, 교사용 지도서 216~218쪽 내용을 바탕으로 만든 활동이에요. 쓴 내용은 이 기기의 브라우저에만 임시로 저장돼요.</p>
+    <details class="ref teacher" id="teacher" hidden>
+      <summary>선생님 설정 · 반별 패들렛 연결</summary>
+      <div class="tset">
+        <p>반마다 활동 3(해결 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
+        <div class="trow">
+          <label for="classCount" class="starter">반 수</label>
+          <input id="classCount" class="num" type="number" min="1" max="30" value="9">
+          <button class="btn" id="makeRows">반 수만큼 줄 만들기</button>
+        </div>
+        <div class="crows" id="classRows"></div>
+        <div class="trow">
+          <button class="btn" id="addRow">+ 반 추가</button>
+          <button class="btn primary" id="saveRows">이 기기에 저장</button>
+          <button class="btn" id="clearRows">모두 지우기</button>
+        </div>
+        <p class="tstatus" id="padletStatus" aria-live="polite"></p>
+        <p class="starter" id="activeNow"></p>
+        <div class="tbox" id="shareBox" hidden>
+          <b>전체 반 공용 링크</b>
+          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
+          <code id="shareLink"></code>
+          <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
+          <b>반별 링크</b>
+          <span class="starter">반이 정해진 링크라서 학생이 반을 고를 필요가 없어요. 반마다 다른 곳(클래스룸 등)에 올릴 때 좋아요.</span>
+          <ul class="clinks" id="classLinks"></ul>
+          <b>코드에 넣을 설정</b>
+          <span class="starter">index.html 스크립트 맨 위의 <code>PADLETS</code> 부분을 이 내용으로 바꾸면, 링크에 아무것도 붙이지 않아도 이 반 목록이 항상 적용돼요.</span>
+          <pre class="snippet" id="codeSnippet"></pre>
+          <div><button class="btn sm" data-copy="codeSnippet">설정 복사</button></div>
+        </div>
+        <p class="starter">이 설정 칸은 사이트 주소 끝에 <code>#teacher</code>를 붙여 열 때만 보여요. 학생 화면과 학생용 링크에서는 보이지 않아요.</p>
+        <p class="starter">적용 순서: ① 학생용 링크(공용·반별) → ② 코드에 적은 <code>PADLETS</code> → ③ 이 기기에 저장한 목록(전자칠판처럼 한 기기에서만 쓸 때).</p>
+      </div>
+    </details>
+  </footer>
+</div>
+
+<script>
+/* ===== 선생님 설정: 반별 패들렛 =====
+   ["반 이름", "패들렛 주소"] 를 한 줄에 하나씩 넣으세요. 반 수는 학교에 맞게 줄을 늘리거나 줄이면 돼요.
+   비워 두면 사이트 주소 끝에 #teacher 를 붙여 연 '선생님 설정'에서 정할 수 있어요.
+   예)
+   const PADLETS = [
+     ["1반", "https://padlet.com/teacher/ai-1"],
+     ["2반", "https://padlet.com/teacher/ai-2"],
+   ];  */
+const PADLETS = [
+];
+/* =================================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem('ai3-'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('ai3-'+k,JSON.stringify(v))}catch(e){}}};
+const norm=s=>String(s||'').replace(/[\s'"‘’“”.,·]/g,'');
+
+/* 탭 */
+const KEYS=['consent','bias','solve'];
+function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
+  KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
+  store.set('tab',k); }
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.k); try{history.replaceState(null,'','#'+b.dataset.k)}catch(e){} window.scrollTo({top:0})}));
+{ const h=(location.hash||'').slice(1); showTab(KEYS.includes(h)?h:store.get('tab','consent')); }
+function pickers(el,list,cur,on){ el.innerHTML=list.map((c,i)=>`<button aria-pressed="${i===cur}" data-i="${i}">${esc(c.name)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>on(+b.dataset.i))); }
+
+/* 활동 1: 동의서 고치기 */
+const FORMS=[
+ {id:'hair',name:'머리 모양 추천 앱',text:'얼굴 사진을 분석해 얼굴형을 알아내고, 어울리는 머리 모양을 추천하는 인공지능 앱이에요. 학습 데이터를 모으려고 아래 동의서를 받으려고 해요.',
+  items:[['얼굴 사진',1,'얼굴형을 알아내려면 꼭 필요해요.'],['이름',0,'얼굴형 분석에는 이름이 필요 없어요.'],['나이',0,'머리 모양 추천 모델 학습에는 없어도 돼요.'],['거주지',0,'얼굴형과 관계없는 정보예요.'],['연락처',0,'학습에 필요 없고, 홍보에 쓰일 수 있어요.']],
+  purps:[['얼굴형에 맞는 머리 모양 추천 모델 학습',1,'서비스를 만드는 데 꼭 필요한 목적이에요.'],['이벤트 홍보',0,'모델 개발과 관계없는 목적이 섞이면 안 돼요.']],
+  keeps:['모델 학습이 끝나면 바로 파기','이벤트가 끝날 때까지 보관','영구 보관'],keepOk:0,keepWhy:'목적을 이루면 개인 정보는 바로 파기해야 해요.'},
+ {id:'meal',name:'급식 잔반 측정 AI',text:'급식을 먹고 난 식판 사진으로 남긴 음식의 양을 재서, 학생들이 덜 남기는 메뉴로 바꾸는 데 쓰는 인공지능이에요.',
+  items:[['식판 사진',1,'남긴 음식 양을 재려면 꼭 필요해요.'],['학년',1,'학년마다 좋아하는 메뉴가 다르니 메뉴 개선에 쓸 수 있어요.'],['이름',0,'누가 남겼는지는 몰라도 메뉴를 고칠 수 있어요.'],['얼굴 사진',0,'식판만 찍으면 돼요. 얼굴은 필요 없어요.'],['휴대 전화 번호',0,'메뉴 개선과 관계없는 정보예요.']],
+  purps:[['남은 음식 양을 분석해 급식 메뉴 개선',1,'서비스를 만드는 데 꼭 필요한 목적이에요.'],['학생에게 맛집 광고 문자 보내기',0,'목적과 관계없고, 연락처까지 필요해져요.']],
+  keeps:['분석이 끝나면 바로 파기','졸업할 때까지 보관','영구 보관'],keepOk:0,keepWhy:'분석이 끝나면 더 갖고 있을 이유가 없어요.'},
+ {id:'talk',name:'고민 상담 연결 챗봇',text:'학생이 입력한 고민 글을 보고 어떤 도움이 필요한지 파악해, 알맞은 상담 선생님께 연결해 주는 인공지능 챗봇이에요.',
+  items:[['고민 글 내용',1,'어떤 도움이 필요한지 알려면 꼭 필요해요.'],['학년·반·번호',1,'상담 선생님이 학생을 찾아 연결하려면 필요해요.'],['집 주소',0,'상담 연결과 관계없는 정보예요.'],['보호자 직업',0,'상담 연결에 필요 없는 민감한 정보예요.'],['SNS 계정',0,'상담 연결에 필요 없어요.']],
+  purps:[['고민 내용에 맞는 상담 선생님 연결',1,'서비스를 만드는 데 꼭 필요한 목적이에요.'],['고민 글을 다른 학생들에게 공개',0,'사생활이 드러나 큰 피해를 줄 수 있어요.']],
+  keeps:['상담 연결이 끝나면 파기하거나 비식별화','졸업 후 10년 동안 보관','영구 보관'],keepOk:0,keepWhy:'목적을 이루면 파기하거나, 누구인지 알 수 없게 비식별화해야 해요.'}];
+let c1=store.get('c1',0), a1=store.get('a1',{}), graded1=false;
+function st1(){ const id=FORMS[c1].id; a1[id]=a1[id]||{items:[],purps:[],keep:null}; return a1[id]; }
+function render1(){
+  const f=FORMS[c1], s=st1();
+  pickers($('#pick1'),FORMS,c1,i=>{c1=i;store.set('c1',i);graded1=false;render1();});
+  $('#text1').textContent=f.text;
+  const chip=(grp,i,label,on)=>`<button class="chip" data-t="cls" data-g="${grp}" data-i="${i}" aria-pressed="${on}">${esc(label)}</button>`;
+  $('#items1').innerHTML=f.items.map((x,i)=>chip('items',i,x[0],s.items.includes(i))).join('');
+  $('#purp1').innerHTML=f.purps.map((x,i)=>chip('purps',i,x[0],s.purps.includes(i))).join('');
+  $('#keep1').innerHTML=f.keeps.map((x,i)=>`<button class="chip" data-t="clu" data-g="keep" data-i="${i}" aria-pressed="${s.keep===i}">${esc(x)}</button>`).join('');
+  document.querySelectorAll('#items1 .chip,#purp1 .chip,#keep1 .chip').forEach(b=>b.addEventListener('click',()=>{ const g=b.dataset.g, i=+b.dataset.i, s=st1();
+    if(g==='keep') s.keep=s.keep===i?null:i; else s[g]=s[g].includes(i)?s[g].filter(x=>x!==i):[...s[g],i];
+    store.set('a1',a1); graded1=false; render1(); }));
+  const pick=(arr,sel)=>sel.length?sel.slice().sort().map(i=>esc(arr[i][0])).join(', '):'<span class="starter">아직 고르지 않았어요</span>';
+  $('#form1').innerHTML=`<tr><th>수집 항목</th><td>${pick(f.items,s.items)}</td></tr><tr><th>수집 목적</th><td>${pick(f.purps,s.purps)}</td></tr><tr><th>보유 기간</th><td>${s.keep===null?'<span class="starter">아직 고르지 않았어요</span>':esc(f.keeps[s.keep])}</td></tr>`;
+  const fb=$('#fb1'); fb.innerHTML=''; let ok=0,total=f.items.length+f.purps.length+1;
+  if(graded1){
+    const line=(right,head,why)=>{ const m=document.createElement('div'); m.className='mark '+(right?'ok':'no'); m.innerHTML=`<b>${head}</b> · ${esc(why)}`; fb.appendChild(m); if(right)ok++; };
+    f.items.forEach((x,i)=>{ const on=s.items.includes(i), r=on===!!x[1]; line(r,`${x[0]}: ${x[1]?'필요한 항목':'과도한 항목'}${r?'':(on?' (빼야 해요)':' (넣어야 해요)')}`,x[2]); });
+    f.purps.forEach((x,i)=>{ const on=s.purps.includes(i), r=on===!!x[1]; line(r,`${x[0]}: ${x[1]?'알맞은 목적':'빼야 할 목적'}${r?'':(on?' (빼야 해요)':' (넣어야 해요)')}`,x[2]); });
+    line(s.keep===f.keepOk,`보유 기간: ${f.keeps[f.keepOk]}`,f.keepWhy);
+  }
+  $('#s1').textContent=graded1?`${ok} / ${total} 정확`:'';
+}
+$('#grade1').addEventListener('click',()=>{graded1=true;render1();});
+$('#reset1').addEventListener('click',()=>{a1[FORMS[c1].id]={items:[],purps:[],keep:null};store.set('a1',a1);graded1=false;render1();});
+render1();
+
+/* 활동 2: 편향 탐지기 */
+const BIAS=[
+ {th:'음성 비서',d:'음성 비서 인공지능을 만들면서, 20~40대 성인 남성의 목소리 데이터만 대량으로 학습시켰다.',o:true,w:'여성, 어린이, 노인의 목소리는 거의 없어서 그 사람들의 말을 잘 알아듣지 못할 수 있어요.'},
+ {th:'날씨 예보',d:'날씨 예보 인공지능을 만들면서, 전국 모든 관측소의 30년 치 기록을 계절과 지역별로 고르게 모아 학습시켰다.',o:false,w:'모든 지역과 계절의 기록을 고르게 모았기 때문에 한쪽으로 치우치지 않았어요.'},
+ {th:'피부 질환 진단',d:'피부 질환을 진단하는 인공지능을 만들면서, 밝은 피부색을 가진 사람들의 피부 사진 위주로 학습시켰다.',o:true,w:'어두운 피부색을 가진 사람의 질환은 잘 찾아내지 못해 진단이 늦어질 수 있어요.'},
+ {th:'입사 지원서 평가',d:'입사 지원서를 평가하는 인공지능을 만들면서, 지난 10년 동안 합격한 사람(대부분 남성)의 지원서만 학습시켰다.',o:true,w:'과거 합격자가 대부분 남성이라, 여성 지원자에게 낮은 점수를 주는 차별이 생길 수 있어요.'},
+ {th:'수학 문제 난이도',d:'수학 문제의 난이도를 예측하는 인공지능을 만들면서, 여러 지역 학교의 모든 학년 학생들이 푼 기록을 골고루 모아 학습시켰다.',o:false,w:'여러 지역과 학년의 기록을 골고루 모았기 때문에 편향 가능성이 낮아요.'},
+ {th:'얼굴 보정 앱',d:'‘예쁜 얼굴’로 보정해 주는 앱의 인공지능을 만들면서, 한 나라의 연예인 사진만으로 ‘예쁜 얼굴’의 기준을 학습시켰다.',o:true,w:'한 나라 연예인의 얼굴만 기준이 되어, 다른 생김새를 ‘고쳐야 할 얼굴’로 바꾸는 편견을 만들 수 있어요.'},
+ {th:'자율 주행 보행자 인식',d:'자율 주행 자동차의 보행자 인식 인공지능을 만들면서, 키가 큰 성인 보행자 영상 위주로 학습시켰다.',o:true,w:'키가 작은 어린이나 휠체어를 탄 사람을 보행자로 알아보지 못해 사고로 이어질 수 있어요.'},
+ {th:'음악 추천',d:'음악 추천 인공지능을 만들면서, 10대부터 70대까지 여러 연령대 사람들의 다양한 장르 청취 기록을 고르게 모아 학습시켰다.',o:false,w:'여러 연령대와 장르의 기록을 고르게 모았기 때문에 한쪽으로 치우치지 않았어요.'},
+ {th:'식물 병 진단',d:'식물 병을 진단하는 앱의 인공지능을 만들면서, 한 농장에서 기른 토마토 잎 사진만 학습시켰다.',o:true,w:'다른 품종이나 다른 환경에서 자란 식물의 병은 잘 알아보지 못할 수 있어요.'},
+ {th:'교통량 예측',d:'교통량을 예측하는 인공지능을 만들면서, 평일·주말·명절을 모두 포함한 1년 치 도로 센서 기록을 학습시켰다.',o:false,w:'평일, 주말, 명절처럼 여러 상황의 기록을 모두 포함했기 때문에 편향 가능성이 낮아요.'}];
+let a2=store.get('a2',{});
+function render2(){
+  const g=$('#grid2'); g.innerHTML=''; let ok=0;
+  BIAS.forEach((it,i)=>{ const pick=a2[i], ans=pick!==undefined, right=ans&&pick===it.o; if(right)ok++;
+    const c=document.createElement('div'); c.className='card'+(ans?(right?' right':' wrong'):'');
+    c.innerHTML=`<span class="thing">${esc(it.th)}</span><p class="desc">${esc(it.d)}</p>
+      <div class="choice"><button data-v="1" aria-pressed="${pick===true}">편향 O</button><button data-v="0" aria-pressed="${pick===false}">편향 X</button></div>
+      ${ans?`<div class="fb ${right?'ok':'no'}"><b>${right?'맞았어요':'다시 생각해 봐요'} · 정답: 편향 ${it.o?'O':'X'}</b>${esc(it.w)}</div>`:''}`;
+    c.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{a2[i]=b.dataset.v==='1';store.set('a2',a2);render2();}));
+    g.appendChild(c); });
+  const n=Object.keys(a2).length; $('#s2').textContent=`${ok} / 10 맞힘`+(n<10?` · ${10-n}개 남음`:' · 완료!');
+}
+$('#reset2').addEventListener('click',()=>{a2={};store.set('a2',a2);render2();});
+render2();
+
+/* 활동 3: 해결 방안 쓰기 */
+const SCASES=[
+ {id:'voice',name:'음성 비서',text:'한 회사가 음성 비서 인공지능을 만들면서, 20~40대 성인 남성의 목소리 데이터만 대량으로 학습시켰다.',
+  chunks:['20~40대 성인 남성의 목소리 데이터만','대량으로 학습시켰다'],
+  model:['20~40대 성인 남성의 목소리 데이터만 학습했기 때문에, 여성이나 어린이, 노인의 목소리는 잘 알아듣지 못한다. 예를 들어 할머니가 음성 비서로 가족에게 전화를 걸려고 해도 명령을 인식하지 못해 도움을 받지 못할 수 있다.','여성, 어린이, 청소년, 노인 등 여러 성별과 연령대의 목소리를 골고루 모으고, 지역 말투(사투리)도 함께 수집해 다시 학습시킨다.']},
+ {id:'skin',name:'피부 질환 진단',text:'피부 질환을 진단하는 인공지능을 만들면서, 밝은 피부색을 가진 사람들의 피부 사진 위주로 학습시켰다.',
+  chunks:['밝은 피부색을 가진 사람들','피부 사진 위주로 학습시켰다'],
+  model:['밝은 피부색 사진 위주로 학습했기 때문에, 어두운 피부색을 가진 사람의 피부 질환은 잘 찾아내지 못한다. 그러면 병을 늦게 발견해 치료 시기를 놓치는 피해가 생길 수 있다.','여러 피부색을 가진 사람들의 피부 사진을 비슷한 양으로 모으고, 전문가와 함께 데이터가 고르게 분포했는지 확인한 뒤 다시 학습시킨다.']},
+ {id:'job',name:'입사 지원서 평가',text:'한 회사가 입사 지원서를 평가하는 인공지능을 만들면서, 지난 10년 동안 합격한 사람(대부분 남성)의 지원서만 학습시켰다.',
+  chunks:['지난 10년 동안 합격한 사람','대부분 남성','지원서만 학습시켰다'],
+  model:['합격자가 대부분 남성인 지원서만 학습했기 때문에, 인공지능이 남성 지원자에게 유리한 점수를 줄 수 있다. 그러면 능력이 있는 여성 지원자가 성별 때문에 불합격하는 차별이 생긴다.','성별과 나이 등이 고르게 포함되도록 다양한 지원자의 지원서를 모으고, 성별처럼 능력과 관계없는 정보는 빼고 학습시킨다. 사용한 뒤에도 결과가 공정한지 계속 점검한다.']}];
+let d3=store.get('d3',{c:0,ans:{}});
+function save3(){store.set('d3',d3);}
+function key(p){ return `${SCASES[d3.c].id}:${p}`; }
+function val(p){ return (d3.ans||{})[key(p)]||''; }
+function rn(s){ const ch=[...String(s).replace(/[\s'"‘’“”.,·)%]+$/,'')].pop()||''; const c=ch.charCodeAt(0); return (c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?'이라는':'라는'; }
+function render3(){
+  const cs=SCASES[d3.c];
+  pickers($('#pick3'),SCASES,d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
+  $('#text3').textContent=cs.text;
+  ['harm','fixd'].forEach(k=>{ if($('#'+k).value!==val(k)) $('#'+k).value=val(k); });
+  drawPick(); checks3();
+}
+function drawPick(){ const cs=SCASES[d3.c], el=$('#ep-harm'), v=val('harm');
+  el.innerHTML='<span class="pl">지문에서 편향이 생긴 부분 고르기</span>'+cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${v.includes(c)}">${esc(c)}</button>`).join('');
+  el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cs.chunks[+b.dataset.i]; let v=val('harm'); if(v.includes(c)) return;
+    const t=v.trimEnd();
+    v=t.endsWith('부분 때문에')?t.slice(0,-6).trimEnd()+` 부분과 ‘${c}’${rn(c)} 부분 때문에 `:(v.trim()?t+` 또한 ‘${c}’${rn(c)} 부분도 문제이다.`:`‘${c}’${rn(c)} 부분 때문에 `);
+    d3.ans=d3.ans||{}; d3.ans[key('harm')]=v; save3(); const ta=$('#harm'); ta.value=v; drawPick(); checks3(); ta.focus(); try{ta.setSelectionRange(v.length,v.length);}catch(e){} })); }
+const HARM_K=['못','틀','차별','불리','피해','불편','손해','위험','사고','놓치','늦','불합격','낮은','억울','인식하지','알아듣지','알아보지','소외','어려'];
+const FIX_K=['다양','골고루','고르게','여러','비슷','균형','포함','추가','더','모아','모으','수집','다시','점검','확인'];
+function strip(s){ return String(s||'').replace(/‘[^’]*’/g,'').replace(/이?라는 부분(과|도)?|때문에|또한|문제이다\.?/g,''); }
+function checks3(){
+  const h=norm(strip(val('harm'))), f=norm(val('fixd'));
+  const hasQ=/‘[^’]*’/.test(val('harm'));
+  const hOk=h.length>=8&&HARM_K.some(k=>h.includes(k)), who=/(여성|어린이|노인|사람|지원자|환자|학생|할머니|할아버지|아이|외국인|사용자|누구|피부)/.test(val('harm').replace(/‘[^’]*’/g,''));
+  const fOk=f.length>=8&&FIX_K.some(k=>f.includes(k));
+  const items=[
+   [hasQ,'지문에서 편향이 생긴 부분을 짚었어요',hasQ?'좋아요.':'지문 조각을 누르거나 지문 표현을 따옴표로 넣어 보세요.'],
+   [hOk&&who,'누가 어떤 피해를 입는지 썼어요',hOk&&who?'좋아요.':(!who?'피해를 입는 사람(예: 여성, 어린이, 노인, 지원자)을 써 보세요.':'‘알아듣지 못한다’, ‘차별을 받는다’처럼 어떤 피해인지 구체적으로 써 보세요.')],
+   [fOk,'데이터를 다시 모으는 방법을 썼어요',fOk?'좋아요.':'어떤 데이터를 ‘골고루’, ‘더’ 모을지 구체적으로 써 보세요.']];
+  $('#checks').innerHTML=items.map(([ok,t,hint])=>`<li class="${ok?'done':''}"><span class="dot">${ok?'✓':''}</span><span>${t}<span class="hint">${hint}</span></span></li>`).join('');
+  const harmFull=hOk&&who; let txt,bg;
+  if(harmFull&&fOk){txt='5점 수준에 가까워요';bg='var(--ok-soft)';}
+  else if(harmFull||fOk){txt='3점 수준: 피해와 해결 방안 중 빠진 쪽을 채워요';bg='var(--mid-soft)';}
+  else {txt='아직 1점 수준: 누가 어떤 피해를 입는지부터 써요';bg='var(--surface-2)';}
+  $('#level').style.background=bg; $('#level').innerHTML=`${txt}<small>자가 점검용 예상이에요. 실제 점수는 선생님이 채점기준표로 매겨요.</small>`;
+}
+['harm','fixd'].forEach(k=>$('#'+k).addEventListener('input',e=>{ d3.ans=d3.ans||{}; d3.ans[key(k)]=e.target.value; save3(); if(k==='harm') drawPick(); checks3(); }));
+$('#model3').addEventListener('click',()=>{ const cs=SCASES[d3.c], box=$('#modelbox'); if(!box.hidden){box.hidden=true;return;}
+  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p><p><b>① 피해</b><br>${esc(cs.model[0])}</p><p><b>② 데이터 다시 수집</b><br>${esc(cs.model[1])}</p><p class="starter">먼저 내 답을 쓰고 비교해 보세요. 피해를 입는 사람과 상황이 구체적일수록 좋아요.</p>`; box.hidden=false; });
+function answerText(){ const cs=SCASES[d3.c];
+  return `[3차시 편향 해결 방안 쓰기]\n[사례] ${cs.name}\n① 피해: ${val('harm')}\n② 데이터 다시 수집: ${val('fixd')}`; }
+async function copyAnswer(okMsg){
+  try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
+  catch(e){const ta=$('#harm');ta.focus();ta.select();$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
+  setTimeout(()=>$('#toast3').textContent='',4000);
+}
+$('#copy3').addEventListener('click',()=>copyAnswer('복사했어요. 제출할 곳에 붙여 넣으세요.'));
+
+/* ===== 반별 패들렛 연결 ===== */
+function cleanPadlet(u){ if(!u)return null; try{ const x=new URL(String(u).trim()); const h=x.hostname.toLowerCase();
+  if(x.protocol!=='https:')return null; if(!(h==='padlet.com'||h.endsWith('.padlet.com')||h==='padlet.org'||h.endsWith('.padlet.org')))return null; return x.href; }catch(e){return null;} }
+function cleanList(arr){ if(!Array.isArray(arr))return [];
+  return arr.map(x=>Array.isArray(x)?{name:String(x[0]??'').trim(),url:cleanPadlet(x[1])}:{name:String((x&&x.name)??'').trim(),url:cleanPadlet(x&&x.url)})
+    .filter(x=>x.url).map((x,i)=>({name:x.name||`${i+1}반`,url:x.url})); }
+const b64e=s=>{ let b=''; new TextEncoder().encode(s).forEach(c=>b+=String.fromCharCode(c)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+const b64d=s=>{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='='; return new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0))); };
+function qp(){ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(); } }
+/* 짧은 형식: ?pb=패들렛아이디&pl=주섰1.주섰2.… (이름이 'N반'이 아니면 이름~주소) */
+const SLUG=/^[A-Za-z0-9_-]+$/;
+function fromShort(q){ const u=q.get('pb'), l=q.get('pl'); if(!u||!l||!SLUG.test(u)) return 'bad';
+  const out=l.split('.').filter(Boolean).map((s,i)=>{ const k=s.indexOf('~'); const name=k>=0?s.slice(0,k):`${i+1}반`, slug=k>=0?s.slice(k+1):s;
+    return SLUG.test(slug)?{name,url:`https://padlet.com/${u}/${slug}`}:null; });
+  const ok=cleanList(out.filter(Boolean)); const n=parseInt(q.get('pn'),10);
+  /* pn(반 개수)은 링크 맨 끝에 붙음. 링크가 잘리면 pn이 없거나 개수가 맞지 않아 잘린 것을 알 수 있음 */
+  return ok.length&&ok.length===out.length&&n===out.length?ok:'bad'; }
+function shortParams(V){ let user=null; const parts=[];
+  for(const [i,v] of V.entries()){ const m=v.url.match(/^https:\/\/padlet\.com\/([A-Za-z0-9_-]+)\/([A-Za-z0-9_-]+)\/?$/); if(!m) return null;
+    if(user&&user!==m[1]) return null; user=m[1]; if(/[.~]/.test(v.name)) return null;
+    parts.push(v.name===`${i+1}반`?m[2]:`${v.name}~${m[2]}`); }
+  return user?{pb:user,pl:parts.join('.')}:null; }
+function fromQuery(){ const q=qp();
+  if(q.get('pl')||q.get('pb')) return fromShort(q);
+  if(q.get('padlets')){ try{ const l=cleanList(JSON.parse(b64d(q.get('padlets')))); if(l.length) return l; }catch(e){} return 'bad'; }
+  if(q.get('padlet')){ const u=cleanPadlet(q.get('padlet')); if(u) return [{name:(q.get('class')||'').trim(),url:u}]; return 'bad'; }
+  return null; }
+function fromLocal(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets')||'[]')); }catch(e){ return []; } }
+/* 공용 링크(?padlets=)로 한 번 들어오면 그 기기에 반 목록을 기억해, 다음에 그냥 주소로 와도 패들렛 버튼이 나오게 함.
+   반별 링크는 기억하지 않음(여러 반이 같이 쓰는 태블릿에서 다른 반 패들렛에 올리는 일을 막기 위해). */
+function fromRemember(){ try{ return cleanList(JSON.parse(localStorage.getItem('ai-padlets-link')||'[]')); }catch(e){ return []; } }
+function source(){ const q=fromQuery();
+  if(Array.isArray(q)){ if(qp().get('padlets')||qp().get('pl')){ try{ localStorage.setItem('ai-padlets-link',JSON.stringify(q.map(v=>[v.name,v.url]))); }catch(e){} }
+    return {list:q,src:'학생용 링크'}; }
+  const c=cleanList(PADLETS); if(c.length) return {list:c,src:'코드에 적은 PADLETS'};
+  const l=fromLocal(); if(l.length) return {list:l,src:'이 기기에 저장한 목록'};
+  const r=fromRemember(); if(r.length) return {list:r,src:'이 기기가 기억한 공용 링크'};
+  return {list:[],src:null,bad:q==='bad'}; }
+let SRC=source();
+function getClass(){ try{ return localStorage.getItem('ai-class'); }catch(e){ return null; } }
+function setClass(v){ try{ v?localStorage.setItem('ai-class',v):localStorage.removeItem('ai-class'); }catch(e){} }
+function chosen(){ const L=SRC.list; if(L.length===1) return L[0]; const n=getClass(); return L.find(x=>x.name===n)||null; }
+function renderStudent(){
+  const L=SRC.list, a=$('#padlet3'), w=$('#classWrap'), sel=$('#classSel');
+  a.hidden=!L.length; $('#padletHelp').hidden=!L.length; $('#padletBad').hidden=!SRC.bad; w.hidden=L.length<2; $('#classHint').hidden=L.length<2;
+  if(L.length>=2){ const cur=chosen();
+    sel.innerHTML='<option value="">반 고르기</option>'+L.map(x=>`<option value="${esc(x.name)}"${cur&&cur.name===x.name?' selected':''}>${esc(x.name)}</option>`).join(''); }
+  const c=chosen();
+  if(c){ a.href=c.url; a.textContent=`복사하고 ${c.name?c.name+' ':''}패들렛에 붙이기 ↗`; }
+  else { a.removeAttribute('href'); a.textContent='복사하고 패들렛에 붙이기 ↗'; }
+}
+$('#classSel').addEventListener('change',e=>{ setClass(e.target.value||null); renderStudent(); });
+$('#padlet3').addEventListener('click',e=>{
+  if(!$('#padlet3').getAttribute('href')){ e.preventDefault(); $('#toast3').textContent='먼저 우리 반을 골라 주세요.'; $('#classSel').focus(); setTimeout(()=>$('#toast3').textContent='',3000); return; }
+  copyAnswer('복사했어요. 새 탭의 패들렛에 붙여 넣으세요.'); });
+
+/* 선생님 설정: 반 목록 편집 */
+let rows=[];
+function initRows(){ const l=fromLocal(), c=cleanList(PADLETS);
+  rows=(l.length?l:c.length?c:[{name:'1반',url:''}]).map(x=>({name:x.name,url:x.url})); }
+function baseURL(){ try{ const x=new URL(location.href); x.search=''; x.hash=''; return x; }catch(e){ return null; } }
+function setStatus(msg,ok){ const s=$('#padletStatus'); s.textContent=msg; s.className='tstatus'+(ok===true?' ok':ok===false?' no':''); }
+function renderRows(){
+  const box=$('#classRows'); box.innerHTML='';
+  rows.forEach((r,i)=>{
+    const d=document.createElement('div'); d.className='crow';
+    d.innerHTML=`<input class="cname" id="cname-${i}" aria-label="${i+1}번째 반 이름" value="${esc(r.name)}"><input class="curl" id="curl-${i}" type="url" inputmode="url" autocomplete="off" aria-label="${i+1}번째 반 패들렛 주소" placeholder="https://padlet.com/아이디/패들렛이름" value="${esc(r.url)}"><button class="btn sm" aria-label="${esc(r.name||'이')} 줄 지우기">✕</button>`;
+    const [n,u,x]=d.children;
+    n.addEventListener('input',()=>{ rows[i].name=n.value; renderOutputs(); });
+    u.addEventListener('input',()=>{ rows[i].url=u.value.trim(); u.classList.toggle('bad',!!rows[i].url&&!cleanPadlet(rows[i].url)); renderOutputs(); });
+    u.classList.toggle('bad',!!r.url&&!cleanPadlet(r.url));
+    x.addEventListener('click',()=>{ rows.splice(i,1); if(!rows.length) rows.push({name:'1반',url:''}); renderRows(); });
+    box.appendChild(d);
+  });
+  renderOutputs();
+}
+function validRows(){ return rows.map(r=>({name:r.name.trim(),url:cleanPadlet(r.url)})).filter(r=>r.url).map((r,i)=>({name:r.name||`${i+1}반`,url:r.url})); }
+function renderOutputs(){
+  const V=validRows(), bad=rows.filter(r=>r.url&&!cleanPadlet(r.url)).length, empty=rows.filter(r=>!r.url).length;
+  const names=V.map(v=>v.name), dup=names.filter((n,i)=>names.indexOf(n)!==i);
+  let msg=`주소가 들어간 반 ${V.length}개`; if(empty) msg+=` · 빈 줄 ${empty}개`; if(bad) msg+=` · 패들렛 주소가 아닌 줄 ${bad}개(빨간 칸)`;
+  if(dup.length) msg+=` · 반 이름이 겹쳐요: ${[...new Set(dup)].join(', ')}`;
+  setStatus(msg, V.length&&!bad&&!dup.length?true:(bad||dup.length?false:null));
+  $('#activeNow').textContent = SRC.src?`지금 학생 화면에 적용 중: ${SRC.src} (${SRC.list.length}개 반)`:'지금 학생 화면에는 연결된 패들렛이 없어서 ‘내 답안 복사하기’ 버튼만 보여요.';
+  const base=baseURL(); $('#shareBox').hidden=!(V.length&&base); if(!V.length||!base) return;
+  const all=new URL(base), sp=shortParams(V);
+  if(sp){ all.searchParams.set('pb',sp.pb); all.searchParams.set('pl',sp.pl); all.searchParams.set('pn',String(V.length)); } else all.searchParams.set('padlets',b64e(JSON.stringify(V.map(v=>[v.name,v.url]))));
+  $('#shareLink').textContent=all.href;
+  $('#classLinks').innerHTML=V.map((v,i)=>{ const one=new URL(base); one.searchParams.set('padlet',v.url); one.searchParams.set('class',v.name);
+    return `<li><b>${esc(v.name)}</b><code id="clink-${i}">${esc(one.href)}</code><button class="btn sm" data-copy="clink-${i}">복사</button></li>`; }).join('');
+  $('#codeSnippet').textContent='const PADLETS = [\n'+V.map(v=>`  [${JSON.stringify(v.name)}, ${JSON.stringify(v.url)}],`).join('\n')+'\n];';
+}
+$('#makeRows').addEventListener('click',()=>{ const n=Math.max(1,Math.min(30,parseInt($('#classCount').value,10)||1));
+  rows=Array.from({length:n},(_,i)=>({name:rows[i]&&rows[i].name.trim()?rows[i].name:`${i+1}반`,url:rows[i]?rows[i].url:''})); renderRows(); });
+$('#addRow').addEventListener('click',()=>{ rows.push({name:`${rows.length+1}반`,url:''}); renderRows(); const l=$('#classRows').lastElementChild; if(l) l.children[1].focus(); });
+$('#saveRows').addEventListener('click',()=>{ const V=validRows();
+  try{ V.length?localStorage.setItem('ai-padlets',JSON.stringify(V.map(v=>[v.name,v.url]))):localStorage.removeItem('ai-padlets'); }catch(e){}
+  SRC=source(); renderStudent(); renderOutputs();
+  setStatus(V.length?`${V.length}개 반을 이 기기에 저장했어요.`+(SRC.src!=='이 기기에 저장한 목록'?` 다만 지금은 ${SRC.src}이(가) 먼저 적용되고 있어요.`:''):'저장할 주소가 없어서 이 기기의 목록을 비웠어요.', V.length?true:null); });
+const clrR=$('#clearRows'); let armedR=false;
+clrR.addEventListener('click',()=>{ if(!armedR){armedR=true;clrR.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armedR=false;clrR.textContent='모두 지우기';},3000);return;}
+  armedR=false; clrR.textContent='모두 지우기'; try{ localStorage.removeItem('ai-padlets'); localStorage.removeItem('ai-padlets-link'); }catch(e){}
+  rows=[{name:'1반',url:''}]; SRC=source(); renderStudent(); renderRows(); });
+$('#shareBox').addEventListener('click',async e=>{ const b=e.target.closest('[data-copy]'); if(!b) return; const el=document.getElementById(b.dataset.copy), t=el.textContent, old=b.textContent;
+  try{ await navigator.clipboard.writeText(t); b.textContent='복사했어요'; }
+  catch(err){ const r=document.createRange(); r.selectNodeContents(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='선택됨, Ctrl+C'; }
+  setTimeout(()=>b.textContent=old,2500); });
+renderStudent(); initRows(); renderRows();
+if(SRC.bad) setStatus('링크에 들어 있는 주소가 패들렛 주소가 아니라서 연결하지 않았어요.',false);
+/* 선생님 설정 칸: 주소 끝에 #teacher가 있고, 학생용 링크로 들어온 게 아닐 때만 보임 */
+function teacherMode(){
+  const on=(location.hash||'')==='#teacher' && fromQuery()===null;
+  const t=$('#teacher'); t.hidden=!on;
+  if(on){ t.open=true; setTimeout(()=>t.scrollIntoView({block:'start'}),50); }
+}
+window.addEventListener('hashchange',teacherMode);
+teacherMode();
+const clr=$('#clear3'); let armed=false;
+clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armed=false;clr.textContent='지우기';},3000);return;}
+  delete d3.ans[key('harm')]; delete d3.ans[key('fixd')]; save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
+render3();
+</script>
+
+</body>
+</html>
