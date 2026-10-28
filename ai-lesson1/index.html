@@ -115,6 +115,12 @@ details.ref summary{cursor:pointer;font-weight:500}
 .pairsel label{font-size:14px;color:var(--muted);font-weight:500}
 textarea{font:inherit;font-size:16px;width:100%;min-height:92px;resize:vertical;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink)}
 textarea.rel{min-height:120px}
+.evpick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.evpick .pl{width:100%;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.evchip{font:inherit;font-size:14.5px;line-height:1.45;text-align:left;cursor:pointer;border:1.5px dashed var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 10px;max-width:100%}
+.evchip:hover{border-color:var(--accent)}
+.evchip[aria-pressed="true"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.evchip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .starter{font-size:14px;color:var(--muted)}
 .check{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
 .check h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
@@ -241,9 +247,11 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
             <div><label>첫 번째 특성</label><div class="chips" id="t1"></div></div>
             <div><label>두 번째 특성</label><div class="chips" id="t2"></div></div>
           </div>
-          <label for="ev1" class="starter">첫 번째 특성의 근거: 사례의 어느 부분에서 그렇게 판단했나요? 사례 속 표현을 그대로 가져와 쓰면 좋아요.</label>
+          <label for="ev1" class="starter">첫 번째 특성의 근거: 아래 지문 조각 중 근거가 되는 부분을 누르면 자동으로 들어가요. 그 뒤에 이유를 이어 쓰세요.</label>
+          <div class="evpick" id="evpick1"></div>
           <textarea id="ev1" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
-          <label for="ev2" class="starter">두 번째 특성의 근거</label>
+          <label for="ev2" class="starter">두 번째 특성의 근거: 근거가 되는 부분을 눌러 넣고 이유를 이어 쓰세요.</label>
+          <div class="evpick" id="evpick2"></div>
           <textarea id="ev2" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
         </div>
         <div class="step">
@@ -449,7 +457,7 @@ const MODEL={
   lack:'상황 인식 및 이해 특성이 없다면 시스템은 손님이 무엇을 집었는지 알 수 없어 결제를 하지 못하거나 잘못된 금액을 결제한다. 결국 직원이 다시 계산해야 해서 무인으로 운영할 수 없게 된다.'}};
 let d3=store.get('d3',{c:0,r:0,t1:null,t2:null,ev1:'',ev2:'',rel:''});
 function chipRow(el,key){ el.innerHTML=TRAITS.map(t=>`<button class="chip" data-t="${t.id}" aria-pressed="${d3[key]===t.id}">${t.name}</button>`).join('');
-  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{d3[key]=d3[key]===b.dataset.t?null:b.dataset.t;save3();render3();})); }
+  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{d3[key]=d3[key]===b.dataset.t?null:b.dataset.t; const ek=key==='t1'?'ev1':'ev2'; if(d3[key]&&(d3[ek]||'').includes('○○ 특성')) d3[ek]=d3[ek].replace('○○ 특성',TN[d3[key]]+' 특성'); save3();render3();})); }
 function save3(){store.set('d3',d3);}
 function render3(){
   const cs=CASES[d3.c], rel=RELS[d3.r];
@@ -462,8 +470,19 @@ function render3(){
   $('#rel').placeholder=rel.st.replace('시작 문장 예) ','');
   chipRow($('#t1'),'t1'); chipRow($('#t2'),'t2');
   ['ev1','ev2','rel'].forEach(k=>{ if($('#'+k).value!==d3[k]) $('#'+k).value=d3[k]; });
+  renderEvPick();
   checks3();
 }
+/* 지문 조각을 눌러 근거 넣기 */
+function renderEvPick(){ const cl=clues(CASES[d3.c]);
+  [['evpick1','ev1','t1'],['evpick2','ev2','t2']].forEach(([pid,ek,tk])=>{ const el=$('#'+pid);
+    el.innerHTML='<span class="pl">지문에서 근거 고르기</span>'+cl.map((p,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${(d3[ek]||'').includes(p.c)}">${esc(p.c)}</button>`).join('');
+    el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cl[+b.dataset.i].c; let v=d3[ek]||''; if(v.includes(c)) return;
+      const nm=d3[tk]?TN[d3[tk]]:'○○';
+      const add=`또한 ‘${c}’라는 부분에서도 알 수 있다.`, t=v.trimEnd();
+      v=t.endsWith('왜냐하면')?t.slice(0,-4).trimEnd()+` ${add} 왜냐하면 `:v.trim()?t+` ${add}`:`‘${c}’라는 부분에서 ${nm} 특성이 나타난다. 왜냐하면 `;
+      d3[ek]=v; save3(); render3(); const ta=$('#'+ek); ta.focus(); try{ta.setSelectionRange(v.length,v.length);}catch(e){} }));
+  }); }
 const norm=s=>s.replace(/[\s'"‘’“”.,·]/g,'');
 function quotes(text,cs){ const src=norm(cs.parts.map(p=>typeof p==='string'?p:p.c).join('')); const t=norm(text);
   for(let i=0;i+7<=t.length;i++){ if(src.includes(t.slice(i,i+7))) return true; } return false; }
