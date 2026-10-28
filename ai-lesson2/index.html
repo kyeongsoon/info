@@ -251,7 +251,7 @@ textarea.sm{min-height:64px}
           <span class="toast" id="toast3" aria-live="polite"></span>
         </div>
         <p class="mark no" id="padletBad" hidden>선생님이 준 링크가 중간에 잘려서 우리 반 패들렛 목록을 불러오지 못했어요. 노션 수업 링크나 QR 코드로 다시 들어와 주세요.</p>
-        <p class="starter" id="padletHelp" hidden><span id="classHint">우리 반을 고른 뒤 </span>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛에서 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
+        <p class="starter" id="padletHelp" hidden><span id="classHint">우리 반을 고른 뒤 </span>버튼을 누르면 답안이 복사되고 패들렛이 새 탭으로 열려요. 패들렛의 <b>‘개선 방안 쓰기’ 섹션</b> 아래 <b>+</b>를 눌러 게시물 내용에 붙여 넣기(Ctrl+V) 하세요. 제목에는 학번과 이름을 써 주세요.</p>
         <div class="model" id="modelbox" hidden></div>
       </div>
       <aside class="check" aria-live="polite">
@@ -475,7 +475,7 @@ $('#model3').addEventListener('click',()=>{
   box.hidden=false;
 });
 function answerText(){ const cs=WCASES[d3.c];
-  return `[사례] ${cs.name}\n`+ITEMS3.map(it=>`${it.name}\n- 문제: ${val(it.id,'p')}\n- 개선: ${val(it.id,'f')}`).join('\n'); }
+  return `[2차시 개선 방안 쓰기]\n[사례] ${cs.name}\n`+ITEMS3.map(it=>`${it.name}\n- 문제: ${val(it.id,'p')}\n- 개선: ${val(it.id,'f')}`).join('\n'); }
 async function copyAnswer(okMsg){
   try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
   catch(e){const ta=$('#p-eval');if(ta){ta.focus();ta.select();}$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
