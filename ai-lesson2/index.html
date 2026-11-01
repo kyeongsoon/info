@@ -45,7 +45,7 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);lin
 .goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .goal{font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted)}
 .goal b{color:var(--ink);font-weight:500}
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;border-bottom:1px solid var(--line)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .tab{font:inherit;cursor:pointer;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 14px;display:grid;gap:0;min-width:0}
 .tab small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
@@ -177,6 +177,42 @@ textarea.sm{min-height:64px}
 .evchip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .casetext{white-space:normal}
 @media (max-width:760px){ .rule3{grid-template-columns:minmax(0,1fr)} }
+/* 활동 2·4 */
+.tmsteps{display:grid;gap:10px}
+.tmstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.tmstep > i{font-style:normal;font-family:var(--display);font-size:22px;color:var(--accent)}
+.tmstep > div{display:grid;gap:4px}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.thumbs figure,.tmrow figure{margin:0;width:150px;display:grid;gap:2px}
+figure svg{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--muted);text-align:center}
+.tmtable{display:grid;gap:10px}
+.tmrow{display:grid;grid-template-columns:160px minmax(0,1fr);gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:var(--r);padding:10px;background:var(--surface)}
+.tmrow.ok{border-color:var(--ok);background:var(--ok-soft)} .tmrow.no{border-color:var(--bad);background:var(--bad-soft)}
+.tmin{display:grid;gap:6px;justify-items:start}
+input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--surface);color:var(--ink)}
+.ans{font-size:15px}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.lgrid.sm{grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}
+.lcard{font:inherit;cursor:pointer;display:grid;gap:3px;padding:6px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-align:left;opacity:.5}
+.lcard.on{opacity:1;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.lcard:disabled{cursor:default;opacity:1}
+.lcard.ok{border-color:var(--ok)} .lcard.no{border-color:var(--bad);background:var(--bad-soft)}
+.lcard:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.lcard svg{width:100%;height:auto;border-radius:6px;display:block}
+.lt{font-size:13px;font-weight:700;border-radius:999px;padding:1px 8px;justify-self:start}
+.lt.good{background:color-mix(in srgb,var(--t-perc) 16%,transparent);color:var(--t-perc)} .lt.bad{background:color-mix(in srgb,var(--t-opt) 18%,transparent);color:var(--t-opt)}
+.lm{font-size:12.5px;color:var(--muted)} .lp{font-size:12.5px;font-weight:700}
+.rulebox{background:var(--accent-soft);border-radius:var(--r);padding:12px 16px;display:grid;gap:4px}
+.rulebox p{margin:0;font-size:17px}
+.evalres{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.evalres .big{font-family:var(--display);font-size:44px;line-height:1}
+.big.ok{color:var(--ok)} .big.mid{color:var(--mid)} .big.no{color:var(--bad)}
+.score.sm{font-size:14px;font-weight:500;color:var(--muted)}
+.tab span{font-size:clamp(16px,1.7vw,19px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt{white-space:nowrap} .lgrid.sm .lt{font-size:12px;padding:1px 6px}
+@media (max-width:440px){ .tmrow{grid-template-columns:110px minmax(0,1fr)} .tmrow figure{width:110px} }
 </style>
 </head>
 <body>
@@ -193,8 +229,10 @@ textarea.sm{min-height:64px}
 
   <nav class="tabs" role="tablist" aria-label="활동">
     <button class="tab" role="tab" id="tab-types" aria-controls="types" data-k="types"><small>활동 1</small><span>결과로 구분하기</span></button>
-    <button class="tab" role="tab" id="tab-clinic" aria-controls="clinic" data-k="clinic"><small>활동 2</small><span>데이터 진단 클리닉</span></button>
-    <button class="tab" role="tab" id="tab-fix" aria-controls="fix" data-k="fix"><small>활동 3</small><span>개선 방안 쓰기</span></button>
+    <button class="tab" role="tab" id="tab-tm" aria-controls="tm" data-k="tm"><small>활동 2</small><span>티처블 머신</span></button>
+    <button class="tab" role="tab" id="tab-clinic" aria-controls="clinic" data-k="clinic"><small>활동 3</small><span>데이터 진단 클리닉</span></button>
+    <button class="tab" role="tab" id="tab-lab" aria-controls="lab" data-k="lab"><small>활동 4</small><span>학습 실험실</span></button>
+    <button class="tab" role="tab" id="tab-fix" aria-controls="fix" data-k="fix"><small>활동 5</small><span>개선 방안 쓰기</span></button>
   </nav>
 
   <!-- 활동 1: 결과로 구분하기 -->
@@ -216,7 +254,42 @@ textarea.sm{min-height:64px}
     <div class="grid1" id="grid1"></div>
   </section>
 
-  <!-- 활동 2: 데이터 진단 클리닉 -->
+  <!-- 활동 2: 티처블 머신 -->
+  <section class="panel" id="tm" role="tabpanel" aria-labelledby="tab-tm" hidden>
+    <div class="intro">
+      <h2>티처블 머신으로 바른 자세 판별 모델 만들기</h2>
+      <p>준비된 그림으로 모델을 학습시키고, 처음 보는 테스트 그림 5장으로 평가해 보세요. 웹캠 대신 그림을 올리는 방식이라 빠르게 끝나요.</p>
+    </div>
+    <p class="link-note"><b>교과서 연결</b> 데이터 수집 → 모델 생성 및 평가 → 모델 활용 중에서 오늘은 <b>모델 생성 및 평가</b>를 직접 해 봐요.</p>
+    <div class="tmsteps">
+      <div class="tmstep"><i>1</i><div><b>그림 묶음 내려받기</b>
+        <div class="dl">
+          <a class="btn" href="posture/posture-good-20.zip" download>바른 자세 20장</a>
+          <a class="btn" href="posture/posture-bad-20.zip" download>바르지 않은 자세 20장</a>
+          <a class="btn" href="posture/posture-test-5.zip" download>테스트 5장</a>
+        </div>
+        <span class="starter">내려받은 파일을 눌러 압축을 풀어 두세요. 테스트 그림은 학습에 넣지 않아요.</span></div></div>
+      <div class="tmstep"><i>2</i><div><b>티처블 머신 열기</b>
+        <div class="dl"><a class="btn primary" href="https://teachablemachine.withgoogle.com/train/image" target="_blank" rel="noopener">티처블 머신 이미지 프로젝트 열기 ↗</a></div>
+        <span class="starter">‘이미지 프로젝트 → 표준 이미지 모델’을 골라요. 그림 데이터라서 포즈 프로젝트보다 이미지 프로젝트가 잘 맞아요.</span></div></div>
+      <div class="tmstep"><i>3</i><div><b>클래스 이름 정하고 훈련 데이터 올리기</b>
+        <span class="starter">Class 1은 ‘바른 자세’, Class 2는 ‘바르지 않은 자세’로 바꾸고, ‘업로드’를 눌러 각 20장을 올려요.</span></div></div>
+      <div class="tmstep"><i>4</i><div><b>모델 학습시키기</b>
+        <span class="starter">‘모델 학습시키기’를 눌러요. 너무 오래 걸리면 ‘고급’에서 에포크를 줄여 보세요. 학습하는 동안 탭을 바꾸지 마세요.</span></div></div>
+      <div class="tmstep"><i>5</i><div><b>테스트 그림으로 평가하고 기록하기</b>
+        <span class="starter">미리보기의 입력을 ‘파일’로 바꾸고 테스트 그림을 한 장씩 올려 결과를 아래 표에 적어요.</span></div></div>
+    </div>
+    <div class="row"><b>훈련 데이터 미리보기</b><div class="thumbs" id="tmTrain"></div></div>
+    <div class="row">
+      <b>테스트 결과 기록표</b>
+      <div class="tmtable" id="tmTest"></div>
+      <div class="bar"><button class="btn" id="tmAnswer">정답 보기</button><span class="score" id="tmScore"></span></div>
+      <p class="prompt" id="tmTalk" hidden>틀린 그림이 있었나요? 그 그림과 비슷한 훈련 데이터가 몇 장이었는지 세어 보세요. 바르지 않은 자세 20장 중 ‘의자에 기대 늘어진 자세’는 4장, ‘고개를 숙인 자세’는 4장뿐이에요. 어떤 데이터를 더 넣으면 좋을까요?</p>
+    </div>
+  </section>
+
+
+  <!-- 활동 3: 데이터 진단 클리닉 -->
   <section class="panel" id="clinic" role="tabpanel" aria-labelledby="tab-clinic" hidden>
     <div class="intro">
       <h2>이 데이터, 어디가 아플까?</h2>
@@ -233,7 +306,31 @@ textarea.sm{min-height:64px}
     </div>
   </section>
 
-  <!-- 활동 3: 개선 방안 쓰기 -->
+  <!-- 활동 4: 학습 실험실 -->
+  <section class="panel" id="lab" role="tabpanel" aria-labelledby="tab-lab" hidden>
+    <div class="intro">
+      <h2>데이터를 바꾸면 인공지능은 무엇을 배울까?</h2>
+      <p>훈련 데이터를 골라 <b>학습하기</b>를 누르면, 인공지능이 찾은 규칙이 나와요. 그다음 <b>평가 방법</b>을 바꿔 가며 정확도를 비교해 보세요. 실험 버튼 ①~③을 차례로 눌러 보면 쉬워요.</p>
+    </div>
+    <p class="link-note"><b>수행평가 연결</b> 문항 2의 <b>평가 방법 · 데이터 양 · 데이터 구성(다양성)</b> 문제가 결과에 어떤 영향을 주는지 직접 확인해요.</p>
+    <div class="casepick" id="labPresets"></div>
+    <div class="row">
+      <b>훈련 데이터 고르기 · 카드를 눌러 넣거나 빼세요</b>
+      <span class="score sm" id="labCount"></span>
+      <div class="lgrid" id="labPool"></div>
+    </div>
+    <div class="bar"><button class="btn primary" id="labTrain">학습하기</button></div>
+    <div class="rulebox" id="labRule" hidden></div>
+    <div class="row" id="labEvalRow" hidden>
+      <b>평가하기 · 어떤 데이터로 평가할까요?</b>
+      <div class="casepick" id="labEvalPick"></div>
+      <div class="evalres" id="labEval"></div>
+      <div class="lgrid sm" id="labEvalCards"></div>
+      <p class="prompt" id="labMsg"></p>
+    </div>
+  </section>
+
+  <!-- 활동 5: 개선 방안 쓰기 -->
   <section class="panel" id="fix" role="tabpanel" aria-labelledby="tab-fix" hidden>
     <div class="intro">
       <h2>문제 3가지와 개선 방안 쓰기</h2>
@@ -273,7 +370,7 @@ textarea.sm{min-height:64px}
     <details class="ref teacher" id="teacher" hidden>
       <summary>선생님 설정 · 반별 패들렛 연결</summary>
       <div class="tset">
-        <p>반마다 활동 3(개선 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
+        <p>반마다 활동 5(개선 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
         <div class="trow">
           <label for="classCount" class="starter">반 수</label>
           <input id="classCount" class="num" type="number" min="1" max="30" value="9">
@@ -289,7 +386,7 @@ textarea.sm{min-height:64px}
         <p class="starter" id="activeNow"></p>
         <div class="tbox" id="shareBox" hidden>
           <b>전체 반 공용 링크</b>
-          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
+          <span class="starter">학생이 활동 5에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
           <code id="shareLink"></code>
           <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
           <b>반별 링크</b>
@@ -324,8 +421,79 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const store={get(k,d){try{const v=localStorage.getItem('ai2-'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('ai2-'+k,JSON.stringify(v))}catch(e){}}};
 
+/* ===== 자세 그림 생성기 (사이트 미리보기와 학습 이미지에 같이 씀) ===== */
+function rng(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const SKINS=['#f2c9a5','#e0ac85','#c68c64','#a8714d','#f6d7bd','#8d5a3b'];
+const SHIRTS=['#3f7cc4','#d9534f','#2e9e6b','#e3a21a','#7a5bc7','#2b3a55','#e86f9a','#5bbcd6','#6b8e23','#9c6b4a'];
+const PANTS=['#2d3748','#4a5568','#1f3b73','#5a4632','#3d3d3d'];
+const HAIRS=['#1b1b1b','#3b2a1f','#6b4423','#a0522d','#2f2f3a'];
+const BG={'교실':{wall:'#e5efe1',floor:'#c8b08d'},'집':{wall:'#f4e7d4',floor:'#b98e66'},'도서관':{wall:'#dde6f2',floor:'#a89276'}};
+function bgSVG(bg,tint){
+  const b=BG[bg]||BG['교실']; const wall=tint||b.wall; let s=`<rect width="480" height="360" fill="${wall}"/><rect y="300" width="480" height="60" fill="${b.floor}"/>`;
+  if(bg==='교실') s+=`<rect x="292" y="34" width="170" height="96" fill="#8b6b47"/><rect x="299" y="41" width="156" height="82" fill="#2f5d4a"/><path d="M312 64h60M312 84h90M312 104h40" stroke="#dfe9e2" stroke-width="3" opacity=".7"/>`;
+  else if(bg==='집') s+=`<rect x="320" y="36" width="130" height="118" fill="#ffffff"/><rect x="327" y="43" width="116" height="104" fill="#cfe8f7"/><path d="M385 43v104M327 95h116" stroke="#ffffff" stroke-width="6"/><rect x="312" y="30" width="146" height="10" fill="#c98b5a"/>`;
+  else { s+=`<rect x="318" y="26" width="146" height="230" fill="#7a4f33"/>`; const cols=['#c0392b','#2e86c1','#27ae60','#f1c40f','#8e44ad','#e67e22','#16a085'];
+    for(let r=0;r<4;r++){ let x=326; const y=36+r*55; s+=`<rect x="322" y="${y+44}" width="138" height="6" fill="#5c3a24"/>`; for(let k=0;k<9;k++){ const w=10+((r*7+k*3)%6); const h=30+((r*5+k*7)%12); s+=`<rect x="${x}" y="${y+44-h}" width="${w}" height="${h}" fill="${cols[(r+k)%cols.length]}"/>`; x+=w+3; if(x>448)break; } } }
+  return s;
+}
+/* p: {kind:'upright'|'hunch'|'headdown'|'slump', lean, curv, neck, bg, tint, skin, shirt, pants, hair, s, dx, dy} */
+function postureSVG(p,w,h){
+  const L=95, rad=d=>d*Math.PI/180;
+  let H=[165,210]; if(p.kind==='slump') H=[188,216];
+  const a=rad(p.lean), S=[H[0]+L*Math.sin(a), H[1]-L*Math.cos(a)];
+  const mid=[(H[0]+S[0])/2,(H[1]+S[1])/2], perp=[-Math.cos(a),-Math.sin(a)];
+  const C=[mid[0]+perp[0]*p.curv, mid[1]+perp[1]*p.curv];
+  const n=rad(p.lean+p.neck), Hd=[S[0]+36*Math.sin(n), S[1]-36*Math.cos(n)];
+  const hand=[Math.min(335,Math.max(272,S[0]+92)),196], E=[(S[0]+hand[0])/2-6,(S[1]+hand[1])/2+24];
+  const K=[248,H[1]+2], F=[250,294];
+  const hairOff=[-6*Math.cos(n)-4*Math.sin(n), -6*Math.sin(n)+4*Math.cos(n)*-1];
+  const eye=[Hd[0]+12*Math.cos(n)+4*Math.sin(n), Hd[1]+12*Math.sin(n)-4*Math.cos(n)];
+  const f=v=>v.toFixed(1);
+  const person=`
+   <path d="M${f(H[0])} ${f(H[1])}L${f(K[0])} ${f(K[1])}L${f(F[0])} ${f(F[1])}" stroke="${p.pants}" stroke-width="26" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M${f(F[0]-6)} ${f(F[1]+4)}h34" stroke="#222" stroke-width="12" stroke-linecap="round"/>
+   <path d="M${f(H[0])} ${f(H[1])}Q${f(C[0])} ${f(C[1])} ${f(S[0])} ${f(S[1])}" stroke="${p.shirt}" stroke-width="36" fill="none" stroke-linecap="round"/>
+   <path d="M${f(S[0])} ${f(S[1])}L${f(Hd[0])} ${f(Hd[1])}" stroke="${p.skin}" stroke-width="14" stroke-linecap="round"/>
+   <circle cx="${f(Hd[0]+hairOff[0])}" cy="${f(Hd[1]+hairOff[1])}" r="25" fill="${p.hair}"/>
+   <circle cx="${f(Hd[0])}" cy="${f(Hd[1])}" r="23" fill="${p.skin}"/>
+   <circle cx="${f(eye[0])}" cy="${f(eye[1])}" r="2.6" fill="#222"/>
+   <path d="M${f(S[0])} ${f(S[1]+6)}L${f(E[0])} ${f(E[1])}L${f(hand[0])} ${f(hand[1])}" stroke="${p.shirt}" stroke-width="15" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+   <circle cx="${f(hand[0])}" cy="${f(hand[1])}" r="8" fill="${p.skin}"/>`;
+  const furniture=`
+   <rect x="100" y="112" width="11" height="116" rx="4" fill="#6b4f3a"/>
+   <rect x="100" y="214" width="104" height="11" rx="4" fill="#6b4f3a"/>
+   <path d="M110 225V300M196 225V300" stroke="#6b4f3a" stroke-width="7"/>
+   <rect x="258" y="202" width="176" height="13" rx="3" fill="#a77b52"/>
+   <path d="M268 215V300M424 215V300" stroke="#8a6342" stroke-width="9"/>
+   <rect x="300" y="190" width="56" height="12" rx="2" fill="#f7f3e8" stroke="#bbb"/>`;
+  const tf=`translate(${f(240+p.dx)} ${f(200+p.dy)}) scale(${p.s.toFixed(3)}) translate(-240 -200)`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360"${w?` width="${w}" height="${h}"`:''}>${bgSVG(p.bg,p.tint)}<g transform="${tf}">${furniture}${person}</g></svg>`;
+}
+function personLook(r){ const pick=a=>a[Math.floor(r()*a.length)]; return {skin:pick(SKINS),shirt:pick(SHIRTS),pants:pick(PANTS),hair:pick(HAIRS),s:0.9+r()*0.18,dx:-24+r()*48,dy:-10+r()*20}; }
+function poseParams(kind,r){
+  if(kind==='upright') return {kind,lean:r()*12-2,curv:r()*4,neck:r()*8};
+  if(kind==='hunch') return {kind,lean:28+r()*14,curv:12+r()*7,neck:16+r()*14};
+  if(kind==='headdown') return {kind,lean:42+r()*10,curv:16+r()*6,neck:26+r()*10};
+  return {kind:'slump',lean:-28+r()*10,curv:-4-r()*6,neck:14+r()*10};
+}
+const BGS=['교실','집','도서관'];
+const TINTS=[null,'#eef0e6','#f6eee6','#e6eef6','#f1e9f3'];
+/* 티처블 머신용 이미지 묶음: 배경과 사람 모습을 두 클래스에 고르게 섞음 */
+function makeTMSet(){
+  const r=rng(20261101); const out={good:[],bad:[],test:[]};
+  for(let i=0;i<20;i++) out.good.push({...poseParams('upright',r),...personLook(r),bg:BGS[i%3],tint:TINTS[Math.floor(r()*TINTS.length)]});
+  const badKinds=['hunch','hunch','hunch','headdown','hunch','slump','hunch','hunch','headdown','hunch','slump','hunch','hunch','headdown','hunch','slump','hunch','hunch','headdown','slump'];
+  for(let i=0;i<20;i++) out.bad.push({...poseParams(badKinds[i],r),...personLook(r),bg:BGS[(i+1)%3],tint:TINTS[Math.floor(r()*TINTS.length)]});
+  const tk=[['upright','집'],['hunch','교실'],['upright','도서관'],['slump','집'],['headdown','도서관']];
+  tk.forEach(([k,bg])=>out.test.push({...poseParams(k,r),...personLook(r),bg,tint:null,label:k==='upright'?'바른 자세':'바르지 않은 자세'}));
+  return out;
+}
+/* 학습 실험실 카드: 등 기울기(도)와 배경으로 만든 카드 */
+function labCard(id,label,lean,bg,seed){ const r=rng(seed); const good=label==='good';
+  return {id,label,lean,bg,p:{kind:good?'upright':'hunch',lean,curv:good?1:Math.max(8,lean*0.42),neck:good?4:Math.min(30,lean*0.6),...personLook(r),bg,tint:null}}; }
+
 /* 탭 */
-const KEYS=['types','clinic','fix'];
+const KEYS=['types','tm','clinic','lab','fix'];
 function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
   KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
   store.set('tab',k); }
@@ -373,7 +541,7 @@ function render1(){
 $('#reset1').addEventListener('click',()=>{a1={};store.set('a1',a1);render1();});
 render1();
 
-/* 활동 2: 데이터 진단 클리닉 */
+/* 활동 3: 데이터 진단 클리닉 */
 const PROBS=[{id:'eval',name:'평가 방법',t:'cls'},{id:'amount',name:'데이터 양',t:'reg'},{id:'div',name:'데이터 구성(다양성)',t:'clu'},{id:'label',name:'레이블(정답) 오류',t:'lab'}];
 const PN=Object.fromEntries(PROBS.map(p=>[p.id,p.name]));
 const CLINIC=[
@@ -418,7 +586,86 @@ $('#grade2').addEventListener('click',()=>{graded2=true;render2();});
 $('#reset2').addEventListener('click',()=>{a2[CLINIC[c2].id]=[];store.set('a2',a2);graded2=false;render2();});
 render2();
 
-/* 활동 3: 개선 방안 쓰기 */
+/* 활동 2: 티처블 머신 */
+const TMSET=makeTMSet();
+$('#tmTrain').innerHTML=[...TMSET.good.slice(0,4).map(q=>['바른 자세',q]),...TMSET.bad.filter((q,i)=>i<3||q.kind!=='hunch').slice(0,5).map(q=>['바르지 않은 자세',q])]
+  .map(([l,q])=>`<figure>${postureSVG(q)}<figcaption>${l}</figcaption></figure>`).join('')+`<span class="starter">… 각 20장 중 일부만 보여요.</span>`;
+let tmRec=store.get('tm',{}), tmShow=false;
+function renderTM(){
+  $('#tmTest').innerHTML=TMSET.test.map((q,i)=>{ const r=tmRec[i]||{}; const show=tmShow;
+    const right=show&&r.p&&r.p===q.label;
+    return `<div class="tmrow ${show?(r.p?(right?'ok':'no'):''):''}"><figure>${postureSVG(q)}<figcaption>테스트${i+1}</figcaption></figure>
+      <div class="tmin"><span class="pl">모델이 고른 클래스</span><div class="chips">${['바른 자세','바르지 않은 자세'].map(l=>`<button class="chip" data-t="${l==='바른 자세'?'cls':'reg'}" data-i="${i}" data-l="${l}" aria-pressed="${r.p===l}">${l}</button>`).join('')}</div>
+      <label class="pl" for="tmc${i}">확률(%)</label><input id="tmc${i}" class="num" type="number" min="0" max="100" inputmode="numeric" value="${r.c??''}">
+      ${show?`<span class="ans">정답: <b>${q.label}</b></span>`:''}</div></div>`; }).join('');
+  $('#tmTest').querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; tmRec[i]={...(tmRec[i]||{}),p:b.dataset.l}; store.set('tm',tmRec); renderTM(); }));
+  $('#tmTest').querySelectorAll('input.num').forEach((el,i)=>el.addEventListener('input',()=>{ tmRec[i]={...(tmRec[i]||{}),c:el.value}; store.set('tm',tmRec); }));
+  if(tmShow){ const done=TMSET.test.filter((q,i)=>tmRec[i]&&tmRec[i].p).length, ok=TMSET.test.filter((q,i)=>tmRec[i]&&tmRec[i].p===q.label).length;
+    $('#tmScore').textContent=done?`우리 모델: ${ok} / 5 맞힘`:'결과를 먼저 기록해 보세요'; } else $('#tmScore').textContent='';
+  $('#tmTalk').hidden=!tmShow; $('#tmAnswer').textContent=tmShow?'정답 숨기기':'정답 보기';
+}
+$('#tmAnswer').addEventListener('click',()=>{tmShow=!tmShow;renderTM();});
+renderTM();
+
+/* 활동 4: 학습 실험실 */
+const POOL=[];
+[[3,'교실'],[6,'교실'],[8,'교실'],[10,'교실'],[12,'교실'],[27,'교실'],[14,'집'],[5,'집'],[11,'집'],[7,'집'],[13,'도서관'],[9,'도서관']].forEach(([a,bg],i)=>POOL.push(labCard('g'+i,'good',a,bg,500+i)));
+[[34,'집'],[38,'집'],[42,'집'],[30,'집'],[46,'집'],[16,'집'],[32,'교실'],[40,'교실'],[44,'교실'],[36,'교실'],[48,'도서관'],[39,'도서관']].forEach(([a,bg],i)=>POOL.push(labCard('b'+i,'bad',a,bg,600+i)));
+const TEST10=[[4,'집','good'],[9,'도서관','good'],[12,'집','good'],[6,'교실','good'],[15,'도서관','good'],[33,'교실','bad'],[41,'교실','bad'],[47,'도서관','bad'],[37,'집','bad'],[29,'도서관','bad']].map(([a,bg,l],i)=>labCard('t'+i,l,a,bg,700+i));
+const LN={good:'바른 자세',bad:'바르지 않은 자세'};
+const PRESETS=[
+ {name:'① 골고루 모은 데이터',ids:['g0','g1','g6','g7','g8','g10','g11','g5','g2','g9','b0','b1','b6','b7','b10','b11','b5','b2','b8','b3']},
+ {name:'② 배경이 치우친 데이터',ids:['g0','g1','g2','g3','g4','g5','b0','b1','b2','b3','b4','b5']},
+ {name:'③ 한쪽만 많은 데이터',ids:['g0','g1','g2','g3','g4','g5','g6','g7','g8','g9','g10','g11','b0','b6']},
+ {name:'직접 고르기',ids:null}];
+let lab=store.get('lab',{sel:PRESETS[0].ids,preset:0,evalOn:'train'}), model=null;
+function trainModel(cards){
+  const g=cards.filter(c=>c.label==='good'), b=cards.filter(c=>c.label==='bad'), maj=g.length>=b.length?'good':'bad';
+  if(g.length<4||b.length<4) return {type:'const',label:maj,few:g.length<4?'good':'bad'};
+  const acc=f=>cards.filter(c=>f(c)===c.label).length/cards.length;
+  const angs=[...new Set(cards.map(c=>c.lean))].sort((x,y)=>x-y), mid=(g.reduce((s,c)=>s+c.lean,0)/g.length+b.reduce((s,c)=>s+c.lean,0)/b.length)/2;
+  let bestT=null,bestA=-1;
+  for(let k=0;k<angs.length-1;k++){ const t=(angs[k]+angs[k+1])/2, a=acc(c=>c.lean>t?'bad':'good');
+    if(a>bestA+1e-9||(Math.abs(a-bestA)<1e-9&&Math.abs(t-mid)<Math.abs(bestT-mid))){bestA=a;bestT=t;} }
+  const bgMap={}; ['교실','집','도서관'].forEach(bg=>{ const cs=cards.filter(c=>c.bg===bg); if(!cs.length)return; const ng=cs.filter(c=>c.label==='good').length; bgMap[bg]=ng>cs.length-ng?'good':ng<cs.length-ng?'bad':maj; });
+  const bgA=acc(c=>bgMap[c.bg]||maj);
+  if(bgA>bestA+1e-9) return {type:'bg',map:bgMap,maj,acc:bgA};
+  return {type:'lean',t:bestT,acc:bestA};
+}
+function predict(m,c){ if(m.type==='const')return m.label; if(m.type==='bg')return m.map[c.bg]||m.maj; return c.lean>m.t?'bad':'good'; }
+function cardHTML(c,opts={}){ const on=opts.sel, res=opts.res;
+  return `<button type="button" class="lcard${on?' on':''}${res?(' '+res):''}" data-id="${c.id}" ${opts.static?'tabindex="-1" disabled':''} aria-pressed="${!!on}">
+    ${postureSVG(c.p)}<span class="lt ${c.label}">${LN[c.label]}</span><span class="lm">${c.bg} · 기울기 ${c.lean}°</span>${opts.pred?`<span class="lp">AI 판단: ${LN[opts.pred]} ${res==='ok'?'✓':'✗'}</span>`:''}</button>`; }
+function renderLab(){
+  $('#labPresets').innerHTML=PRESETS.map((p,i)=>`<button aria-pressed="${lab.preset===i}" data-i="${i}">${p.name}</button>`).join('');
+  $('#labPresets').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; lab.preset=i; if(PRESETS[i].ids) lab.sel=[...PRESETS[i].ids]; model=null; store.set('lab',lab); renderLab(); }));
+  const sel=new Set(lab.sel), cards=POOL.filter(c=>sel.has(c.id));
+  $('#labPool').innerHTML=POOL.map(c=>cardHTML(c,{sel:sel.has(c.id)})).join('');
+  $('#labPool').querySelectorAll('.lcard').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.id; lab.sel=sel.has(id)?lab.sel.filter(x=>x!==id):[...lab.sel,id]; lab.preset=3; model=null; store.set('lab',lab); renderLab(); }));
+  const ng=cards.filter(c=>c.label==='good').length, nb=cards.length-ng;
+  $('#labCount').textContent=`훈련 데이터 ${cards.length}장 · 바른 자세 ${ng}장 · 바르지 않은 자세 ${nb}장`;
+  const rb=$('#labRule'), er=$('#labEvalRow');
+  if(!model){ rb.hidden=true; er.hidden=true; return; }
+  rb.hidden=false; er.hidden=false;
+  rb.innerHTML=model.type==='lean'?`<b>인공지능이 찾은 규칙</b><p>등이 <b>약 ${Math.round(model.t)}°보다 더 굽으면</b> → 바르지 않은 자세, 아니면 → 바른 자세</p><span class="starter">자세(등 기울기)를 보고 판단하는 규칙이에요.</span>`
+    :model.type==='bg'?`<b>인공지능이 찾은 규칙</b><p>${Object.entries(model.map).map(([bg,l])=>`배경이 <b>${bg}</b>이면 → ${LN[l]}`).join('<br>')}<br>처음 보는 배경이면 → ${LN[model.maj]}</p><span class="starter">자세가 아니라 <b>배경</b>을 보고 판단하는 규칙을 배웠어요!</span>`
+    :`<b>인공지능이 찾은 규칙</b><p>무엇이든 → <b>${LN[model.label]}</b></p><span class="starter">${LN[model.few]} 데이터가 너무 적어서(4장 미만) 그 특징을 배우지 못했어요.</span>`;
+  $('#labEvalPick').innerHTML=[['train','학습에 쓴 데이터로 평가'],['test','처음 보는 테스트 데이터 10장으로 평가']].map(([k,l])=>`<button aria-pressed="${lab.evalOn===k}" data-k="${k}">${l}</button>`).join('');
+  $('#labEvalPick').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ lab.evalOn=b.dataset.k; store.set('lab',lab); renderLab(); }));
+  const set=lab.evalOn==='train'?cards:TEST10, res=set.map(c=>({c,p:predict(model,c)})), ok=res.filter(r=>r.p===r.c.label).length, pct=Math.round(ok/set.length*100);
+  $('#labEval').innerHTML=`<span class="big ${pct>=80?'ok':pct>=60?'mid':'no'}">${pct}%</span><span>정확도 · ${set.length}장 중 ${ok}장 맞힘</span>`;
+  $('#labEvalCards').innerHTML=res.map(r=>cardHTML(r.c,{static:true,pred:r.p,res:r.p===r.c.label?'ok':'no'})).join('');
+  let msg='';
+  if(lab.evalOn==='train') msg='<b>평가 방법</b> 학습에 쓴 사진으로 평가하면 이미 본 사진이라 점수가 높게 나오기 쉬워요. 이번에는 ‘처음 보는 테스트 데이터’로 평가해 보세요.';
+  else if(model.type==='bg') msg='<b>데이터 구성(다양성)</b> 바른 자세 사진은 모두 교실, 바르지 않은 자세 사진은 모두 집에서 찍어서 인공지능이 배경을 보고 판단했어요. 테스트 데이터처럼 배경이 섞이면 많이 틀려요. → 여러 장소에서 고르게 찍어야 해요.';
+  else if(model.type==='const') msg='<b>데이터 양</b> 한쪽 데이터가 너무 적어서 인공지능이 무엇이든 한쪽으로만 답해요. 그래서 정확도가 50% 정도밖에 안 돼요. → 적은 쪽 데이터를 더 모아 양을 비슷하게 맞춰야 해요.';
+  else msg='<b>좋은 데이터</b> 배경과 양이 고르게 섞인 데이터로 학습해서, 인공지능이 자세를 보고 판단하는 규칙을 배웠어요. 처음 보는 사진도 잘 맞혀요.';
+  $('#labMsg').innerHTML=msg+' <br>실험 ①·②·③을 모두 해 보고, 학습에 쓴 데이터로 평가했을 때와 테스트 데이터로 평가했을 때의 정확도를 비교해 보세요.';
+}
+$('#labTrain').addEventListener('click',()=>{ const sel=new Set(lab.sel); model=trainModel(POOL.filter(c=>sel.has(c.id))); lab.evalOn='train'; store.set('lab',lab); renderLab(); $('#labRule').scrollIntoView({block:'nearest'}); });
+renderLab();
+
+/* 활동 5: 개선 방안 쓰기 */
 const WCASES=[
  {id:'spoon',name:'예린 · 젓가락 vs 숟가락',chunks:['자기 집 식탁 매트 위에서만','젓가락 85장, 숟가락 15장, 총 100장을 찍었다','모든 사진의 배경이 같은 식탁 매트였다','100장을 모두 학습에 사용했고','학습에 썼던 100장을 그대로 다시 사용해 평가했더니','“정확도 100%”가 나와 무척 뿌듯해했다'],text:'예린이는 ‘젓가락 vs 숟가락’ 분류 모델을 만들기 위해 사진을 수집했다. 시간이 부족했던 예린이는 자기 집 식탁 매트 위에서만 젓가락 85장, 숟가락 15장, 총 100장을 찍었다(모든 사진의 배경이 같은 식탁 매트였다). 예린이는 100장을 모두 학습에 사용했고, 학습에 썼던 100장을 그대로 다시 사용해 평가했더니 “정확도 100%”가 나와 무척 뿌듯해했다.',
   model:{eval:['학습에 사용한 100장을 그대로 평가에 다시 사용했다. 모델이 이미 학습한 사진이라 정답을 기억해서 맞힐 수 있으므로, 정확도 100%는 실제 실력보다 높게 나온 결과이다.','사진을 훈련 데이터와 테스트 데이터로 8:2 정도로 나누고, 학습에 사용하지 않은 테스트 데이터로 평가해야 한다.'],
