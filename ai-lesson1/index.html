@@ -170,7 +170,6 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header class="top">
     <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 1. 인공지능과 학습 · 1차시 · 교과서 164~169쪽</div>
@@ -226,36 +225,35 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
   <section class="panel" id="connect" role="tabpanel" aria-labelledby="tab-connect" hidden>
     <div class="intro">
       <h2>특성 두 개를 근거와 함께 연결해 쓰기</h2>
-      <p>수행평가 문항 1과 같은 형식이에요. 사례와 질문 유형을 고르고, 특성 2개와 근거, 두 특성의 관계를 써 보세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
+      <p>수행평가 문항 1과 같은 형식이에요. 사례를 고르고, 특성 1과 근거 → 특성 2와 근거 → 두 특성을 연결해서 설명하기 순서로 써 보세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
     </div>
-    <p class="link-note"><b>채점기준 5점</b> 특성 2가지를 정확히 찾고 · 사례 속 구체적 근거로 설명하고 · 두 특성의 관계(연결·순서·없을 때의 문제)를 논리적으로 서술</p>
+    <p class="link-note"><b>채점기준 5점</b> 특성 2가지를 정확히 찾고 · 사례 속 구체적 근거로 설명하고 · 두 특성이 어떻게 연결되어 작동하는지 논리적으로 서술</p>
     <div class="two">
       <div class="step" style="gap:18px">
         <div class="step">
           <h3><i>1</i> 사례 고르기</h3>
           <div class="casepick" id="pick3"></div>
           <div class="casetext" id="text3" style="font-size:17px;line-height:1.8"></div>
-        </div>
-        <div class="step">
-          <h3><i>2</i> 질문 유형 고르기</h3>
-          <div class="casepick" id="relpick"></div>
           <div class="prompt" id="prompt3"></div>
         </div>
         <div class="step">
-          <h3><i>3</i> 특성 2가지와 근거</h3>
-          <div class="pairsel">
-            <div><label>첫 번째 특성</label><div class="chips" id="t1"></div></div>
-            <div><label>두 번째 특성</label><div class="chips" id="t2"></div></div>
-          </div>
-          <label for="ev1" class="starter">첫 번째 특성의 근거: 아래 지문 조각 중 근거가 되는 부분을 누르면 자동으로 들어가요. 필요하면 설명을 덧붙여도 돼요.</label>
+          <h3><i>2</i> 첫 번째 특성과 근거</h3>
+          <label class="starter">첫 번째 특성을 고르세요.</label>
+          <div class="chips" id="t1"></div>
+          <label for="ev1" class="starter">근거: 지문 조각 중 이 특성이 드러나는 부분을 누르면 자동으로 들어가요. 필요하면 설명을 덧붙여도 돼요.</label>
           <div class="evpick" id="evpick1"></div>
-          <textarea id="ev1" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
-          <label for="ev2" class="starter">두 번째 특성의 근거: 근거가 되는 부분을 눌러 넣으세요.</label>
-          <div class="evpick" id="evpick2"></div>
-          <textarea id="ev2" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다. 왜냐하면 ~"></textarea>
+          <textarea id="ev1" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다."></textarea>
         </div>
         <div class="step">
-          <h3><i>4</i> 두 특성의 관계</h3>
+          <h3><i>3</i> 두 번째 특성과 근거</h3>
+          <label class="starter">첫 번째와 다른 특성을 고르세요.</label>
+          <div class="chips" id="t2"></div>
+          <label for="ev2" class="starter">근거: 이 특성이 드러나는 부분을 눌러 넣으세요.</label>
+          <div class="evpick" id="evpick2"></div>
+          <textarea id="ev2" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다."></textarea>
+        </div>
+        <div class="step">
+          <h3><i>4</i> 두 특성을 연결해서 설명하기</h3>
           <label for="rel" class="starter" id="starter3"></label>
           <textarea id="rel" class="rel"></textarea>
         </div>
@@ -455,16 +453,15 @@ const MODEL={
   link:'카메라가 손님이 집은 물건이 무엇인지 인식하면, 시스템은 그 결과를 바탕으로 직원 없이 스스로 결제 금액을 정해 결제한다. 인식한 정보가 자율적인 판단의 바탕이 되어 두 특성이 이어져 작동한다.',
   order:'상황 인식 및 이해가 먼저 이루어져야 자율성이 가능하다. 손님이 무엇을 집었는지 알아야 사람의 도움 없이 스스로 얼마를 결제할지 결정할 수 있기 때문이다.',
   lack:'상황 인식 및 이해 특성이 없다면 시스템은 손님이 무엇을 집었는지 알 수 없어 결제를 하지 못하거나 잘못된 금액을 결제한다. 결국 직원이 다시 계산해야 해서 무인으로 운영할 수 없게 된다.'}};
+const REL=RELS[0]; /* 질문 유형은 '연결해서 설명하기' 하나로 통일 */
 let d3=store.get('d3',{c:0,r:0,t1:null,t2:null,ev1:'',ev2:'',rel:''});
 function chipRow(el,key){ el.innerHTML=TRAITS.map(t=>`<button class="chip" data-t="${t.id}" aria-pressed="${d3[key]===t.id}">${t.name}</button>`).join('');
   el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{d3[key]=d3[key]===b.dataset.t?null:b.dataset.t; const ek=key==='t1'?'ev1':'ev2'; if(d3[key]&&(d3[ek]||'').includes('○○ 특성')) d3[ek]=d3[ek].replace('○○ 특성',TN[d3[key]]+' 특성'); save3();render3();})); }
 function save3(){store.set('d3',d3);}
 function render3(){
-  const cs=CASES[d3.c], rel=RELS[d3.r];
+  const cs=CASES[d3.c], rel=REL;
   pickers($('#pick3'),d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
   $('#text3').innerHTML=caseHTML(cs,null,false).replace(/class="clue"/g,'');
-  $('#relpick').innerHTML=RELS.map((r,i)=>`<button aria-pressed="${i===d3.r}" data-i="${i}">${r.name}</button>`).join('');
-  $('#relpick').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{d3.r=+b.dataset.i;save3();$('#modelbox').hidden=true;render3();}));
   $('#prompt3').innerHTML=`인공지능의 특성(상황 인식 및 이해, 학습, 최적화, 자율성, 예측) 중 이 사례에서 나타나는 특성을 2가지 찾아 각각 어떤 부분에서 그렇게 판단했는지 근거를 들어 설명하시오. 그리고 <b>${esc(rel.q)}</b>`;
   $('#starter3').textContent=rel.st;
   $('#rel').placeholder=rel.st.replace('시작 문장 예) ','');
@@ -489,7 +486,7 @@ const norm=s=>s.replace(/[\s'"‘’“”.,·]/g,'');
 function quotes(text,cs){ const src=norm(cs.parts.map(p=>typeof p==='string'?p:p.c).join('')); const t=norm(text);
   for(let i=0;i+7<=t.length;i++){ if(src.includes(t.slice(i,i+7))) return true; } return false; }
 function checks3(){
-  const cs=CASES[d3.c], rel=RELS[d3.r];
+  const cs=CASES[d3.c], rel=REL;
   const both=d3.t1&&d3.t2&&d3.t1!==d3.t2;
   const inCase=both&&cs.has.includes(d3.t1)&&cs.has.includes(d3.t2);
   const e1=d3.ev1.trim().length>=15&&quotes(d3.ev1,cs), e2=d3.ev2.trim().length>=15&&quotes(d3.ev2,cs);
@@ -499,7 +496,7 @@ function checks3(){
    [inCase,'특성 2가지를 정확히 골랐어요',both?(inCase?'두 특성 모두 이 사례에 나타나요.':'고른 특성 중 이 사례에 잘 드러나지 않는 것이 있어요. 사례를 다시 읽어 보세요.'):'서로 다른 특성 2개를 골라 주세요.'],
    [e1,'첫 번째 근거에 사례 속 표현이 들어 있어요',e1?'좋아요.':'사례 문장 일부를 따옴표로 가져와 “○○ 부분에서”처럼 써 보세요.'],
    [e2,'두 번째 근거에 사례 속 표현이 들어 있어요',e2?'좋아요.':'두 번째 특성도 사례 속 표현을 근거로 들어 주세요.'],
-   [relOk,'두 특성의 관계를 이유와 함께 썼어요',relOk?(nameIn?'두 특성 이름도 들어가 있어요.':'관계 문장에 두 특성 이름을 직접 넣으면 더 분명해요.'):(r.length<40?'40자 이상으로 자세히 써 보세요.':`‘${rel.kw.slice(0,3).join('’, ‘')}’ 같은 말로 두 특성을 이어 보세요.`)]];
+   [relOk,'두 특성을 연결해서 설명했어요',relOk?(nameIn?'두 특성 이름도 들어가 있어요.':'관계 문장에 두 특성 이름을 직접 넣으면 더 분명해요.'):(r.length<40?'40자 이상으로 자세히 써 보세요.':`‘${rel.kw.slice(0,3).join('’, ‘')}’ 같은 말로 두 특성을 이어 보세요.`)]];
   $('#checks').innerHTML=items.map(([ok,t,h])=>`<li class="${ok?'done':''}"><span class="dot">${ok?'✓':''}</span><span>${t}<span class="hint">${h}</span></span></li>`).join('');
   const n=items.filter(x=>x[0]).length; const lv=$('#level');
   let txt,bg;
@@ -510,13 +507,13 @@ function checks3(){
 }
 ['ev1','ev2','rel'].forEach(k=>$('#'+k).addEventListener('input',e=>{d3[k]=e.target.value;save3();checks3();}));
 $('#model3').addEventListener('click',()=>{
-  const cs=CASES[d3.c], m=MODEL[cs.id], rel=RELS[d3.r], box=$('#modelbox');
+  const cs=CASES[d3.c], m=MODEL[cs.id], rel=REL, box=$('#modelbox');
   if(!box.hidden){box.hidden=true;return;}
-  box.innerHTML=`<p><b>예시 답안 · ${cs.name} · ${TN[m.pair[0]]} + ${TN[m.pair[1]]}</b></p><p>${esc(m.ev[0])}</p><p>${esc(m.ev[1])}</p><p><b>${rel.name}</b> ${esc(m[rel.id])}</p><p class="starter">다른 특성 조합도 사례 속 근거가 분명하면 정답이 될 수 있어요. 먼저 내 답을 쓰고 비교해 보세요.</p>`;
+  box.innerHTML=`<p><b>예시 답안 · ${cs.name} · ${TN[m.pair[0]]} + ${TN[m.pair[1]]}</b></p><p>${esc(m.ev[0])}</p><p>${esc(m.ev[1])}</p><p><b>연결해서 설명하기</b> ${esc(m.link)}</p><p class="starter">다른 특성 조합도 사례 속 근거가 분명하면 정답이 될 수 있어요. 먼저 내 답을 쓰고 비교해 보세요.</p>`;
   box.hidden=false;
 });
-function answerText(){ const cs=CASES[d3.c], rel=RELS[d3.r];
-  return `[1차시 특성 연결 글쓰기]\n[사례] ${cs.name} / [질문 유형] ${rel.name}\n특성 1: ${d3.t1?TN[d3.t1]:''}\n근거: ${d3.ev1}\n특성 2: ${d3.t2?TN[d3.t2]:''}\n근거: ${d3.ev2}\n관계: ${d3.rel}`; }
+function answerText(){ const cs=CASES[d3.c], rel=REL;
+  return `[1차시 특성 연결 글쓰기]\n[사례] ${cs.name}\n특성 1: ${d3.t1?TN[d3.t1]:''}\n근거: ${d3.ev1}\n특성 2: ${d3.t2?TN[d3.t2]:''}\n근거: ${d3.ev2}\n연결해서 설명하기: ${d3.rel}`; }
 async function copyAnswer(okMsg){
   try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
   catch(e){const ta=$('#rel');ta.focus();ta.select();$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
@@ -645,6 +642,7 @@ clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 �
   Object.assign(d3,{t1:null,t2:null,ev1:'',ev2:'',rel:''});save3();armed=false;clr.textContent='지우기';$('#modelbox').hidden=true;render3();});
 render3();
 </script>
+
 
 </body>
 </html>
