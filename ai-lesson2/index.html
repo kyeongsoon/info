@@ -187,6 +187,8 @@ textarea.sm{min-height:64px}
 .thumbs figure,.tmrow figure{margin:0;width:150px;display:grid;gap:2px}
 figure svg{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
 figcaption{font-size:13px;color:var(--muted);text-align:center}
+.tips{margin:4px 0 0;padding-left:20px;display:grid;gap:3px;font-size:15px;color:var(--muted)} .tips b{color:var(--ink);margin-right:4px}
+.tmin .mt{font-size:16px}
 .tmtable{display:grid;gap:10px}
 .tmrow{display:grid;grid-template-columns:160px minmax(0,1fr);gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:var(--r);padding:10px;background:var(--surface)}
 .tmrow.ok{border-color:var(--ok);background:var(--ok-soft)} .tmrow.no{border-color:var(--bad);background:var(--bad-soft)}
@@ -216,7 +218,6 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header class="top">
     <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 1. 인공지능과 학습 · 2차시 · 교과서 170~177쪽</div>
@@ -258,34 +259,43 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
   <section class="panel" id="tm" role="tabpanel" aria-labelledby="tab-tm" hidden>
     <div class="intro">
       <h2>티처블 머신으로 바른 자세 판별 모델 만들기</h2>
-      <p>준비된 그림으로 모델을 학습시키고, 처음 보는 테스트 그림 5장으로 평가해 보세요. 웹캠 대신 그림을 올리는 방식이라 빠르게 끝나요.</p>
+      <p>포즈 프로젝트를 열고 웹캠으로 내 자세 데이터를 모아 모델을 학습시켜요. 그다음 아래 테스트 미션 5개로 모델을 평가해 보세요.</p>
     </div>
-    <p class="link-note"><b>교과서 연결</b> 데이터 수집 → 모델 생성 및 평가 → 모델 활용 중에서 오늘은 <b>모델 생성 및 평가</b>를 직접 해 봐요.</p>
+    <p class="link-note"><b>교과서 연결</b> 데이터 수집 → 모델 생성 및 평가 → 모델 활용 과정을 직접 해 봐요. 바른 자세 유지 시스템 영상(173쪽)과 같은 순서예요.</p>
     <div class="tmsteps">
-      <div class="tmstep"><i>1</i><div><b>그림 묶음 내려받기</b>
-        <div class="dl">
-          <a class="btn" href="posture/posture-good-20.zip" download>바른 자세 20장</a>
-          <a class="btn" href="posture/posture-bad-20.zip" download>바르지 않은 자세 20장</a>
-          <a class="btn" href="posture/posture-test-5.zip" download>테스트 5장</a>
-        </div>
-        <span class="starter">내려받은 파일을 눌러 압축을 풀어 두세요. 테스트 그림은 학습에 넣지 않아요.</span></div></div>
-      <div class="tmstep"><i>2</i><div><b>티처블 머신 열기</b>
-        <div class="dl"><a class="btn primary" href="https://teachablemachine.withgoogle.com/train/image" target="_blank" rel="noopener">티처블 머신 이미지 프로젝트 열기 ↗</a></div>
-        <span class="starter">‘이미지 프로젝트 → 표준 이미지 모델’을 골라요. 그림 데이터라서 포즈 프로젝트보다 이미지 프로젝트가 잘 맞아요.</span></div></div>
-      <div class="tmstep"><i>3</i><div><b>클래스 이름 정하고 훈련 데이터 올리기</b>
-        <span class="starter">Class 1은 ‘바른 자세’, Class 2는 ‘바르지 않은 자세’로 바꾸고, ‘업로드’를 눌러 각 20장을 올려요.</span></div></div>
+      <div class="tmstep"><i>1</i><div><b>티처블 머신 포즈 프로젝트 열기</b>
+        <div class="dl"><a class="btn primary" href="https://teachablemachine.withgoogle.com/train/pose" target="_blank" rel="noopener">티처블 머신 포즈 프로젝트 열기 ↗</a></div>
+        <span class="starter">새 탭에서 바로 포즈 프로젝트가 열려요. 카메라 사용을 물으면 ‘허용’을 눌러요.</span></div></div>
+      <div class="tmstep"><i>2</i><div><b>클래스 이름 바꾸기</b>
+        <span class="starter">Class 1은 ‘바른 자세’, Class 2는 ‘바르지 않은 자세’로 바꿔요.</span></div></div>
+      <div class="tmstep"><i>3</i><div><b>웹캠으로 데이터 모으기</b>
+        <span class="starter">각 클래스에서 ‘웹캠’을 누르고 ‘길게 눌러서 녹화하기’를 눌러 자세를 담아요. 어깨와 머리가 화면에 다 보이게 앉으세요.</span>
+        <ul class="tips">
+          <li><b>양</b> 두 클래스의 샘플 수를 비슷하게 맞춰요. (예: 각 80~150개)</li>
+          <li><b>다양성</b> 바르지 않은 자세는 등 굽히기, 고개 숙이기, 의자에 기대기를 모두 담아요.</li>
+          <li><b>조금씩 움직이기</b> 몸을 살짝 좌우로 움직이며 녹화하면 처음 보는 상황도 잘 맞혀요.</li>
+        </ul></div></div>
       <div class="tmstep"><i>4</i><div><b>모델 학습시키기</b>
-        <span class="starter">‘모델 학습시키기’를 눌러요. 너무 오래 걸리면 ‘고급’에서 에포크를 줄여 보세요. 학습하는 동안 탭을 바꾸지 마세요.</span></div></div>
-      <div class="tmstep"><i>5</i><div><b>테스트 그림으로 평가하고 기록하기</b>
-        <span class="starter">미리보기의 입력을 ‘파일’로 바꾸고 테스트 그림을 한 장씩 올려 결과를 아래 표에 적어요.</span></div></div>
+        <span class="starter">‘모델 학습시키기’를 눌러요. 학습하는 동안 탭을 바꾸지 마세요.</span></div></div>
+      <div class="tmstep"><i>5</i><div><b>미리보기로 평가하고 기록하기</b>
+        <span class="starter">오른쪽 미리보기 화면 앞에서 아래 테스트 미션을 하나씩 해 보고, 모델이 고른 클래스와 확률을 기록해요.</span></div></div>
     </div>
-    <div class="row"><b>훈련 데이터 미리보기</b><div class="thumbs" id="tmTrain"></div></div>
     <div class="row">
-      <b>테스트 결과 기록표</b>
+      <b>테스트 미션 결과 기록표</b>
       <div class="tmtable" id="tmTest"></div>
       <div class="bar"><button class="btn" id="tmAnswer">정답 보기</button><span class="score" id="tmScore"></span></div>
-      <p class="prompt" id="tmTalk" hidden>틀린 그림이 있었나요? 그 그림과 비슷한 훈련 데이터가 몇 장이었는지 세어 보세요. 바르지 않은 자세 20장 중 ‘의자에 기대 늘어진 자세’는 4장, ‘고개를 숙인 자세’는 4장뿐이에요. 어떤 데이터를 더 넣으면 좋을까요?</p>
+      <p class="prompt" id="tmTalk" hidden>틀린 미션이 있었나요? 그 자세를 훈련 데이터로 충분히 녹화했는지 떠올려 보세요. 미션 5처럼 학습에 없던 친구가 앉으면 결과가 어땠나요? 어떤 데이터를 더 모으면 모델이 좋아질까요?</p>
     </div>
+    <details class="ref">
+      <summary>웹캠이 안 될 때 · 그림 파일로 하기</summary>
+      <p class="starter">이미지 프로젝트를 열고 그림 묶음을 ‘업로드’해서 학습시켜요.</p>
+      <div class="dl">
+        <a class="btn" href="https://teachablemachine.withgoogle.com/train/image" target="_blank" rel="noopener">이미지 프로젝트 열기 ↗</a>
+        <a class="btn" href="posture/posture-good-20.zip" download>바른 자세 20장</a>
+        <a class="btn" href="posture/posture-bad-20.zip" download>바르지 않은 자세 20장</a>
+        <a class="btn" href="posture/posture-test-5.zip" download>테스트 5장</a>
+      </div>
+    </details>
   </section>
 
 
@@ -586,21 +596,21 @@ $('#grade2').addEventListener('click',()=>{graded2=true;render2();});
 $('#reset2').addEventListener('click',()=>{a2[CLINIC[c2].id]=[];store.set('a2',a2);graded2=false;render2();});
 render2();
 
-/* 활동 2: 티처블 머신 */
-const TMSET=makeTMSet();
-$('#tmTrain').innerHTML=[...TMSET.good.slice(0,4).map(q=>['바른 자세',q]),...TMSET.bad.filter((q,i)=>i<3||q.kind!=='hunch').slice(0,5).map(q=>['바르지 않은 자세',q])]
-  .map(([l,q])=>`<figure>${postureSVG(q)}<figcaption>${l}</figcaption></figure>`).join('')+`<span class="starter">… 각 20장 중 일부만 보여요.</span>`;
-let tmRec=store.get('tm',{}), tmShow=false;
+/* 활동 2: 티처블 머신 (포즈 프로젝트 · 웹캠) */
+const TMMISSIONS=(()=>{ const r=rng(20261102);
+  const m=[['upright','바른 자세로 앉기','바른 자세'],['hunch','등을 구부정하게 굽히기','바르지 않은 자세'],['headdown','고개만 푹 숙이기','바르지 않은 자세'],['slump','의자 뒤로 기대 늘어지기','바르지 않은 자세'],['upright','짝이 바른 자세로 앉기 (학습에 없던 사람)','바른 자세']];
+  return m.map(([k,t,label],i)=>({...poseParams(k,r),...personLook(r),bg:BGS[i%3],tint:null,title:t,label})); })();
+let tmRec=store.get('tm2',{}), tmShow=false;
 function renderTM(){
-  $('#tmTest').innerHTML=TMSET.test.map((q,i)=>{ const r=tmRec[i]||{}; const show=tmShow;
+  $('#tmTest').innerHTML=TMMISSIONS.map((q,i)=>{ const r=tmRec[i]||{}; const show=tmShow;
     const right=show&&r.p&&r.p===q.label;
-    return `<div class="tmrow ${show?(r.p?(right?'ok':'no'):''):''}"><figure>${postureSVG(q)}<figcaption>테스트${i+1}</figcaption></figure>
-      <div class="tmin"><span class="pl">모델이 고른 클래스</span><div class="chips">${['바른 자세','바르지 않은 자세'].map(l=>`<button class="chip" data-t="${l==='바른 자세'?'cls':'reg'}" data-i="${i}" data-l="${l}" aria-pressed="${r.p===l}">${l}</button>`).join('')}</div>
+    return `<div class="tmrow ${show?(r.p?(right?'ok':'no'):''):''}"><figure>${postureSVG(q)}<figcaption>미션 ${i+1}</figcaption></figure>
+      <div class="tmin"><b class="mt">${q.title}</b><span class="pl">모델이 고른 클래스</span><div class="chips">${['바른 자세','바르지 않은 자세'].map(l=>`<button class="chip" data-t="${l==='바른 자세'?'cls':'reg'}" data-i="${i}" data-l="${l}" aria-pressed="${r.p===l}">${l}</button>`).join('')}</div>
       <label class="pl" for="tmc${i}">확률(%)</label><input id="tmc${i}" class="num" type="number" min="0" max="100" inputmode="numeric" value="${r.c??''}">
       ${show?`<span class="ans">정답: <b>${q.label}</b></span>`:''}</div></div>`; }).join('');
-  $('#tmTest').querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; tmRec[i]={...(tmRec[i]||{}),p:b.dataset.l}; store.set('tm',tmRec); renderTM(); }));
-  $('#tmTest').querySelectorAll('input.num').forEach((el,i)=>el.addEventListener('input',()=>{ tmRec[i]={...(tmRec[i]||{}),c:el.value}; store.set('tm',tmRec); }));
-  if(tmShow){ const done=TMSET.test.filter((q,i)=>tmRec[i]&&tmRec[i].p).length, ok=TMSET.test.filter((q,i)=>tmRec[i]&&tmRec[i].p===q.label).length;
+  $('#tmTest').querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; tmRec[i]={...(tmRec[i]||{}),p:b.dataset.l}; store.set('tm2',tmRec); renderTM(); }));
+  $('#tmTest').querySelectorAll('input.num').forEach((el,i)=>el.addEventListener('input',()=>{ tmRec[i]={...(tmRec[i]||{}),c:el.value}; store.set('tm2',tmRec); }));
+  if(tmShow){ const done=TMMISSIONS.filter((q,i)=>tmRec[i]&&tmRec[i].p).length, ok=TMMISSIONS.filter((q,i)=>tmRec[i]&&tmRec[i].p===q.label).length;
     $('#tmScore').textContent=done?`우리 모델: ${ok} / 5 맞힘`:'결과를 먼저 기록해 보세요'; } else $('#tmScore').textContent='';
   $('#tmTalk').hidden=!tmShow; $('#tmAnswer').textContent=tmShow?'정답 숨기기':'정답 보기';
 }
@@ -873,6 +883,7 @@ clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 �
   const id=WCASES[d3.c].id; Object.keys(d3.ans||{}).forEach(k=>{ if(k.startsWith(id+':')) delete d3.ans[k]; }); save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
 render3();
 </script>
+
 
 </body>
 </html>
