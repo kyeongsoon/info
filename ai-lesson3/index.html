@@ -189,6 +189,15 @@ textarea.sm{min-height:64px}
 .ocstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
 .ocstep > i{font-style:normal;font-family:var(--display);font-size:22px;color:var(--accent)}
 .ocstep > div{display:grid;gap:4px}
+.item3 .sub{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px dashed var(--line)}
+.item3 .sub:first-child{border-top:0;padding-top:0}
+.item3 .sub > div{display:grid;gap:4px}
+.item3 .sn{font-family:var(--display);font-size:20px;color:var(--accent);line-height:1.2}
+.item3 .st{font-weight:700}
+.item3 .sub.done .sn{color:var(--ok)}
+.item3 .sub.locked{opacity:.6}
+.item3 textarea:disabled{background:var(--surface-2);cursor:not-allowed}
+.lockmsg{font-size:13.5px;color:var(--muted)} .lockmsg:empty{display:none}
 </style>
 </head>
 <body>
@@ -301,7 +310,7 @@ textarea.sm{min-height:64px}
   <section class="panel" id="solve" role="tabpanel" aria-labelledby="tab-solve" hidden>
     <div class="intro">
       <h2>편향이 일으키는 피해와 해결 방안 쓰기</h2>
-      <p>수행평가 문항 4(2)와 같은 형식이에요. 편향이 있는 사례를 골라 ① 실제로 어떤 피해가 생기는지, ② 데이터를 어떻게 다시 모아야 하는지 쓰세요.</p>
+      <p>수행평가 문항 4(2)와 같은 형식이에요. 편향이 있는 사례를 골라 ⓐ 편향 부분 고르기 → ⓑ 누가 어떤 피해를 입는지 이유 쓰기 → ⓒ 데이터를 다시 모으는 개선 방안 쓰기 순서로 해요.</p>
     </div>
     <p class="link-note"><b>채점기준 5점</b> 구체적 피해를 논리적으로 서술하고, 실현 가능한 개선 방안(데이터 다시 수집)을 제시</p>
     <div class="two">
@@ -311,16 +320,14 @@ textarea.sm{min-height:64px}
           <div class="casepick" id="pick3"></div>
           <div class="casetext" id="text3" style="font-size:17px;line-height:1.8"></div>
         </div>
-        <div class="step item3">
-          <b>① 이 편향이 일으키는 문제(피해)</b>
-          <label class="starter" for="harm">지문에서 편향이 생긴 부분을 누르고, 누가 어떤 피해를 입는지 이어 쓰세요.</label>
-          <div class="evpick" id="ep-harm"></div>
-          <textarea id="harm"></textarea>
-        </div>
-        <div class="step item3">
-          <b>② 데이터를 다시 수집하는 방법</b>
-          <label class="starter" for="fixd">어떤 데이터를 더 모으거나 어떻게 골고루 모을지 구체적으로 쓰세요.</label>
-          <textarea id="fixd"></textarea>
+        <div class="step">
+          <h3><i>2</i> 편향 부분 고르기 → 이유 쓰기 → 개선 방안 쓰기</h3>
+          <p class="starter">ⓐ → ⓑ → ⓒ 순서로 해요. 이유를 써야 개선 방안 칸이 열려요.</p>
+          <div class="item3">
+            <div class="sub" id="sa"><span class="sn">ⓐ</span><div><span class="st">편향 부분 고르기</span><span class="starter">지문에서 데이터가 한쪽으로 치우친 부분을 눌러요. 여러 개 골라도 돼요.</span><div class="evpick" id="ep-harm"></div></div></div>
+            <div class="sub" id="sb"><span class="sn">ⓑ</span><div><label class="st" for="harm">이유 쓰기 · 이 편향 때문에 누가 어떤 피해를 입을까?</label><span class="starter">이렇게 학습하면 어떤 사람을 잘 알아보지 못하거나 불리하게 판단하는지 구체적으로 써요.</span><textarea id="harm" class="sm" placeholder="예) ○○의 데이터가 없어서 ○○은(는) … 피해를 입는다."></textarea><span class="lockmsg" id="lb"></span></div></div>
+            <div class="sub" id="sc"><span class="sn">ⓒ</span><div><label class="st" for="fixd">개선 방안 쓰기 · 데이터를 어떻게 다시 모을까?</label><span class="starter">어떤 데이터를 더 모으거나 어떻게 골고루 모을지 구체적으로 써요.</span><textarea id="fixd" class="sm"></textarea><span class="lockmsg" id="lc"></span></div></div>
+          </div>
         </div>
         <div class="bar">
           <label class="classpick" id="classWrap" hidden>우리 반 <select id="classSel"></select></label>
@@ -511,26 +518,38 @@ function render3(){
   pickers($('#pick3'),SCASES,d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
   $('#text3').textContent=cs.text;
   ['harm','fixd'].forEach(k=>{ if($('#'+k).value!==val(k)) $('#'+k).value=val(k); });
-  drawPick(); checks3();
+  drawPick(); gate(); checks3();
 }
-function drawPick(){ const cs=SCASES[d3.c], el=$('#ep-harm'), v=val('harm');
-  el.innerHTML='<span class="pl">지문에서 편향이 생긴 부분 고르기</span>'+cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${v.includes(c)}">${esc(c)}</button>`).join('');
-  el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cs.chunks[+b.dataset.i]; let v=val('harm'); if(v.includes(c)) return;
-    const t=v.trimEnd();
-    v=t.endsWith('부분 때문에')?t.slice(0,-6).trimEnd()+` 부분과 ‘${c}’${rn(c)} 부분 때문에 `:(v.trim()?t+` 또한 ‘${c}’${rn(c)} 부분도 문제이다.`:`‘${c}’${rn(c)} 부분 때문에 `);
-    d3.ans=d3.ans||{}; d3.ans[key('harm')]=v; save3(); const ta=$('#harm'); ta.value=v; drawPick(); checks3(); ta.focus(); try{ta.setSelectionRange(v.length,v.length);}catch(e){} })); }
+function sel(){ return (val('s')||'').split(',').filter(x=>x!=='').map(Number); }
+function picked(){ const cs=SCASES[d3.c]; return sel().map(i=>cs.chunks[i]).filter(Boolean); }
+/* 이유: 고른 지문을 그대로 옮긴 부분과 따옴표 속 지문은 빼고 학생이 쓴 말만 봄 */
+function reasonOnly(){ let t=val('harm'); picked().forEach(c=>{ t=t.split(c).join(''); }); return norm(strip(t)); }
+const RMIN=8; /* 이 글자 수 이상 써야 개선 방안 칸이 열림 */
+function gate(){ const hasS=picked().length>0, okR=reasonOnly().length>=RMIN;
+  const r=$('#harm'), f=$('#fixd');
+  r.disabled=!hasS && !val('harm'); $('#sb').classList.toggle('locked',r.disabled);
+  $('#lb').textContent=r.disabled?'ⓐ에서 편향 부분을 먼저 골라야 열려요.':'';
+  f.disabled=!(hasS&&okR) && !val('fixd'); $('#sc').classList.toggle('locked',f.disabled);
+  $('#lc').textContent=f.disabled?(hasS?`ⓑ 이유를 한 문장 이상 써야 열려요. (${reasonOnly().length}/${RMIN}자)`:'ⓐ, ⓑ를 먼저 해야 열려요.'):'';
+  $('#sa').classList.toggle('done',hasS); $('#sb').classList.toggle('done',hasS&&okR); }
+/* 지문 조각 누르기: 선택/취소만 하고 글은 넣지 않음 */
+function drawPick(){ const cs=SCASES[d3.c], el=$('#ep-harm'), ss=sel();
+  el.innerHTML=cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${ss.includes(i)}">${esc(c)}</button>`).join('');
+  el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; let ss=sel();
+    ss=ss.includes(i)?ss.filter(x=>x!==i):[...ss,i].sort((x,y)=>x-y);
+    d3.ans=d3.ans||{}; d3.ans[key('s')]=ss.join(','); save3(); drawPick(); gate(); checks3();
+    if(ss.length===1&&!val('harm')) $('#harm').focus(); })); }
 const HARM_K=['못','틀','차별','불리','피해','불편','손해','위험','사고','놓치','늦','불합격','낮은','억울','인식하지','알아듣지','알아보지','소외','어려'];
 const FIX_K=['다양','골고루','고르게','여러','비슷','균형','포함','추가','더','모아','모으','수집','다시','점검','확인'];
 function strip(s){ return String(s||'').replace(/‘[^’]*’/g,'').replace(/이?라는 부분(과|도)?|때문에|또한|문제이다\.?/g,''); }
 function checks3(){
-  const h=norm(strip(val('harm'))), f=norm(val('fixd'));
-  const hasQ=/‘[^’]*’/.test(val('harm'));
-  const hOk=h.length>=8&&HARM_K.some(k=>h.includes(k)), who=/(여성|어린이|노인|사람|지원자|환자|학생|할머니|할아버지|아이|외국인|사용자|누구|피부)/.test(val('harm').replace(/‘[^’]*’/g,''));
+  const h=reasonOnly(), f=norm(val('fixd')), hasS=picked().length>0;
+  const hOk=h.length>=RMIN&&HARM_K.some(k=>h.includes(k)), who=/(여성|어린이|노인|사람|지원자|환자|학생|할머니|할아버지|아이|외국인|사용자|누구|피부)/.test(val('harm').replace(/‘[^’]*’/g,''));
   const fOk=f.length>=8&&FIX_K.some(k=>f.includes(k));
   const items=[
-   [hasQ,'지문에서 편향이 생긴 부분을 짚었어요',hasQ?'좋아요.':'지문 조각을 누르거나 지문 표현을 따옴표로 넣어 보세요.'],
-   [hOk&&who,'누가 어떤 피해를 입는지 썼어요',hOk&&who?'좋아요.':(!who?'피해를 입는 사람(예: 여성, 어린이, 노인, 지원자)을 써 보세요.':'‘알아듣지 못한다’, ‘차별을 받는다’처럼 어떤 피해인지 구체적으로 써 보세요.')],
-   [fOk,'데이터를 다시 모으는 방법을 썼어요',fOk?'좋아요.':'어떤 데이터를 ‘골고루’, ‘더’ 모을지 구체적으로 써 보세요.']];
+   [hasS,'ⓐ 지문에서 편향이 생긴 부분을 골랐어요',hasS?'좋아요.':'지문 조각을 눌러 편향이 생긴 부분을 골라 보세요.'],
+   [hOk&&who,'ⓑ 누가 어떤 피해를 입는지 이유를 썼어요',hOk&&who?'좋아요.':(!who?'피해를 입는 사람(예: 여성, 어린이, 노인, 지원자)을 써 보세요.':'‘알아듣지 못한다’, ‘차별을 받는다’처럼 어떤 피해인지 구체적으로 써 보세요.')],
+   [fOk,'ⓒ 데이터를 다시 모으는 방법을 썼어요',fOk?'좋아요.':'어떤 데이터를 ‘골고루’, ‘더’ 모을지 구체적으로 써 보세요.']];
   $('#checks').innerHTML=items.map(([ok,t,hint])=>`<li class="${ok?'done':''}"><span class="dot">${ok?'✓':''}</span><span>${t}<span class="hint">${hint}</span></span></li>`).join('');
   const harmFull=hOk&&who; let txt,bg;
   if(harmFull&&fOk){txt='5점 수준에 가까워요';bg='var(--ok-soft)';}
@@ -538,11 +557,11 @@ function checks3(){
   else {txt='아직 1점 수준: 누가 어떤 피해를 입는지부터 써요';bg='var(--surface-2)';}
   $('#level').style.background=bg; $('#level').innerHTML=`${txt}<small>자가 점검용 예상이에요. 실제 점수는 선생님이 채점기준표로 매겨요.</small>`;
 }
-['harm','fixd'].forEach(k=>$('#'+k).addEventListener('input',e=>{ d3.ans=d3.ans||{}; d3.ans[key(k)]=e.target.value; save3(); if(k==='harm') drawPick(); checks3(); }));
+['harm','fixd'].forEach(k=>$('#'+k).addEventListener('input',e=>{ d3.ans=d3.ans||{}; d3.ans[key(k)]=e.target.value; save3(); gate(); checks3(); }));
 $('#model3').addEventListener('click',()=>{ const cs=SCASES[d3.c], box=$('#modelbox'); if(!box.hidden){box.hidden=true;return;}
-  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p><p><b>① 피해</b><br>${esc(cs.model[0])}</p><p><b>② 데이터 다시 수집</b><br>${esc(cs.model[1])}</p><p class="starter">먼저 내 답을 쓰고 비교해 보세요. 피해를 입는 사람과 상황이 구체적일수록 좋아요.</p>`; box.hidden=false; });
+  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p><p><b>ⓑ 이유(피해)</b><br>${esc(cs.model[0])}</p><p><b>ⓒ 개선 방안(데이터 다시 수집)</b><br>${esc(cs.model[1])}</p><p class="starter">먼저 내 답을 쓰고 비교해 보세요. 피해를 입는 사람과 상황이 구체적일수록 좋아요.</p>`; box.hidden=false; });
 function answerText(){ const cs=SCASES[d3.c];
-  return `[3차시 편향 해결 방안 쓰기]\n[사례] ${cs.name}\n① 피해: ${val('harm')}\n② 데이터 다시 수집: ${val('fixd')}`; }
+  return `[3차시 편향 해결 방안 쓰기]\n[사례] ${cs.name}\n- 편향 부분: ${picked().map(c=>`‘${c}’`).join(', ')}\n- 이유(피해): ${val('harm')}\n- 개선 방안(데이터 다시 수집): ${val('fixd')}`; }
 async function copyAnswer(okMsg){
   try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
   catch(e){const ta=$('#harm');ta.focus();ta.select();$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
@@ -669,7 +688,7 @@ window.addEventListener('hashchange',teacherMode);
 teacherMode();
 const clr=$('#clear3'); let armed=false;
 clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 번 더 누르면 지워져요';setTimeout(()=>{armed=false;clr.textContent='지우기';},3000);return;}
-  delete d3.ans[key('harm')]; delete d3.ans[key('fixd')]; save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
+  delete d3.ans[key('harm')]; delete d3.ans[key('fixd')]; delete d3.ans[key('s')]; save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
 render3();
 </script>
 
