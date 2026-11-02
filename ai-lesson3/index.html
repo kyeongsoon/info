@@ -45,7 +45,7 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);lin
 .goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .goal{font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted)}
 .goal b{color:var(--ink);font-weight:500}
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;border-bottom:1px solid var(--line)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .tab{font:inherit;cursor:pointer;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 14px;display:grid;gap:0;min-width:0}
 .tab small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
@@ -184,10 +184,14 @@ textarea.sm{min-height:64px}
 .consent th{width:6.5em;white-space:nowrap;text-align:left;vertical-align:top;background:var(--surface-2);padding:8px 10px;border:1px solid var(--line);font-weight:700}
 .consent td{padding:8px 10px;border:1px solid var(--line)}
 @media (max-width:760px){ .consent{position:static} }
+.tab span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ocsteps{display:grid;gap:10px}
+.ocstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.ocstep > i{font-style:normal;font-family:var(--display);font-size:22px;color:var(--accent)}
+.ocstep > div{display:grid;gap:4px}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header class="top">
     <div class="eyebrow"><b>Ⅳ. 인공지능</b> · 2. 인공지능과 문제 해결 · 3차시 · 교과서 199~204쪽</div>
@@ -200,8 +204,9 @@ textarea.sm{min-height:64px}
 
   <nav class="tabs" role="tablist" aria-label="활동">
     <button class="tab" role="tab" id="tab-consent" aria-controls="consent" data-k="consent"><small>활동 1</small><span>동의서 고치기</span></button>
-    <button class="tab" role="tab" id="tab-bias" aria-controls="bias" data-k="bias"><small>활동 2</small><span>편향 탐지기</span></button>
-    <button class="tab" role="tab" id="tab-solve" aria-controls="solve" data-k="solve"><small>활동 3</small><span>해결 방안 쓰기</span></button>
+    <button class="tab" role="tab" id="tab-ocean" aria-controls="ocean" data-k="ocean"><small>활동 2</small><span>AI for Oceans</span></button>
+    <button class="tab" role="tab" id="tab-bias" aria-controls="bias" data-k="bias"><small>활동 3</small><span>편향 탐지기</span></button>
+    <button class="tab" role="tab" id="tab-solve" aria-controls="solve" data-k="solve"><small>활동 4</small><span>해결 방안 쓰기</span></button>
   </nav>
 
   <!-- 활동 1: 동의서 고치기 -->
@@ -233,7 +238,48 @@ textarea.sm{min-height:64px}
     </div>
   </section>
 
-  <!-- 활동 2: 편향 탐지기 -->
+  <!-- 활동 2: AI for Oceans -->
+  <section class="panel" id="ocean" role="tabpanel" aria-labelledby="tab-ocean" hidden>
+    <div class="intro">
+      <h2>AI for Oceans로 편향 경험하기</h2>
+      <p>바다 쓰레기를 치우는 AI에게 물고기를 직접 가르쳐 보세요. 가르치는 <b>기준</b>이 다르면 AI의 판단이 어떻게 달라지는지 확인하고 아래에 기록해요.</p>
+    </div>
+    <p class="link-note"><b>교과서 연결</b> 데이터 수집 시 주의 사항 · <b>기준이 모호하면</b> 사람마다 판단이 달라 데이터 편향이 생겨요.</p>
+    <div class="bar">
+      <a class="btn primary" href="https://studio.code.org/s/oceans/lessons/1/levels/1?lang=ko-KR" target="_blank" rel="noopener">AI for Oceans 처음부터 하기 ↗</a>
+      <a class="btn" href="https://studio.code.org/s/oceans/lessons/1/levels/6?lang=ko-KR" target="_blank" rel="noopener">6단계 바로 가기 ↗</a>
+      <a class="btn" href="https://studio.code.org/s/oceans/lessons/1/levels/8?lang=ko-KR" target="_blank" rel="noopener">8단계 바로 가기 ↗</a>
+    </div>
+    <p class="starter">로그인하지 않아도 할 수 있어요. 화면이 영어로 나오면 아래쪽 언어 메뉴에서 ‘한국어’를 고르세요.</p>
+    <div class="ocsteps">
+      <div class="ocstep"><i>1</i><div><b>1~5단계 · 물고기와 쓰레기 가르치기</b><span class="starter">그림마다 물고기면 ‘예’, 쓰레기면 ‘아니요’를 눌러 AI를 학습시키고 ‘실행’으로 결과를 봐요. 많이 가르칠수록 결과가 어떻게 달라지는지 살펴보세요.</span></div></div>
+      <div class="ocstep"><i>2</i><div><b>6단계 · ‘파란색 물고기’ 가르치기</b><span class="starter">AI가 찾을 물고기 단어를 고르고 가르쳐요. 몸통 색만 볼지, 지느러미까지 볼지 내 <b>기준</b>을 정하고 시작하세요.</span></div></div>
+      <div class="ocstep"><i>3</i><div><b>8단계 · 새 단어 가르치기</b><span class="starter">표정이나 느낌처럼 사람마다 판단이 다를 수 있는 단어를 골라 가르쳐 보고, 짝의 결과와 비교해요.</span></div></div>
+    </div>
+    <div class="row">
+      <b>실험 1 · 6단계</b>
+      <span class="pl">내 기준</span><div class="chips" id="oc1c"></div>
+      <span class="pl">AI가 고른 물고기는 내 생각과 얼마나 맞았나요?</span><div class="chips" id="oc1r"></div>
+      <label class="pl" for="oc1t">짝과 기준이 달랐다면 결과는 어떻게 달랐나요?</label>
+      <textarea id="oc1t" class="sm" placeholder="예) 나는 지느러미까지 파란 물고기만 골랐는데, 짝의 AI는 몸통만 파래도 골랐다."></textarea>
+    </div>
+    <div class="row">
+      <b>실험 2 · 8단계</b>
+      <span class="pl">내가 고른 단어</span><div class="chips" id="oc2w"></div>
+      <span class="pl">같은 물고기를 보고 짝과 판단이 같았나요?</span><div class="chips" id="oc2r"></div>
+      <label class="pl" for="oc2t">판단이 달랐던 물고기와 그 이유</label>
+      <textarea id="oc2t" class="sm" placeholder="예) 입꼬리가 내려간 물고기를 나는 ‘화난’으로, 짝은 ‘슬픈’으로 골랐다."></textarea>
+    </div>
+    <div class="row">
+      <b>생각 정리</b>
+      <label class="pl" for="oc3t">기준이 모호하면 왜 편향이 생길까요? 어떻게 하면 줄일 수 있을까요?</label>
+      <textarea id="oc3t"></textarea>
+      <div class="bar"><button class="btn" id="ocModel">예시 답안 보기</button><button class="btn primary" id="ocNext">다음 활동 · 편향 탐지기 →</button></div>
+      <div class="model" id="ocModelBox" hidden><p><b>예시 답안</b></p><p>‘파란색’이나 ‘화난’처럼 기준이 분명하지 않은 단어는 가르치는 사람마다 다르게 판단한다. 그러면 AI는 가르친 사람의 생각대로만 배우게 되어, 다른 사람이 보기에는 틀린 결과를 내는 편향이 생긴다.</p><p>줄이려면 데이터를 모으기 전에 분류 기준을 분명하게 정하고(예: 몸통 절반 이상이 파란색), 여러 사람이 함께 레이블을 붙여 서로 확인한다.</p></div>
+    </div>
+  </section>
+
+  <!-- 활동 3: 편향 탐지기 -->
   <section class="panel" id="bias" role="tabpanel" aria-labelledby="tab-bias" hidden>
     <div class="intro">
       <h2>이 데이터, 한쪽으로 치우쳤을까?</h2>
@@ -251,7 +297,7 @@ textarea.sm{min-height:64px}
     <div class="grid1" id="grid2"></div>
   </section>
 
-  <!-- 활동 3: 해결 방안 쓰기 -->
+  <!-- 활동 4: 해결 방안 쓰기 -->
   <section class="panel" id="solve" role="tabpanel" aria-labelledby="tab-solve" hidden>
     <div class="intro">
       <h2>편향이 일으키는 피해와 해결 방안 쓰기</h2>
@@ -301,7 +347,7 @@ textarea.sm{min-height:64px}
     <details class="ref teacher" id="teacher" hidden>
       <summary>선생님 설정 · 반별 패들렛 연결</summary>
       <div class="tset">
-        <p>반마다 활동 3(해결 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
+        <p>반마다 활동 4(해결 방안 쓰기) 답안을 받을 패들렛 주소를 넣으세요. <b>padlet.com</b> 주소만 쓸 수 있어요. 패들렛을 하나만 쓴다면 한 줄만 채우면 돼요.</p>
         <div class="trow">
           <label for="classCount" class="starter">반 수</label>
           <input id="classCount" class="num" type="number" min="1" max="30" value="9">
@@ -317,7 +363,7 @@ textarea.sm{min-height:64px}
         <p class="starter" id="activeNow"></p>
         <div class="tbox" id="shareBox" hidden>
           <b>전체 반 공용 링크</b>
-          <span class="starter">학생이 활동 3에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
+          <span class="starter">학생이 활동 4에서 자기 반을 골라 제출해요. 노션처럼 한곳에 링크 하나만 올릴 때 좋아요. 이 링크로 한 번 들어온 기기는 반 목록을 기억해서, 다음에 그냥 주소로 들어와도 패들렛 버튼이 나와요.</span>
           <code id="shareLink"></code>
           <div><button class="btn sm" data-copy="shareLink">링크 복사</button></div>
           <b>반별 링크</b>
@@ -353,7 +399,7 @@ const store={get(k,d){try{const v=localStorage.getItem('ai3-'+k);return v?JSON.p
 const norm=s=>String(s||'').replace(/[\s'"‘’“”.,·]/g,'');
 
 /* 탭 */
-const KEYS=['consent','bias','solve'];
+const KEYS=['consent','ocean','bias','solve'];
 function showTab(k){ if(!KEYS.includes(k))k=KEYS[0];
   KEYS.forEach(x=>{ $('#'+x).hidden=x!==k; document.querySelector(`.tab[data-k="${x}"]`).setAttribute('aria-selected',x===k);});
   store.set('tab',k); }
@@ -404,7 +450,20 @@ $('#grade1').addEventListener('click',()=>{graded1=true;render1();});
 $('#reset1').addEventListener('click',()=>{a1[FORMS[c1].id]={items:[],purps:[],keep:null};store.set('a1',a1);graded1=false;render1();});
 render1();
 
-/* 활동 2: 편향 탐지기 */
+/* 활동 2: AI for Oceans */
+let oc=store.get('ocean',{});
+function ocChips(id,key,opts){ const el=$('#'+id);
+  el.innerHTML=opts.map(o=>`<button class="chip" data-t="perc" data-v="${esc(o)}" aria-pressed="${oc[key]===o}">${esc(o)}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ oc[key]=oc[key]===b.dataset.v?null:b.dataset.v; store.set('ocean',oc); ocChips(id,key,opts); })); }
+ocChips('oc1c','c1',['몸통 색만 보고','지느러미까지 보고','파란색이 조금만 있어도']);
+ocChips('oc1r','r1',['거의 맞았다','절반쯤 맞았다','많이 달랐다']);
+ocChips('oc2w','w2',['행복한','화난','무서운','슬픈','장난스러운','기타']);
+ocChips('oc2r','r2',['거의 같았다','조금 달랐다','많이 달랐다']);
+['oc1t','oc2t','oc3t'].forEach(k=>{ const el=$('#'+k); el.value=oc[k]||''; el.addEventListener('input',()=>{ oc[k]=el.value; store.set('ocean',oc); }); });
+$('#ocModel').addEventListener('click',()=>{ const b=$('#ocModelBox'); b.hidden=!b.hidden; $('#ocModel').textContent=b.hidden?'예시 답안 보기':'예시 답안 숨기기'; });
+$('#ocNext').addEventListener('click',()=>{ showTab('bias'); try{history.replaceState(null,'','#bias')}catch(e){} window.scrollTo({top:0}); });
+
+/* 활동 3: 편향 탐지기 */
 const BIAS=[
  {th:'음성 비서',d:'음성 비서 인공지능을 만들면서, 20~40대 성인 남성의 목소리 데이터만 대량으로 학습시켰다.',o:true,w:'여성, 어린이, 노인의 목소리는 거의 없어서 그 사람들의 말을 잘 알아듣지 못할 수 있어요.'},
  {th:'날씨 예보',d:'날씨 예보 인공지능을 만들면서, 전국 모든 관측소의 30년 치 기록을 계절과 지역별로 고르게 모아 학습시켰다.',o:false,w:'모든 지역과 계절의 기록을 고르게 모았기 때문에 한쪽으로 치우치지 않았어요.'},
@@ -431,7 +490,7 @@ function render2(){
 $('#reset2').addEventListener('click',()=>{a2={};store.set('a2',a2);render2();});
 render2();
 
-/* 활동 3: 해결 방안 쓰기 */
+/* 활동 4: 해결 방안 쓰기 */
 const SCASES=[
  {id:'voice',name:'음성 비서',text:'한 회사가 음성 비서 인공지능을 만들면서, 20~40대 성인 남성의 목소리 데이터만 대량으로 학습시켰다.',
   chunks:['20~40대 성인 남성의 목소리 데이터만','대량으로 학습시켰다'],
@@ -613,6 +672,7 @@ clr.addEventListener('click',()=>{ if(!armed){armed=true;clr.textContent='한 �
   delete d3.ans[key('harm')]; delete d3.ans[key('fixd')]; save3(); armed=false; clr.textContent='지우기'; $('#modelbox').hidden=true; render3(); });
 render3();
 </script>
+
 
 </body>
 </html>
