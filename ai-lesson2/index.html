@@ -169,6 +169,14 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .pl{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
 .item3{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
 textarea.sm{min-height:64px}
+.item3 .sub{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px dashed var(--line)}
+.item3 .sub > div{display:grid;gap:4px}
+.item3 .sn{font-family:var(--display);font-size:20px;color:var(--accent);line-height:1.2}
+.item3 .st{font-weight:700}
+.item3 .sub.done .sn{color:var(--ok)}
+.item3 .sub.locked{opacity:.6}
+.item3 textarea:disabled{background:var(--surface-2);cursor:not-allowed}
+.lockmsg{font-size:13.5px;color:var(--muted)} .lockmsg:empty{display:none}
 .evpick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .evpick .pl{width:100%;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
 .evchip{font:inherit;font-size:14.5px;line-height:1.45;text-align:left;cursor:pointer;border:1.5px dashed var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 10px;max-width:100%}
@@ -344,7 +352,7 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
   <section class="panel" id="fix" role="tabpanel" aria-labelledby="tab-fix" hidden>
     <div class="intro">
       <h2>문제 3가지와 개선 방안 쓰기</h2>
-      <p>수행평가 문항 2와 같은 형식이에요. 사례를 고르고, 세 가지 문제를 각각 설명한 뒤 개선 방안을 쓰세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
+      <p>수행평가 문항 2와 같은 형식이에요. 사례를 고르고, 세 가지 문제마다 ⓐ 문제 부분 고르기 → ⓑ 이유 쓰기 → ⓒ 개선 방안 쓰기를 하세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
     </div>
     <p class="link-note"><b>채점기준 9점</b> 평가 방법 · 데이터 양 · 데이터 구성의 문제 3가지를 모두 정확히 설명하고, 각각 타당한 개선 방안을 제시</p>
     <div class="two">
@@ -705,17 +713,19 @@ function render3(){
   const cs=WCASES[d3.c];
   pickers($('#pick3'),WCASES,d3.c,i=>{d3.c=i;save3();$('#modelbox').hidden=true;render3();});
   $('#text3').textContent=cs.text;
-  const box=$('#items3'); box.innerHTML=`<h3><i>2</i> 세 가지 문제와 개선 방안</h3>`;
+  const box=$('#items3'); box.innerHTML=`<h3><i>2</i> 세 가지 문제와 개선 방안</h3><p class="starter">문제마다 <b>ⓐ 문제 부분 고르기 → ⓑ 이유 쓰기 → ⓒ 개선 방안 쓰기</b> 순서로 해요. 이유를 써야 개선 방안 칸이 열려요.</p>`;
   ITEMS3.forEach(it=>{
     const d=document.createElement('div'); d.className='item3';
     d.innerHTML=`<b>${it.name}</b>
-      <label class="starter" for="p-${it.id}">문제 설명 · 지문에서 문제가 되는 부분을 누르고, 왜 문제인지 이어 쓰세요.</label><div class="evpick" id="ep-${it.id}"></div><textarea id="p-${it.id}" class="sm"></textarea>
-      <label class="starter" for="f-${it.id}">개선 방안 · ${it.hf}</label><textarea id="f-${it.id}" class="sm"></textarea>`;
+      <div class="sub" id="sa-${it.id}"><span class="sn">ⓐ</span><div><span class="st">문제 부분 고르기</span><span class="starter">지문에서 이 문제가 드러나는 부분을 눌러요. 여러 개 골라도 돼요.</span><div class="evpick" id="ep-${it.id}"></div></div></div>
+      <div class="sub" id="sb-${it.id}"><span class="sn">ⓑ</span><div><label class="st" for="r-${it.id}">이유 쓰기 · 왜 문제일까?</label><span class="starter">${it.hp}</span><textarea id="r-${it.id}" class="sm" placeholder="예) 이렇게 하면 …하기 때문에 문제이다."></textarea><span class="lockmsg" id="lb-${it.id}"></span></div></div>
+      <div class="sub" id="sc-${it.id}"><span class="sn">ⓒ</span><div><label class="st" for="f-${it.id}">개선 방안 쓰기</label><span class="starter">${it.hf}</span><textarea id="f-${it.id}" class="sm"></textarea><span class="lockmsg" id="lc-${it.id}"></span></div></div>`;
     box.appendChild(d);
-    const p=d.querySelector('#p-'+it.id), f=d.querySelector('#f-'+it.id);
-    p.value=val(it.id,'p'); f.value=val(it.id,'f'); bindPick(it,p);
-    p.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'p')]=p.value; save3(); checks3(); });
+    const r=d.querySelector('#r-'+it.id), f=d.querySelector('#f-'+it.id);
+    r.value=val(it.id,'r'); f.value=val(it.id,'f'); bindPick(it);
+    r.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'r')]=r.value; save3(); gate(it); checks3(); });
     f.addEventListener('input',()=>{ d3.ans=d3.ans||{}; d3.ans[key(it.id,'f')]=f.value; save3(); checks3(); });
+    gate(it);
   });
   checks3();
 }
@@ -724,21 +734,36 @@ function hit(text,kws){ const t=norm(text); return t.length>=6&&kws.some(k=>t.in
 function stripQ(s){ return String(s||'').replace(/‘[^’]*’/g,'').replace(/이?라는 부분(이|도) 문제이다\.?|왜냐하면|또한/g,''); }
 /* 받침에 따라 '이라는/라는' */
 function rn(s){ const ch=[...String(s).replace(/[\s'"‘’“”.,·)%]+$/,'')].pop()||''; const c=ch.charCodeAt(0); return (c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?'이라는':'라는'; }
-function pHit(it){ const t=norm(stripQ(val(it.id,'p'))); return t.length>=5&&it.kp.some(k=>t.includes(k)); }
-/* 지문 조각을 눌러 문제 부분 넣기 */
-function bindPick(it,p){ const cs=WCASES[d3.c], el=document.getElementById('ep-'+it.id);
-  const draw=()=>{ const v=val(it.id,'p');
-    el.innerHTML='<span class="pl">지문에서 문제 부분 고르기</span>'+cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${v.includes(c)}">${esc(c)}</button>`).join('');
-    el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const c=cs.chunks[+b.dataset.i]; let v=val(it.id,'p'); if(v.includes(c)) return;
-      const t=v.trimEnd(), add=`또한 ‘${c}’${rn(c)} 부분도 문제이다.`;
-      v=t.endsWith('왜냐하면')?t.slice(0,-4).trimEnd()+` ${add} 왜냐하면 `:(v.trim()?t+` ${add}`:`‘${c}’${rn(c)} 부분이 문제이다. 왜냐하면 `);
-      d3.ans=d3.ans||{}; d3.ans[key(it.id,'p')]=v; save3(); p.value=v; draw(); checks3(); p.focus(); try{p.setSelectionRange(v.length,v.length);}catch(e){} })); };
-  draw(); p.addEventListener('input',draw); }
+/* 고른 지문 조각 번호 목록 */
+function sel(it){ return (val(it.id,'s')||'').split(',').filter(x=>x!=='').map(Number); }
+function picked(it){ const cs=WCASES[d3.c]; return sel(it).map(i=>cs.chunks[i]).filter(Boolean); }
+/* 이유: 고른 지문을 그대로 옮겨 쓴 부분은 빼고 학생이 쓴 말만 봄 */
+function reasonOnly(it){ let t=val(it.id,'r'); picked(it).forEach(c=>{ t=t.split(c).join(''); }); return norm(stripQ(t)); }
+const RMIN=8; /* 이 글자 수 이상 써야 개선 방안 칸이 열림 */
+function rOk(it){ return reasonOnly(it).length>=RMIN; }
+function pHit(it){ const t=reasonOnly(it); return picked(it).length>0&&t.length>=RMIN&&it.kp.some(k=>t.includes(k)); }
+function gate(it){ const hasS=picked(it).length>0, okR=rOk(it);
+  const r=document.getElementById('r-'+it.id), f=document.getElementById('f-'+it.id); if(!r||!f) return;
+  r.disabled=!hasS; document.getElementById('sb-'+it.id).classList.toggle('locked',!hasS);
+  document.getElementById('lb-'+it.id).textContent=hasS?'':'ⓐ에서 문제 부분을 먼저 골라야 열려요.';
+  const openF=hasS&&okR; f.disabled=!openF && !val(it.id,'f'); document.getElementById('sc-'+it.id).classList.toggle('locked',f.disabled);
+  document.getElementById('lc-'+it.id).textContent=f.disabled?(hasS?`ⓑ 이유를 한 문장 이상 써야 열려요. (${reasonOnly(it).length}/${RMIN}자)`:'ⓐ, ⓑ를 먼저 해야 열려요.'):'';
+  document.getElementById('sa-'+it.id).classList.toggle('done',hasS);
+  document.getElementById('sb-'+it.id).classList.toggle('done',okR&&hasS); }
+/* 지문 조각을 눌러 문제 부분 고르기(누르면 선택, 다시 누르면 취소) */
+function bindPick(it){ const cs=WCASES[d3.c], el=document.getElementById('ep-'+it.id);
+  const draw=()=>{ const ss=sel(it);
+    el.innerHTML=cs.chunks.map((c,i)=>`<button type="button" class="evchip" data-i="${i}" aria-pressed="${ss.includes(i)}">${esc(c)}</button>`).join('');
+    el.querySelectorAll('.evchip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; let ss=sel(it);
+      ss=ss.includes(i)?ss.filter(x=>x!==i):[...ss,i].sort((x,y)=>x-y);
+      d3.ans=d3.ans||{}; d3.ans[key(it.id,'s')]=ss.join(','); save3(); draw(); gate(it); checks3();
+      if(ss.length===1&&!val(it.id,'r')){ const r=document.getElementById('r-'+it.id); if(r) r.focus(); } })); };
+  draw(); }
 function checks3(){
   let full=0; const lis=[];
   ITEMS3.forEach(it=>{ const p=pHit(it), f=hit(val(it.id,'f'),it.kf); if(p&&f)full++;
-    const hasQ=/‘[^’]*’/.test(val(it.id,'p'));
-    const hint=p&&f?'문제와 개선 방안을 모두 썼어요.':[!p?(hasQ?`문제 이유: ‘왜냐하면’ 뒤에 왜 문제인지 써 주세요. ${it.hp}`:`문제 이유: ${it.hp}`):'문제 이유 ✓',!f?`개선 방안: ${it.hf}`:'개선 방안 ✓'].join(' · ');
+    const hasS=picked(it).length>0;
+    const hint=p&&f?'문제 부분, 이유, 개선 방안을 모두 썼어요.':[hasS?'ⓐ ✓':'ⓐ 문제 부분을 골라요',p?'ⓑ ✓':(hasS?`ⓑ 이유: ${it.hp}`:'ⓑ 이유'),f?'ⓒ ✓':`ⓒ 개선 방안: ${it.hf}`].join(' · ');
     lis.push(`<li class="${p&&f?'done':''}"><span class="dot">${p&&f?'✓':(p||f?'½':'')}</span><span>${it.name.slice(2)}<span class="hint">${hint}</span></span></li>`); });
   $('#checks').innerHTML=lis.join('');
   let txt,bg;
@@ -749,14 +774,14 @@ function checks3(){
 }
 $('#model3').addEventListener('click',()=>{
   const cs=WCASES[d3.c], box=$('#modelbox'); if(!box.hidden){box.hidden=true;return;}
-  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p>`+ITEMS3.map(it=>`<p><b>${it.name}</b><br>문제: ${esc(cs.model[it.id][0])}<br>개선: ${esc(cs.model[it.id][1])}</p>`).join('')+`<p class="starter">먼저 내 답을 쓰고 비교해 보세요. 표현이 달라도 같은 내용이면 괜찮아요.</p>`;
+  box.innerHTML=`<p><b>예시 답안 · ${esc(cs.name)}</b></p>`+ITEMS3.map(it=>`<p><b>${it.name}</b><br>이유: ${esc(cs.model[it.id][0])}<br>개선: ${esc(cs.model[it.id][1])}</p>`).join('')+`<p class="starter">먼저 내 답을 쓰고 비교해 보세요. 표현이 달라도 같은 내용이면 괜찮아요.</p>`;
   box.hidden=false;
 });
 function answerText(){ const cs=WCASES[d3.c];
-  return `[2차시 개선 방안 쓰기]\n[사례] ${cs.name}\n`+ITEMS3.map(it=>`${it.name}\n- 문제: ${val(it.id,'p')}\n- 개선: ${val(it.id,'f')}`).join('\n'); }
+  return `[2차시 개선 방안 쓰기]\n[사례] ${cs.name}\n`+ITEMS3.map(it=>`${it.name}\n- 문제 부분: ${picked(it).map(c=>`‘${c}’`).join(', ')}\n- 이유: ${val(it.id,'r')}\n- 개선: ${val(it.id,'f')}`).join('\n'); }
 async function copyAnswer(okMsg){
   try{await navigator.clipboard.writeText(answerText());$('#toast3').textContent=okMsg;}
-  catch(e){const ta=$('#p-eval');if(ta){ta.focus();ta.select();}$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
+  catch(e){const ta=$('#r-eval');if(ta){ta.focus();ta.select();}$('#toast3').textContent='복사가 막혀 있어요. 직접 선택해서 복사해 주세요.';}
   setTimeout(()=>$('#toast3').textContent='',4000);
 }
 $('#copy3').addEventListener('click',()=>copyAnswer('복사했어요. 제출할 곳에 붙여 넣으세요.'));
