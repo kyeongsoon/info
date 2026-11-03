@@ -225,7 +225,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
   <section class="panel" id="connect" role="tabpanel" aria-labelledby="tab-connect" hidden>
     <div class="intro">
       <h2>특성 두 개를 근거와 함께 연결해 쓰기</h2>
-      <p>수행평가 문항 1과 같은 형식이에요. 사례를 고르고, 특성 1과 근거 → 특성 2와 근거 → 두 특성을 연결해서 설명하기 순서로 써 보세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
+      <p>수행평가 문항 1과 같은 형식이에요. 사례를 고르고, 근거 고르기 → 특성 고르기를 두 번 한 뒤 두 특성을 연결해서 설명해 보세요. 오른쪽 점검표가 쓰는 동안 바로 확인해 줘요.</p>
     </div>
     <p class="link-note"><b>채점기준 5점</b> 특성 2가지를 정확히 찾고 · 사례 속 구체적 근거로 설명하고 · 두 특성이 어떻게 연결되어 작동하는지 논리적으로 서술</p>
     <div class="two">
@@ -237,19 +237,21 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
           <div class="prompt" id="prompt3"></div>
         </div>
         <div class="step">
-          <h3><i>2</i> 첫 번째 특성과 근거</h3>
-          <label class="starter">첫 번째 특성을 고르세요.</label>
-          <div class="chips" id="t1"></div>
-          <label for="ev1" class="starter">근거: 지문 조각 중 이 특성이 드러나는 부분을 누르면 자동으로 들어가요. 필요하면 설명을 덧붙여도 돼요.</label>
+          <h3><i>2</i> 첫 번째 근거와 특성</h3>
+          <label class="starter">먼저 지문에서 인공지능의 특성이 드러나는 부분을 누르세요. 누르면 아래 칸에 자동으로 들어가요.</label>
           <div class="evpick" id="evpick1"></div>
+          <label class="starter">이 부분에서 나타나는 특성을 고르세요.</label>
+          <div class="chips" id="t1"></div>
+          <label for="ev1" class="starter">근거 문장 · 필요하면 설명을 덧붙여도 돼요.</label>
           <textarea id="ev1" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다."></textarea>
         </div>
         <div class="step">
-          <h3><i>3</i> 두 번째 특성과 근거</h3>
-          <label class="starter">첫 번째와 다른 특성을 고르세요.</label>
-          <div class="chips" id="t2"></div>
-          <label for="ev2" class="starter">근거: 이 특성이 드러나는 부분을 눌러 넣으세요.</label>
+          <h3><i>3</i> 두 번째 근거와 특성</h3>
+          <label class="starter">첫 번째와 다른 특성이 드러나는 부분을 누르세요.</label>
           <div class="evpick" id="evpick2"></div>
+          <label class="starter">이 부분에서 나타나는 특성을 고르세요.</label>
+          <div class="chips" id="t2"></div>
+          <label for="ev2" class="starter">근거 문장 · 필요하면 설명을 덧붙여도 돼요.</label>
           <textarea id="ev2" placeholder="예) '○○○'라는 부분에서 ○○ 특성이 나타난다."></textarea>
         </div>
         <div class="step">
@@ -456,7 +458,10 @@ const MODEL={
 const REL=RELS[0]; /* 질문 유형은 '연결해서 설명하기' 하나로 통일 */
 let d3=store.get('d3',{c:0,r:0,t1:null,t2:null,ev1:'',ev2:'',rel:''});
 function chipRow(el,key){ el.innerHTML=TRAITS.map(t=>`<button class="chip" data-t="${t.id}" aria-pressed="${d3[key]===t.id}">${t.name}</button>`).join('');
-  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{d3[key]=d3[key]===b.dataset.t?null:b.dataset.t; const ek=key==='t1'?'ev1':'ev2'; if(d3[key]&&(d3[ek]||'').includes('○○ 특성')) d3[ek]=d3[ek].replace('○○ 특성',TN[d3[key]]+' 특성'); save3();render3();})); }
+  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ const prev=d3[key]; d3[key]=prev===b.dataset.t?null:b.dataset.t; const ek=key==='t1'?'ev1':'ev2';
+    /* 근거 문장 속 특성 이름을 고른 특성으로 바꿈(먼저 근거를 누르면 '○○ 특성'으로 들어가 있음) */
+    const from=`부분에서 ${prev?TN[prev]:'○○'} 특성이`, to=`부분에서 ${d3[key]?TN[d3[key]]:'○○'} 특성이`;
+    if((d3[ek]||'').includes(from)) d3[ek]=d3[ek].split(from).join(to); save3();render3();})); }
 function save3(){store.set('d3',d3);}
 function render3(){
   const cs=CASES[d3.c], rel=REL;
