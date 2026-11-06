@@ -220,7 +220,7 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
 .evalres .big{font-family:var(--display);font-size:44px;line-height:1}
 .big.ok{color:var(--ok)} .big.mid{color:var(--mid)} .big.no{color:var(--bad)}
 .score.sm{font-size:14px;font-weight:500;color:var(--muted)}
-.tab span{font-size:clamp(16px,1.7vw,19px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab span{font-size:clamp(15px,1.55vw,18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lt{white-space:nowrap} .lgrid.sm .lt{font-size:12px;padding:1px 6px}
 @media (max-width:440px){ .tmrow{grid-template-columns:110px minmax(0,1fr)} .tmrow figure{width:110px} }
 </style>
@@ -267,7 +267,7 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
   <section class="panel" id="tm" role="tabpanel" aria-labelledby="tab-tm" hidden>
     <div class="intro">
       <h2>티처블 머신으로 바른 자세 판별 모델 만들기</h2>
-      <p>포즈 프로젝트를 열고 웹캠으로 내 자세 데이터를 모아 모델을 학습시켜요. 그다음 아래 테스트 미션 5개로 모델을 평가해 보세요.</p>
+      <p>포즈 프로젝트를 열고 웹캠으로 내 자세 데이터를 모아 모델을 학습시켜요. 그다음 미리보기에서 여러 자세를 해 보며 모델을 평가해 보세요.</p>
     </div>
     <p class="link-note"><b>교과서 연결</b> 데이터 수집 → 모델 생성 및 평가 → 모델 활용 과정을 직접 해 봐요. 바른 자세 유지 시스템 영상(173쪽)과 같은 순서예요.</p>
     <div class="tmsteps">
@@ -285,15 +285,10 @@ input.num{font:inherit;width:6em;border:1.5px solid var(--line);border-radius:10
         </ul></div></div>
       <div class="tmstep"><i>4</i><div><b>모델 학습시키기</b>
         <span class="starter">‘모델 학습시키기’를 눌러요. 학습하는 동안 탭을 바꾸지 마세요.</span></div></div>
-      <div class="tmstep"><i>5</i><div><b>미리보기로 평가하고 기록하기</b>
-        <span class="starter">오른쪽 미리보기 화면 앞에서 아래 테스트 미션을 하나씩 해 보고, 모델이 고른 클래스와 확률을 기록해요.</span></div></div>
+      <div class="tmstep"><i>5</i><div><b>미리보기로 평가하기</b>
+        <span class="starter">오른쪽 미리보기 화면 앞에서 여러 자세를 해 보며 모델이 고른 클래스와 확률을 확인해요.</span></div></div>
     </div>
-    <div class="row">
-      <b>테스트 미션 결과 기록표</b>
-      <div class="tmtable" id="tmTest"></div>
-      <div class="bar"><button class="btn" id="tmAnswer">정답 보기</button><span class="score" id="tmScore"></span></div>
-      <p class="prompt" id="tmTalk" hidden>틀린 미션이 있었나요? 그 자세를 훈련 데이터로 충분히 녹화했는지 떠올려 보세요. 미션 5처럼 학습에 없던 친구가 앉으면 결과가 어땠나요? 어떤 데이터를 더 모으면 모델이 좋아질까요?</p>
-    </div>
+    <p class="prompt">미리보기에서 바른 자세, 등 굽히기, 고개 숙이기, 의자에 기대기를 차례로 해 보세요. 틀리게 판단한 자세가 있었나요? 그 자세의 데이터를 충분히 모았는지 떠올려 보고, 어떤 데이터를 더 모으면 좋을지 짝과 이야기해 보세요.</p>
     <details class="ref">
       <summary>웹캠이 안 될 때 · 그림 파일로 하기</summary>
       <p class="starter">이미지 프로젝트를 열고 그림 묶음을 ‘업로드’해서 학습시켜요.</p>
@@ -523,20 +518,20 @@ const FORMS=[{id:'cat',name:'정해진 범주 중 하나',t:'cls'},{id:'num',nam
 const TYPES=[{id:'cls',name:'분류'},{id:'reg',name:'회귀'},{id:'clu',name:'군집'}];
 const TYN=Object.fromEntries(TYPES.map(t=>[t.id,t.name]));
 const SITS=[
- {d:'택배 상자의 무게와 보내는 거리를 보고 배송비(원)를 예측한다.',a:'reg',w:'결과가 ‘몇 원’이라는 숫자예요. 숫자를 예측하니 회귀예요.'},
  {d:'학교 분실물 사진을 보고 ‘전자기기 / 옷 / 학용품’ 중 무엇인지 나눈다.',a:'cls',w:'결과가 미리 정해 둔 세 범주 중 하나예요. 그래서 분류예요.'},
- {d:'웹툰 열람 기록을 분석해 취향이 비슷한 독자끼리 묶는다.',a:'clu',w:'정해진 정답 없이 비슷한 독자끼리 그룹을 만들어요. 그래서 군집이에요.'},
- {d:'어제까지의 기온과 습도로 내일의 미세 먼지 농도(㎍/㎥)를 예측한다.',a:'reg',w:'결과가 농도라는 숫자 값이에요. 그래서 회귀예요.'},
- {d:'손으로 쓴 숫자 사진이 0부터 9 중 어떤 숫자인지 알아낸다.',a:'cls',w:'결과가 0~9라는 10개의 정해진 범주 중 하나예요. 숫자 모양이지만 ‘값의 크기’를 예측하는 게 아니라 범주를 고르는 것이라 분류예요.'},
- {d:'편의점 고객의 구매 내역으로 구매 습관이 비슷한 고객끼리 묶는다.',a:'clu',w:'미리 정한 범주 없이 비슷한 고객끼리 그룹을 만들어요. 그래서 군집이에요.'},
  {d:'아파트의 넓이와 층수를 보고 집값을 예측한다.',a:'reg',w:'결과가 가격이라는 숫자예요. 그래서 회귀예요.'},
- {d:'강아지 울음소리가 ‘경계 / 반가움 / 배고픔’ 중 어떤 뜻인지 알아낸다.',a:'cls',w:'결과가 정해 둔 세 가지 뜻 중 하나예요. 그래서 분류예요.'},
- {d:'별의 밝기와 색깔 데이터로 성질이 비슷한 별끼리 묶는다.',a:'clu',w:'정답 없이 비슷한 별끼리 그룹을 만들어요. 그래서 군집이에요.'},
  {d:'버스에 탄 승객 수를 보고 다음 정류장까지 걸리는 시간(분)을 예측한다.',a:'reg',w:'결과가 ‘몇 분’이라는 숫자예요. 그래서 회귀예요.'},
+ {d:'웹툰 열람 기록을 분석해 취향이 비슷한 독자끼리 묶는다.',a:'clu',w:'정해진 정답 없이 비슷한 독자끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'손으로 쓴 숫자 사진이 0부터 9 중 어떤 숫자인지 알아낸다.',a:'cls',w:'결과가 0~9라는 10개의 정해진 범주 중 하나예요. 숫자 모양이지만 ‘값의 크기’를 예측하는 게 아니라 범주를 고르는 것이라 분류예요.'},
+ {d:'교통사고가 난 위치 데이터를 분석해 사고가 많이 나는 구역끼리 묶는다.',a:'clu',w:'정해진 정답 없이 위치가 비슷한 사고끼리 구역으로 묶어요. 그래서 군집이에요.'},
+ {d:'택배 상자의 무게와 보내는 거리를 보고 배송비(원)를 예측한다.',a:'reg',w:'결과가 ‘몇 원’이라는 숫자예요. 숫자를 예측하니 회귀예요.'},
  {d:'인터넷 댓글이 ‘악성 댓글’인지 ‘일반 댓글’인지 판단한다.',a:'cls',w:'결과가 두 범주 중 하나예요. 그래서 분류예요.'},
- {d:'교통사고가 난 위치 데이터를 분석해 사고가 많이 나는 구역끼리 묶는다.',a:'clu',w:'정해진 정답 없이 위치가 비슷한 사고끼리 구역으로 묶어요. 그래서 군집이에요.'}];
+ {d:'편의점 고객의 구매 내역으로 구매 습관이 비슷한 고객끼리 묶는다.',a:'clu',w:'미리 정한 범주 없이 비슷한 고객끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'별의 밝기와 색깔 데이터로 성질이 비슷한 별끼리 묶는다.',a:'clu',w:'정답 없이 비슷한 별끼리 그룹을 만들어요. 그래서 군집이에요.'},
+ {d:'어제까지의 기온과 습도로 내일의 미세 먼지 농도(㎍/㎥)를 예측한다.',a:'reg',w:'결과가 농도라는 숫자 값이에요. 그래서 회귀예요.'},
+ {d:'강아지 울음소리가 ‘경계 / 반가움 / 배고픔’ 중 어떤 뜻인지 알아낸다.',a:'cls',w:'결과가 정해 둔 세 가지 뜻 중 하나예요. 그래서 분류예요.'}];
 const FORM_OF={cls:'cat',reg:'num',clu:'grp'};
-let a1=store.get('a1',{});
+let a1=store.get('a1b',{});
 function render1(){
   const g=$('#grid1'); g.innerHTML=''; let ok=0, done=0;
   SITS.forEach((it,i)=>{
@@ -550,13 +545,13 @@ function render1(){
     c.innerHTML=`<span class="thing">상황 ${i+1}</span><p class="desc">${esc(it.d)}</p>
       <div class="pick"><span class="pl">결과 모양</span><div class="chips">${FORMS.map(f=>`<button class="chip" data-t="${f.t}" data-f="${f.id}" aria-pressed="${s.f===f.id}">${f.name}</button>`).join('')}</div></div>
       <div class="pick"><span class="pl">방법</span><div class="chips">${TYPES.map(t=>`<button class="chip" data-t="${t.id}" data-ty="${t.id}" aria-pressed="${s.t===t.id}">${t.name}</button>`).join('')}</div></div>${fb}`;
-    c.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),f:b.dataset.f};store.set('a1',a1);render1();}));
-    c.querySelectorAll('[data-ty]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),t:b.dataset.ty};store.set('a1',a1);render1();}));
+    c.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),f:b.dataset.f};store.set('a1b',a1);render1();}));
+    c.querySelectorAll('[data-ty]').forEach(b=>b.addEventListener('click',()=>{a1[i]={...(a1[i]||{}),t:b.dataset.ty};store.set('a1b',a1);render1();}));
     g.appendChild(c);
   });
   $('#s1').textContent=`${ok} / 12 맞힘`+(done<12?` · ${12-done}개 남음`:' · 완료!');
 }
-$('#reset1').addEventListener('click',()=>{a1={};store.set('a1',a1);render1();});
+$('#reset1').addEventListener('click',()=>{a1={};store.set('a1b',a1);render1();});
 render1();
 
 /* 활동 3: 데이터 진단 클리닉 */
@@ -604,26 +599,6 @@ $('#grade2').addEventListener('click',()=>{graded2=true;render2();});
 $('#reset2').addEventListener('click',()=>{a2[CLINIC[c2].id]=[];store.set('a2',a2);graded2=false;render2();});
 render2();
 
-/* 활동 2: 티처블 머신 (포즈 프로젝트 · 웹캠) */
-const TMMISSIONS=(()=>{ const r=rng(20261102);
-  const m=[['upright','바른 자세로 앉기','바른 자세'],['hunch','등을 구부정하게 굽히기','바르지 않은 자세'],['headdown','고개만 푹 숙이기','바르지 않은 자세'],['slump','의자 뒤로 기대 늘어지기','바르지 않은 자세'],['upright','짝이 바른 자세로 앉기 (학습에 없던 사람)','바른 자세']];
-  return m.map(([k,t,label],i)=>({...poseParams(k,r),...personLook(r),bg:BGS[i%3],tint:null,title:t,label})); })();
-let tmRec=store.get('tm2',{}), tmShow=false;
-function renderTM(){
-  $('#tmTest').innerHTML=TMMISSIONS.map((q,i)=>{ const r=tmRec[i]||{}; const show=tmShow;
-    const right=show&&r.p&&r.p===q.label;
-    return `<div class="tmrow ${show?(r.p?(right?'ok':'no'):''):''}"><figure>${postureSVG(q)}<figcaption>미션 ${i+1}</figcaption></figure>
-      <div class="tmin"><b class="mt">${q.title}</b><span class="pl">모델이 고른 클래스</span><div class="chips">${['바른 자세','바르지 않은 자세'].map(l=>`<button class="chip" data-t="${l==='바른 자세'?'cls':'reg'}" data-i="${i}" data-l="${l}" aria-pressed="${r.p===l}">${l}</button>`).join('')}</div>
-      <label class="pl" for="tmc${i}">확률(%)</label><input id="tmc${i}" class="num" type="number" min="0" max="100" inputmode="numeric" value="${r.c??''}">
-      ${show?`<span class="ans">정답: <b>${q.label}</b></span>`:''}</div></div>`; }).join('');
-  $('#tmTest').querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; tmRec[i]={...(tmRec[i]||{}),p:b.dataset.l}; store.set('tm2',tmRec); renderTM(); }));
-  $('#tmTest').querySelectorAll('input.num').forEach((el,i)=>el.addEventListener('input',()=>{ tmRec[i]={...(tmRec[i]||{}),c:el.value}; store.set('tm2',tmRec); }));
-  if(tmShow){ const done=TMMISSIONS.filter((q,i)=>tmRec[i]&&tmRec[i].p).length, ok=TMMISSIONS.filter((q,i)=>tmRec[i]&&tmRec[i].p===q.label).length;
-    $('#tmScore').textContent=done?`우리 모델: ${ok} / 5 맞힘`:'결과를 먼저 기록해 보세요'; } else $('#tmScore').textContent='';
-  $('#tmTalk').hidden=!tmShow; $('#tmAnswer').textContent=tmShow?'정답 숨기기':'정답 보기';
-}
-$('#tmAnswer').addEventListener('click',()=>{tmShow=!tmShow;renderTM();});
-renderTM();
 
 /* 활동 4: 학습 실험실 */
 const POOL=[];
