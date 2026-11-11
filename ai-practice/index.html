@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>AI 급식 도우미 연습문제</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 시험지 한 장처럼 사례(지문) 카드 옆에 문항을 두고, 좁은 화면에서는 위아래로 쌓는다 */
+:root {
+  --bg: #f3f6f5;
+  --paper: #ffffff;
+  --ink: #17211e;
+  --muted: #5a6a64;
+  --line: #d5dfdb;
+  --rule: #e6ecea;
+  --accent: #1d6b57;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2f0eb;
+  --ok: #1d7a3c;
+  --ok-soft: #e3f3e7;
+  --bad: #b3261e;
+  --bad-soft: #fbe8e6;
+  --part: #8a5a00;
+  --part-soft: #fbf1dc;
+  --chip: #edf2f0;
+  --chip-line: #c8d4cf;
+  --font-ui: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-text: "Gowun Batang", "Nanum Myeongjo", "Batang", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1412; --paper: #151d1a; --ink: #e5ede9; --muted: #9babA4; --line: #2b3732; --rule: #222c28;
+    --accent: #5ec3a2; --accent-ink: #0b1411; --accent-soft: #17302a;
+    --ok: #74d394; --ok-soft: #142d1d; --bad: #ff8f85; --bad-soft: #3a1815; --part: #f0c060; --part-soft: #33280f;
+    --chip: #1e2925; --chip-line: #33433d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1412; --paper: #151d1a; --ink: #e5ede9; --muted: #9babA4; --line: #2b3732; --rule: #222c28;
+  --accent: #5ec3a2; --accent-ink: #0b1411; --accent-soft: #17302a;
+  --ok: #74d394; --ok-soft: #142d1d; --bad: #ff8f85; --bad-soft: #3a1815; --part: #f0c060; --part-soft: #33280f;
+  --chip: #1e2925; --chip-line: #33433d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+header.top { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--muted); font-weight: 500; }
+h1 { font-size: clamp(22px, 4vw, 30px); margin: 0; line-height: 1.25; text-wrap: balance; }
+.sub { margin: 0; color: var(--muted); max-width: 62ch; }
+.tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; align-self: flex-start; }
+.tab { font: inherit; font-weight: 700; border: 0; background: transparent; color: var(--muted); padding: 8px 16px; border-radius: 9px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+.tab:focus-visible, button:focus-visible, textarea:focus-visible, .blank:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.group { display: grid; gap: 16px; align-items: start; }
+@media (min-width: 980px) { .group { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); } .group .case { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); } }
+.group > * { min-width: 0; }
+.case { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+.case-label { font-size: 13px; font-weight: 700; color: var(--accent); margin: 0 0 8px; }
+.case p, .case li { font-family: var(--font-text); font-size: 16px; line-height: 1.85; margin: 0; text-align: justify; word-break: keep-all; }
+.case p + p { margin-top: 8px; text-indent: 0; }
+.case ul { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.case li { padding-left: 1.4em; text-indent: -1.4em; }
+details.case summary { cursor: pointer; font-weight: 700; color: var(--accent); font-size: 13px; }
+details.case[open] summary { margin-bottom: 8px; }
+
+.qs { display: flex; flex-direction: column; gap: 16px; }
+.q { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.q-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.q-num { font-weight: 700; font-size: 17px; }
+.pts { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.prompt { margin: 0; word-break: keep-all; }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 700; }
+textarea {
+  width: 100%; font: inherit; font-size: 15px; color: var(--ink); background-color: var(--paper);
+  border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; resize: vertical;
+  line-height: 2em; min-height: calc(4em + 2px);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(2em - 1px), var(--rule) calc(2em - 1px), var(--rule) 2em);
+  background-attachment: local;
+}
+textarea.tall { min-height: calc(8em + 2px); }
+.picks { display: flex; gap: 8px; flex-wrap: wrap; }
+.pick { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--chip-line); background: var(--chip); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 700; }
+.pick input { accent-color: var(--accent); width: 16px; height: 16px; }
+button.pick { font: inherit; font-weight: 700; color: var(--ink); }
+button.pick.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.sub-block { border-left: 3px solid var(--accent-soft); padding-left: 12px; display: flex; flex-direction: column; gap: 10px; }
+.sub-title { font-weight: 700; margin: 0; }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-weight: 700; border-radius: 10px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.result { border-radius: 12px; padding: 14px 16px; background: var(--accent-soft); display: flex; flex-direction: column; gap: 10px; }
+.score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.score b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.score span { color: var(--muted); font-size: 13px; }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px; font-size: 14px; word-break: keep-all; }
+.mark { width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.mark.ok { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); }
+.mark.no { background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad); }
+.note { font-size: 12px; color: var(--muted); margin: 0; }
+.model { border: 1px dashed var(--line); border-radius: 12px; padding: 12px 14px; font-family: var(--font-text); font-size: 15px; line-height: 1.8; }
+.model p { margin: 0; }
+.model p + p { margin-top: 6px; }
+
+/* 스마트폰 탭 */
+.fill-text { font-family: var(--font-text); font-size: 16px; line-height: 2.3; margin: 0; word-break: keep-all; }
+.blank {
+  display: inline-block; min-width: 4.6em; min-height: 1.7em; line-height: 1.6em; padding: 0 8px; margin: 0 2px;
+  border: 1.5px dashed var(--chip-line); border-radius: 8px; text-align: center; vertical-align: middle;
+  font-family: var(--font-ui); font-size: 14px; font-weight: 700; cursor: pointer; background: var(--paper); color: var(--ink);
+}
+.blank.filled { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.blank.sel { outline: 3px solid var(--accent); outline-offset: 1px; }
+.blank.over { background: var(--accent-soft); border-color: var(--accent); }
+.blank.ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.blank.no { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.bank, .pool { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 12px; background: var(--bg); border: 1px solid var(--rule); min-height: 52px; }
+.bank-label { font-size: 12px; font-weight: 700; color: var(--muted); margin: 0 0 -4px; }
+.chip {
+  font: inherit; font-size: 14px; font-weight: 500; border: 1px solid var(--chip-line); background: var(--paper); color: var(--ink);
+  padding: 6px 12px; border-radius: 9px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; text-align: left; word-break: keep-all;
+}
+.chip.dragging { opacity: .35; }
+.drag-ghost { position: fixed; z-index: 50; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,.18); transform: translate(-50%, -60%); opacity: .95; }
+.answer-zone { display: flex; flex-direction: column; gap: 8px; }
+.slot { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: center; }
+.slot-num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; background: var(--chip); color: var(--muted); font-variant-numeric: tabular-nums; }
+.slot-box { min-height: 40px; border: 1.5px dashed var(--chip-line); border-radius: 10px; background: var(--paper); display: flex; align-items: stretch; cursor: pointer; }
+.slot-box:empty::before { content: "여기에 넣기"; color: var(--muted); font-size: 13px; align-self: center; padding: 0 12px; }
+.slot-box.over { border-color: var(--accent); background: var(--accent-soft); }
+.slot-box.next { border-color: var(--accent); }
+.slot-box .chip { width: 100%; border: 0; background: transparent; }
+.slot-box.ok { border-style: solid; border-color: var(--ok); background: var(--ok-soft); }
+.slot-box.no { border-style: solid; border-color: var(--bad); background: var(--bad-soft); }
+.toggle { font: inherit; font-weight: 700; font-size: 18px; width: 56px; height: 48px; border-radius: 12px; border: 1.5px solid var(--chip-line); background: var(--paper); color: var(--ink); cursor: pointer; }
+.toggle[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.toggle.ok { box-shadow: 0 0 0 3px var(--ok); }
+.toggle.no { box-shadow: 0 0 0 3px var(--bad); }
+.msg { margin: 0; font-weight: 700; font-size: 14px; }
+.msg.ok { color: var(--ok); }
+.msg.no { color: var(--bad); }
+.msg.part { color: var(--part); }
+.step2[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">세종중학교 정보 · 4단원 인공지능 논술형 연습</div>
+    <h1>AI 급식 도우미 연습문제</h1>
+    <p class="sub">사례를 읽고 네 문항을 풀어 보세요. 컴퓨터는 직접 써 보고, 스마트폰은 빈칸과 문장 조각으로 예시 답안을 완성해 보세요.</p>
+    <div class="tabs" role="tablist" aria-label="풀이 방식">
+      <button class="tab" role="tab" id="tab-pc" aria-controls="panel-pc" aria-selected="true">컴퓨터로 쓰기</button>
+      <button class="tab" role="tab" id="tab-m" aria-controls="panel-m" aria-selected="false">스마트폰으로 풀기</button>
+    </div>
+  </header>
+
+  <section id="panel-pc" role="tabpanel" aria-labelledby="tab-pc"></section>
+  <section id="panel-m" role="tabpanel" aria-labelledby="tab-m" hidden></section>
+</div>
+
+<script>
+(function () {
+  // ---------- 지문 ----------
+  const CASE1 = [
+    "세종중학교 정보 동아리 학생들은 급식실 잔반을 줄이기 위해 'AI 급식 도우미'를 만들기로 했다. 퇴식구 위에 카메라를 달아 학생들이 반납하는 식판을 촬영하면, 인공지능이 그 사진을 분석하는 방식이다.",
+    "시범 운영이 시작되자 AI 급식 도우미는 퇴식구 카메라에 찍힌 식판 사진을 보고 밥, 국, 반찬의 종류와 남은 양을 알아냈다. 또 지난 한 달 동안의 메뉴별 잔반 기록을 바탕으로 \"내일 메뉴인 카레는 잔반이 적고, 나물 반찬은 잔반이 많을 것\"이라고 미리 알려 주었고, 영양 기준을 지키면서도 버려지는 음식이 가장 적어지도록 반찬별 배식량을 조정한 다음 주 배식 계획안을 만들어 영양사 선생님께 제안했다. 점심시간에 학생들이 한꺼번에 몰리면 사람이 따로 조작하지 않아도 스스로 촬영 간격을 줄였고, 잔반이 많은 식판이 연달아 나오면 스스로 판단해 영양사 선생님께 알림을 보냈다.",
+    "그런데 배추김치와 깍두기처럼 비슷하게 생긴 반찬은 자주 헷갈렸다. 그래서 동아리원 민수가 '배추김치 vs 깍두기' 분류 모델을 따로 만들기로 했다. 시간이 부족했던 민수는 두 반찬이 함께 나온 어느 하루 점심시간에 1학년 2반 학생들의 식판만 촬영해 배추김치 80장, 깍두기 20장, 총 100장을 모았다. 하루 점심시간에 서둘러 찍다 보니, 100장 모두 같은 급식실 조명 아래에서 똑같은 은색 식판을 찍은 사진이 되었고 배경과 밝기도 거의 비슷했다. 민수가 사진마다 '배추김치', '깍두기' 이름표를 붙여 모델에 넣자, 모델은 사진 속 색깔, 모양, 크기 같은 특징을 스스로 찾아 두 반찬을 구분하는 규칙을 익혀 나갔다. 민수는 이 100장을 모두 학습에 사용했고, 학습에 썼던 100장을 그대로 다시 사용해 모델을 평가했더니 \"정확도 100%\"라는 결과가 나와 매우 뿌듯해했다."
+  ];
+  const CASE2_INTRO = "동아리는 AI 급식 도우미에 다음 세 가지 기능을 추가하기로 하고, 동아리원 세 명이 하나씩 맡아 학습용 데이터를 모았다.";
+  const CASE2_ITEMS = [
+    "㉠ (서연 담당) 날짜별 기온, 메뉴, 급식 인원 데이터를 분석하여 다음 날 잔반량(kg)을 예측한다. 서연은 작년 1년 동안의 급식 기록을 요일, 계절, 메뉴 종류가 골고루 들어가도록 빠짐없이 모아 학습시켰다.",
+    "㉡ (도윤 담당) 학생들의 급식 만족도 설문(맛, 양, 다양성) 점수를 분석하여 성향이 비슷한 학생들끼리 그룹을 나눈다. 도윤은 급식을 좋아해서 매번 설문에 자발적으로 참여하는 급식 모니터링단 학생들의 응답만 모아 학습시켰다.",
+    "㉢ (지호 담당) 반납된 식판 사진을 분석하여 '잔반 많음'과 '잔반 거의 없음'으로 나눈다. 지호는 사진을 빨리 모으려고, 반찬을 거의 남기지 않는 3학년 운동부 학생들의 식판 사진만 모아 학습시켰다."
+  ];
+  const PROMPTS = {
+    1: "위 사례에 나타난 인공지능의 특성(상황 인식 및 이해, 학습, 최적화, 자율성, 예측) 중 2가지를 찾아, 각각 사례의 어떤 부분에서 그렇게 판단했는지 근거를 들어 설명하시오. 또한 두 특성이 AI 급식 도우미에서 어떻게 서로 연결되어 작동하는지도 서술하시오.",
+    2: "위 사례에서 민수의 데이터 수집과 평가 과정에 나타난 ① 평가 방법의 문제, ② 데이터 양의 문제, ③ 데이터 구성(다양성)의 문제를 각각 찾아 설명하고, 그에 대한 개선 방안을 각각 제시하시오.",
+    3: "위 사례의 기능 ㉠, ㉡, ㉢에 각각 어떤 인공지능 문제 해결 방법(분류/회귀/군집)이 적합한지 쓰고, 그렇게 판단한 이유를 각각 서술하시오. (단, 예측 결과의 형태가 무엇인지를 근거로 들 것)",
+    4: "위 사례의 ㉠, ㉡, ㉢ 중 데이터 편향이 발생할 가능성이 있는 것을 모두 고르시오. 그리고 고른 것 각각에 대해 편향이 생기는 이유와 그로 인해 AI 급식 도우미에서 생길 수 있는 문제를 서술하고, 이를 줄이기 위해 데이터를 어떻게 다시 수집해야 하는지 해결 방안을 제시하시오."
+  };
+  const POINTS = { 1: 5, 2: 9, 3: 5, 4: 11 };
+  const MODEL = {
+    1: ["첫째, 예측 특성이 나타난다. 지난 한 달 동안의 메뉴별 잔반 기록을 바탕으로 \"내일 메뉴인 카레는 잔반이 적고, 나물 반찬은 잔반이 많을 것\"이라고 미리 알려 주었기 때문이다. 둘째, 최적화 특성이 나타난다. 영양 기준을 지키면서도 버려지는 음식이 가장 적어지도록 반찬별 배식량을 조정한 배식 계획안을 만들었기 때문이다. 두 특성은 서로 연결되어 작동한다. 먼저 예측으로 어떤 반찬의 잔반이 많을지 알아내고, 그 예측 결과를 바탕으로 잔반이 많을 반찬은 배식량을 줄이는 식으로 최적화한다. 예측이 없으면 어떤 반찬의 양을 줄여야 할지 알 수 없어서 최적화도 할 수 없다.",
+        "※ 다른 특성(상황 인식 및 이해, 학습, 자율성)을 골라도 사례 속 근거와 두 특성의 연결이 맞으면 정답이에요."],
+    2: ["① 평가 방법의 문제: 민수는 학습에 썼던 100장을 그대로 다시 사용해 평가했다. 모델이 이미 본 사진으로 시험을 본 것이라 정확도 100%가 나와도, 처음 보는 사진도 잘 구분하는지는 알 수 없다. 따라서 사진을 학습용(예: 80장)과 평가용(예: 20장)으로 나누고, 학습에 쓰지 않은 평가용 사진으로 정확도를 확인해야 한다.",
+        "② 데이터 양의 문제: 전체 사진이 100장으로 적고, 특히 깍두기는 20장뿐이다. 그래서 모델이 깍두기의 특징을 충분히 배우지 못하고, 헷갈리면 배추김치로 판단할 가능성이 크다. 따라서 여러 날에 걸쳐 사진을 더 많이 모으고, 배추김치와 깍두기 사진 수를 비슷하게 맞춰야 한다.",
+        "③ 데이터 구성(다양성)의 문제: 하루 점심시간에 1학년 2반 식판만, 같은 조명과 같은 은색 식판, 비슷한 배경과 밝기에서 찍었다. 그래서 조명이 다른 날이나 다른 식판, 다른 학생이 담은 반찬은 잘못 구분할 수 있다. 따라서 여러 날, 여러 학년과 반의 식판을 다양한 조명·밝기·각도에서 촬영해 모아야 한다."],
+    3: ["㉠은 회귀가 적합하다. 예측 결과가 다음 날 잔반량(kg)처럼 연속적인 숫자 값이기 때문이다.",
+        "㉡은 군집이 적합하다. 정해진 정답(이름표) 없이 설문 점수가 비슷한 학생들끼리 묶어서 그룹을 만드는 것이기 때문이다.",
+        "㉢은 분류가 적합하다. 예측 결과가 '잔반 많음'과 '잔반 거의 없음'처럼 미리 정해진 두 범주 중 하나이기 때문이다."],
+    4: ["데이터 편향이 발생할 가능성이 있는 것은 ㉡, ㉢이다.",
+        "㉡ 이유: 급식을 좋아해서 설문에 자발적으로 참여하는 급식 모니터링단 학생들의 응답만 모았기 때문에, 급식에 만족하는 학생들의 의견에 치우쳐 있다. 문제: 급식에 불만이 있는 학생들의 그룹이 제대로 만들어지지 않고, 전체 학생의 만족도가 실제보다 높게 나타난다. 그러면 개선이 필요한 학생들의 의견이 급식에 반영되지 못한다. 해결 방안: 전교생을 대상으로 학년과 반마다 비슷한 인원이 응답하도록 설문을 받고, 평소 설문에 참여하지 않던 학생들의 응답도 포함한다.",
+        "㉢ 이유: 반찬을 거의 남기지 않는 3학년 운동부 학생들의 식판 사진만 모아서, '잔반 거의 없음' 사진에 치우쳐 있고 특정 학년의 사진만 있다. 문제: 모델이 '잔반 많음'인 식판을 거의 보지 못해 잔반이 많은 식판도 '잔반 거의 없음'으로 판단할 수 있다. 그러면 영양사 선생님께 알림이 가지 않아 잔반을 줄이지 못하고, 1·2학년처럼 담는 양이 다른 학생의 식판도 잘못 판단할 수 있다. 해결 방안: 1~3학년 여러 반의 식판 사진을 여러 날에 걸쳐 모으고, '잔반 많음'과 '잔반 거의 없음' 사진 수가 비슷해지도록 수집한다."]
+  };
+
+  // ---------- 공통 도우미 ----------
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, html) => {
+    const e = document.createElement(tag);
+    for (const k in attrs) { if (k === "class") e.className = attrs[k]; else e.setAttribute(k, attrs[k]); }
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  };
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const norm = s => (s || "").replace(/[\s.,·'"“”‘’!?()\[\]:;~\-–—…]/g, "").toLowerCase();
+  const has = (t, keys) => keys.some(k => t.includes(norm(k)));
+  const caseCard = (which, collapsible) => {
+    const box = el(collapsible ? "details" : "article", { class: "case" });
+    if (collapsible) box.open = true;
+    const label = which === 1 ? "[문항 1~2] 다음 사례를 읽고 물음에 답하시오." : "[문항 3~4] 다음 사례를 읽고 물음에 답하시오.";
+    box.appendChild(el(collapsible ? "summary" : "p", { class: collapsible ? "" : "case-label" }, label));
+    if (which === 1) CASE1.forEach(t => box.appendChild(el("p", {}, "&nbsp;" + t)));
+    else {
+      box.appendChild(el("p", {}, "&nbsp;" + CASE2_INTRO));
+      const ul = el("ul");
+      CASE2_ITEMS.forEach(t => ul.appendChild(el("li", {}, t)));
+      box.appendChild(ul);
+    }
+    return box;
+  };
+  const qHead = n => {
+    const h = el("div", { class: "q-head" });
+    h.appendChild(el("span", { class: "q-num" }, "문항 " + n + "."));
+    h.appendChild(el("span", { class: "pts" }, "[" + POINTS[n] + "점]"));
+    return h;
+  };
+  const modelBox = n => {
+    const m = el("div", { class: "model" });
+    MODEL[n].forEach(t => m.appendChild(el("p", {}, t)));
+    m.hidden = true;
+    return m;
+  };
+
+  // ---------- 탭 ----------
+  const tabs = { pc: $("#tab-pc"), m: $("#tab-m") };
+  const panels = { pc: $("#panel-pc"), m: $("#panel-m") };
+  function showTab(which) {
+    for (const k in tabs) {
+      const on = k === which;
+      tabs[k].setAttribute("aria-selected", on ? "true" : "false");
+      tabs[k].tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on;
+    }
+    store.set("ai-lunch-tab", which);
+  }
+  tabs.pc.addEventListener("click", () => showTab("pc"));
+  tabs.m.addEventListener("click", () => showTab("m"));
+  document.querySelector(".tabs").addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      const next = tabs.pc.getAttribute("aria-selected") === "true" ? "m" : "pc";
+      showTab(next); tabs[next].focus();
+    }
+  });
+
+  // ================= 컴퓨터 탭 =================
+  const drafts = store.get("ai-lunch-draft", {});
+  const saveDraft = () => {
+    const d = {};
+    panels.pc.querySelectorAll("textarea[id]").forEach(t => { d[t.id] = t.value; });
+    panels.pc.querySelectorAll("input[type=checkbox][id]").forEach(c => { d[c.id] = c.checked; });
+    store.set("ai-lunch-draft", d);
+  };
+  const ta = (id, label, rows, ph) => {
+    const f = el("div", { class: "field" });
+    f.appendChild(el("label", { for: id }, label));
+    const t = el("textarea", { id, rows: String(rows), placeholder: ph || "" });
+    if (rows >= 4) t.classList.add("tall");
+    if (typeof drafts[id] === "string") t.value = drafts[id];
+    t.addEventListener("input", saveDraft);
+    f.appendChild(t);
+    return f;
+  };
+  const val = id => norm(document.getElementById(id).value);
+
+  function renderResult(box, score, max, items) {
+    box.innerHTML = "";
+    box.hidden = false;
+    const s = el("div", { class: "score" });
+    s.appendChild(el("b", {}, score + " / " + max + "점"));
+    s.appendChild(el("span", {}, "자동 확인 예상 점수"));
+    box.appendChild(s);
+    const ul = el("ul", { class: "checks" });
+    items.forEach(it => {
+      const li = el("li");
+      li.appendChild(el("span", { class: "mark " + (it.ok ? "ok" : "no"), "aria-label": it.ok ? "충족" : "부족" }, it.ok ? "✓" : "!"));
+      li.appendChild(el("span", {}, it.text));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    box.appendChild(el("p", { class: "note" }, "핵심 단어를 찾아 확인하는 연습용 채점이에요. 실제 점수는 선생님이 채점해요."));
+  }
+
+  // 문항 1
+  const TRAITS = [
+    { name: "상황 인식 및 이해", keys: ["상황인식", "인식", "이해"], ev: ["사진", "종류", "남은양", "알아냈", "알아내", "알아낸"] },
+    { name: "학습", keys: ["학습"], ev: ["이름표", "특징", "규칙", "익혀", "익힌", "익히"] },
+    { name: "최적화", keys: ["최적화"], ev: ["배식량", "계획안", "가장적", "영양기준", "조정"] },
+    { name: "자율성", keys: ["자율"], ev: ["촬영간격", "알림", "조작하지", "스스로판단", "스스로촬영"] },
+    { name: "예측", keys: ["예측"], ev: ["내일", "카레", "나물", "잔반기록", "미리"] }
+  ];
+  const REL = ["연결", "바탕으로", "결과를", "없으면", "없다면", "먼저", "이용해", "이용하여", "활용해", "활용하여", "덕분에", "있어야", "그다음", "그래서"];
+  function check1() {
+    const t = val("q1");
+    if (!t) return { score: 3, items: [{ ok: false, text: "아직 답안을 쓰지 않았어요." }] };
+    const named = TRAITS.filter(x => has(t, x.keys));
+    const found = named.filter(x => has(t, x.ev));
+    const items = [];
+    found.slice(0, 2).forEach(x => items.push({ ok: true, text: "'" + x.name + "' 특성과 사례 속 근거를 함께 썼어요." }));
+    named.filter(x => !found.includes(x)).forEach(x => items.push({ ok: false, text: "'" + x.name + "'은 찾았지만, 사례의 어느 부분에서 그렇게 판단했는지 근거가 보이지 않아요." }));
+    if (found.length < 2 && named.length < 2) items.push({ ok: false, text: "특성을 2가지 찾아야 해요. 지금은 " + named.length + "가지가 보여요." });
+    const rel = named.length >= 2 && has(t, REL);
+    items.push(rel ? { ok: true, text: "두 특성이 어떻게 이어지는지 썼어요." } : { ok: false, text: "두 특성이 어떻게 연결되는지 써 보세요. 예: '○○의 결과를 바탕으로 △△를 한다', '○○가 없으면 △△도 할 수 없다'." });
+    const units = Math.min(found.length, 2) + (rel ? 1 : 0);
+    return { score: units >= 3 ? 5 : units === 2 ? 4 : 3, items };
+  }
+
+  // 문항 2
+  const Q2 = [
+    { id: "q2a", name: "① 평가 방법", prob: ["그대로", "같은사진", "같은데이터", "이미본", "이미학습", "학습에썼던", "학습에사용한", "학습한사진", "똑같은"], sol: ["나누", "나눠", "분리", "따로", "평가용", "테스트", "새로운사진", "처음보는", "학습에쓰지않은", "학습하지않은"],
+      ph: "어떤 문제가 있는지, 어떻게 고치면 되는지 함께 써 보세요.",
+      probHint: "학습에 쓴 사진으로 다시 평가한 점이 왜 문제인지 써 보세요.", solHint: "학습용과 평가용 데이터를 어떻게 나눌지 써 보세요." },
+    { id: "q2b", name: "② 데이터 양", prob: ["적다", "적고", "적어", "적은", "적음", "부족", "20장", "불균형", "차이", "뿐", "밖에"], sol: ["더많이", "많이모", "늘리", "늘려", "추가", "비슷하게", "맞추", "맞춰", "같게", "균형"],
+      ph: "데이터가 얼마나 있었는지, 무엇이 부족한지 생각해 보세요.",
+      probHint: "100장, 깍두기 20장이라는 양이 왜 문제인지 써 보세요.", solHint: "데이터를 얼마나, 어떻게 더 모을지 써 보세요." },
+    { id: "q2c", name: "③ 데이터 구성(다양성)", prob: ["하루", "같은날", "같은조명", "조명", "은색", "식판만", "배경", "밝기", "1학년2반", "한반", "한학급", "비슷한"], sol: ["여러날", "다양한", "다양하게", "여러학년", "여러반", "다른조명", "각도", "여러종류", "여러가지"],
+      ph: "사진을 찍은 날, 반, 조명, 식판을 떠올려 보세요.",
+      probHint: "사진이 어떤 조건에서만 찍혔는지 써 보세요.", solHint: "어떤 조건을 다양하게 바꿔서 모을지 써 보세요." }
+  ];
+  function check2() {
+    let p = 0, s = 0; const items = [];
+    Q2.forEach(q => {
+      const t = val(q.id);
+      if (!t) { items.push({ ok: false, text: q.name + ": 아직 쓰지 않았어요." }); return; }
+      const pk = has(t, q.prob), sk = has(t, q.sol);
+      if (pk) p++; if (sk) s++;
+      items.push(pk ? { ok: true, text: q.name + "의 문제를 찾았어요." } : { ok: false, text: q.name + ": " + q.probHint });
+      items.push(sk ? { ok: true, text: q.name + "의 개선 방안을 썼어요." } : { ok: false, text: q.name + ": " + q.solHint });
+    });
+    const score = p === 3 && s === 3 ? 9 : (p >= 2 && s >= 1 ? 6 : 3);
+    return { score, items };
+  }
+
+  // 문항 3
+  const TYPES = ["분류", "회귀", "군집"];
+  const Q3 = [
+    { id: "q3a", mark: "㉠", type: "회귀", why: ["숫자", "수치", "kg", "연속", "값", "양을예측", "얼마나"], hint: "결과가 어떤 형태(숫자인지, 정해진 이름인지)인지 근거로 써 보세요." },
+    { id: "q3b", mark: "㉡", type: "군집", why: ["정답없", "정답이없", "이름표없", "이름표가없", "레이블", "정해지지않", "정해진정답", "비슷한", "묶"], hint: "정해진 정답(이름표)이 있는지 없는지를 근거로 써 보세요." },
+    { id: "q3c", mark: "㉢", type: "분류", why: ["정해진", "범주", "둘중", "두가지", "중하나", "두개", "이름표", "항목"], hint: "결과가 미리 정해진 범주 중 하나인지 근거로 써 보세요." }
+  ];
+  function check3() {
+    let units = 0; const items = [];
+    Q3.forEach(q => {
+      const t = val(q.id);
+      if (!t) { items.push({ ok: false, text: q.mark + ": 아직 쓰지 않았어요." }); return; }
+      const others = TYPES.filter(x => x !== q.type && t.includes(x));
+      const typeOk = t.includes(q.type) && others.length === 0;
+      const whyOk = has(t, q.why);
+      if (typeOk && whyOk) { units++; items.push({ ok: true, text: q.mark + ": 유형과 근거가 모두 맞아요." }); }
+      else if (typeOk) items.push({ ok: false, text: q.mark + ": 유형은 맞아요. " + q.hint });
+      else items.push({ ok: false, text: q.mark + ": 문제 해결 유형을 다시 생각해 보세요. " + (others.length ? "(" + others.join(", ") + "(으)로 썼어요)" : "(분류/회귀/군집 중 하나를 써 주세요)") });
+    });
+    return { score: units === 3 ? 5 : units === 2 ? 4 : 3, items };
+  }
+
+  // 문항 4
+  const Q4 = [
+    { k: "a", mark: "㉠", biased: false },
+    { k: "b", mark: "㉡", biased: true,
+      why: ["모니터링단", "좋아하", "자발적", "만족하는", "만족한", "일부학생", "특정학생", "치우"],
+      harm: ["불만", "반영", "실제보다", "높게", "제대로", "잘못", "소외", "무시"],
+      fix: ["전교생", "모든학생", "골고루", "여러학년", "무작위", "참여하지않", "비슷한인원", "다양한학생", "학년과반"] },
+    { k: "c", mark: "㉢", biased: true,
+      why: ["운동부", "3학년", "거의남기지", "잔반거의없음", "잔반많음", "특정학년", "치우"],
+      harm: ["잘못판단", "잘못구분", "알림", "잔반이많은식판", "잔반많은식판", "거의없음으로", "1학년", "2학년", "못알아", "놓치"],
+      fix: ["여러학년", "13학년", "모든학년", "여러반", "잔반많은", "잔반이많은", "비슷하게", "비슷해지도록", "골고루", "여러날"] }
+  ];
+  function check4() {
+    const items = [];
+    const sel = Q4.map(q => document.getElementById("q4-" + q.k).checked);
+    const errors = Q4.filter((q, i) => sel[i] !== q.biased).length;
+    const picked = Q4.filter((q, i) => sel[i] && q.biased);
+    if (!sel.some(Boolean)) {
+      items.push({ ok: false, text: "편향이 생길 수 있는 사례를 먼저 골라 주세요." });
+      return { score: 2 + 1, items };
+    }
+    items.push(errors === 0 ? { ok: true, text: "편향이 생길 수 있는 사례를 정확히 골랐어요." } : { ok: false, text: "고른 사례를 다시 살펴보세요. 데이터를 모은 대상이 한쪽에 치우쳤는지 확인해 보세요. (" + errors + "개 다름)" });
+    let reasons = 0, units = 0;
+    picked.forEach(q => {
+      const w = has(val("q4-" + q.k + "-why"), q.why);
+      const h = has(val("q4-" + q.k + "-harm"), q.harm);
+      const f = has(val("q4-" + q.k + "-fix"), q.fix);
+      if (w) reasons++;
+      units += (h ? 1 : 0) + (f ? 1 : 0);
+      items.push(w ? { ok: true, text: q.mark + ": 편향이 생기는 이유를 썼어요." } : { ok: false, text: q.mark + ": 데이터를 누구(어떤 조건)에게서만 모았는지 이유를 써 보세요." });
+      items.push(h ? { ok: true, text: q.mark + ": 편향 때문에 생길 문제를 썼어요." } : { ok: false, text: q.mark + ": 이 편향 때문에 누가, 어떤 상황에서 잘못 판단되는지 써 보세요." });
+      items.push(f ? { ok: true, text: q.mark + ": 데이터 재수집 방안을 썼어요." } : { ok: false, text: q.mark + ": 빠진 대상이나 조건을 어떻게 더 모을지 구체적으로 써 보세요." });
+    });
+    if (Q4.some((q, i) => sel[i] && !q.biased)) items.push({ ok: false, text: "편향이 없는 사례에 쓴 내용은 채점하지 않아요." });
+    const allReasons = picked.length > 0 && reasons === picked.length;
+    let e4;
+    if (errors === 0 && allReasons) e4 = 6;
+    else if (errors === 0 && reasons > 0) e4 = 4;
+    else if (errors === 1 && allReasons) e4 = 4;
+    else e4 = 2;
+    const e5 = units >= 4 ? 5 : units >= 1 ? 3 : 1;
+    items.push({ ok: e4 === 6, text: "편향 여부 판단: " + e4 + " / 6점" });
+    items.push({ ok: e5 === 5, text: "영향 분석과 해결 방안: " + e5 + " / 5점" });
+    return { score: e4 + e5, items };
+  }
+
+  const CHECKERS = { 1: check1, 2: check2, 3: check3, 4: check4 };
+
+  function pcQuestion(n, body) {
+    const q = el("article", { class: "q", id: "pc-q" + n });
+    q.appendChild(qHead(n));
+    q.appendChild(el("p", { class: "prompt" }, PROMPTS[n]));
+    q.appendChild(body);
+    const act = el("div", { class: "actions" });
+    const btn = el("button", { class: "btn", type: "button" }, "답안 확인하기");
+    const mbtn = el("button", { class: "btn ghost", type: "button" }, "예시 답안 보기");
+    mbtn.disabled = true;
+    act.appendChild(btn); act.appendChild(mbtn);
+    q.appendChild(act);
+    const res = el("div", { class: "result", "aria-live": "polite" }); res.hidden = true;
+    q.appendChild(res);
+    const model = modelBox(n);
+    q.appendChild(model);
+    btn.addEventListener("click", () => {
+      const r = CHECKERS[n]();
+      renderResult(res, r.score, POINTS[n], r.items);
+      mbtn.disabled = false;
+    });
+    mbtn.addEventListener("click", () => {
+      model.hidden = !model.hidden;
+      mbtn.textContent = model.hidden ? "예시 답안 보기" : "예시 답안 접기";
+    });
+    return q;
+  }
+
+  function buildPC() {
+    const root = panels.pc;
+    // 사례 1
+    const g1 = el("div", { class: "group" });
+    g1.appendChild(caseCard(1, false));
+    const qs1 = el("div", { class: "qs" });
+    const b1 = el("div", { class: "field" });
+    b1.appendChild(ta("q1", "답안", 6, "첫째, ○○ 특성이 나타난다. 왜냐하면 사례에서 …"));
+    qs1.appendChild(pcQuestion(1, b1));
+    const b2 = el("div", { class: "qs" });
+    Q2.forEach(q => b2.appendChild(ta(q.id, q.name + "의 문제와 개선 방안", 3, q.ph)));
+    qs1.appendChild(pcQuestion(2, b2));
+    g1.appendChild(qs1);
+    root.appendChild(g1);
+    // 사례 2
+    const g2 = el("div", { class: "group" });
+    g2.appendChild(caseCard(2, false));
+    const qs2 = el("div", { class: "qs" });
+    const b3 = el("div", { class: "qs" });
+    Q3.forEach(q => b3.appendChild(ta(q.id, q.mark + "에 적합한 방법과 이유", 2, q.mark + "은 ○○가 적합하다. 예측 결과가 …")));
+    qs2.appendChild(pcQuestion(3, b3));
+    const b4 = el("div", { class: "qs" });
+    b4.appendChild(el("p", { class: "hint" }, "1단계: 편향이 생길 수 있는 사례를 모두 고르세요. 고른 사례마다 쓸 칸이 열려요."));
+    const picks = el("div", { class: "picks" });
+    const blocks = el("div", { class: "qs" });
+    Q4.forEach(q => {
+      const lab = el("label", { class: "pick" });
+      const cb = el("input", { type: "checkbox", id: "q4-" + q.k });
+      if (drafts[cb.id] === true) cb.checked = true;
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(q.mark));
+      picks.appendChild(lab);
+      const blk = el("div", { class: "sub-block" });
+      blk.appendChild(el("p", { class: "sub-title" }, q.mark + "에 대해 쓰기"));
+      blk.appendChild(ta("q4-" + q.k + "-why", "편향이 생기는 이유", 2, "어떤 학생(조건)의 데이터만 모았는지 써 보세요."));
+      blk.appendChild(ta("q4-" + q.k + "-harm", "AI 급식 도우미에서 생길 수 있는 문제", 2, "누가, 어떤 상황에서 잘못 판단될까요?"));
+      blk.appendChild(ta("q4-" + q.k + "-fix", "데이터 재수집 방안", 2, "무엇을 어떻게 더 모을지 구체적으로 써 보세요."));
+      blk.hidden = !cb.checked;
+      cb.addEventListener("change", () => { blk.hidden = !cb.checked; saveDraft(); });
+      blocks.appendChild(blk);
+    });
+    b4.appendChild(picks);
+    b4.appendChild(el("p", { class: "hint" }, "2단계: 고른 사례마다 이유, 문제, 해결 방안을 쓰세요."));
+    b4.appendChild(blocks);
+    qs2.appendChild(pcQuestion(4, b4));
+    g2.appendChild(qs2);
+    root.appendChild(g2);
+  }
+
+  // ================= 스마트폰 탭 =================
+  const FILLS = {
+    m1: { text: "", extra: [] },
+    m3: { text: "㉠은 [[회귀]]가 적합하다. 예측 결과가 잔반량(kg)처럼 [[연속적인 숫자]]이기 때문이다. ㉡은 [[군집]]이 적합하다. [[정해진 정답]] 없이 설문 점수가 비슷한 학생끼리 [[묶어서]] 그룹을 만들기 때문이다. ㉢은 [[분류]]가 적합하다. 예측 결과가 '잔반 많음'과 '잔반 거의 없음'처럼 미리 정해진 [[범주]] 중 하나이기 때문이다.",
+          extra: ["최적화", "정해진 순서", "평균"] },
+    m4b: { text: "㉡: 급식을 좋아하는 [[모니터링단]] 학생의 응답만 모아 급식에 [[만족하는]] 학생의 의견에 치우쳐 있다. 그래서 불만이 있는 학생의 의견이 [[반영]]되지 못하고 만족도가 실제보다 [[높게]] 나타난다. [[전교생]]을 대상으로 학년과 반마다 [[비슷한]] 인원이 응답하도록 설문을 받아야 한다.",
+          extra: ["낮게", "운동부"] },
+    m4c: { text: "㉢: 반찬을 거의 남기지 않는 [[운동부]] 학생의 사진만 모아 [[잔반 많음]] 사진이 거의 없다. 그래서 잔반이 많은 식판도 '잔반 거의 없음'으로 [[잘못]] 판단해 영양사 선생님께 [[알림]]이 가지 않는다. [[1~3학년]] 여러 반의 사진을 여러 날에 걸쳐 모으고, 두 종류 사진 수가 [[비슷해지도록]] 수집해야 한다.",
+          extra: ["잔반 거의 없음", "정확하게"] }
+  };
+  // 문항 1: 학생이 고른 두 특성에 맞춰 빈칸 문장을 만든다 (0 상황 인식, 1 학습, 2 최적화, 3 자율성, 4 예측)
+  const TRAIT_NAMES = ["상황 인식 및 이해", "학습", "최적화", "자율성", "예측"];
+  const TRAIT_FILL = [
+    "[[상황 인식 및 이해]] 특성이 나타난다. 퇴식구 카메라에 찍힌 식판 [[사진]]을 보고 밥, 국, 반찬의 [[종류]]와 남은 양을 알아냈기 때문이다.",
+    "[[학습]] 특성이 나타난다. 민수가 사진마다 붙인 [[이름표]]를 보고 모델이 색깔, 모양, 크기 같은 [[특징]]을 스스로 찾아 구분하는 규칙을 익혔기 때문이다.",
+    "[[최적화]] 특성이 나타난다. 영양 기준을 지키면서도 버려지는 음식이 가장 [[적어지도록]] 반찬별 [[배식량]]을 조정한 계획안을 만들었기 때문이다.",
+    "[[자율성]] 특성이 나타난다. 사람이 따로 조작하지 않아도 [[스스로]] 촬영 간격을 줄이고, 잔반이 많은 식판이 연달아 나오면 영양사 선생님께 [[알림]]을 보냈기 때문이다.",
+    "[[예측]] 특성이 나타난다. 지난 한 달 동안의 메뉴별 잔반 [[기록]]을 바탕으로 내일 카레와 나물 반찬의 잔반을 [[미리]] 알려 주었기 때문이다."
+  ];
+  const PAIR_REL = {
+    "0-1": "모델이 [[학습]]으로 익힌 규칙이 있어야 사진 속 반찬을 정확히 [[인식]]할 수 있다. 학습이 [[없으면]] 반찬의 종류도 제대로 알아낼 수 없다.",
+    "0-2": "먼저 식판 사진에서 반찬별 남은 양을 [[인식]]하고, 그 결과를 [[바탕으로]] 잔반이 가장 적어지도록 배식량을 [[최적화]]한다.",
+    "0-3": "식판 사진에서 잔반이 많은 상황을 [[인식]]해야 사람이 시키지 않아도 [[스스로]] 판단해 알림을 보낼 수 있다. 인식이 [[없으면]] 언제 알림을 보낼지 알 수 없다.",
+    "0-4": "식판 사진에서 남은 양을 [[인식]]해 쌓은 잔반 기록을 [[바탕으로]] 내일 반찬의 잔반을 [[예측]]한다.",
+    "1-2": "모델이 [[학습]]으로 반찬을 정확히 구분해야 반찬별 잔반을 알 수 있고, 그 정보를 [[바탕으로]] 배식량을 [[최적화]]할 수 있다.",
+    "1-3": "[[학습]]으로 반찬과 잔반을 구분하는 규칙을 익혀야 사람이 조작하지 않아도 [[스스로]] 판단해 알림을 보낼 수 있다. 학습이 [[없으면]] 스스로 판단할 기준도 없다.",
+    "1-4": "모델이 [[학습]]으로 익힌 규칙으로 반찬별 잔반을 기록하고, 그 기록을 [[바탕으로]] 내일의 잔반을 [[예측]]한다.",
+    "2-3": "AI 급식 도우미는 사람이 시키지 않아도 [[스스로]] 잔반 상황을 판단하고, 그 판단을 [[바탕으로]] 배식량을 [[최적화]]한 계획안을 만들어 제안한다.",
+    "2-4": "먼저 [[예측]]으로 잔반이 많을 반찬을 알아내고, 그 결과를 [[바탕으로]] 배식량을 [[최적화]]한다. 예측이 [[없으면]] 어떤 반찬을 줄여야 할지 알 수 없다.",
+    "3-4": "잔반이 많을 것으로 [[예측]]되면 사람이 시키지 않아도 [[스스로]] 판단해 영양사 선생님께 미리 알릴 수 있다. 예측이 [[없으면]] 미리 대비할 수 없다."
+  };
+  const M1_EXTRA = ["많아지도록", "촬영 간격", "정답", "평균"];
+
+  const ORDERS = {
+    m2a: { title: "① 평가 방법의 문제", parts: ["학습에 썼던 100장으로", "다시 평가했기 때문에", "처음 보는 사진도 잘 구분하는지 알 수 없다.", "따라서 사진을 학습용과 평가용으로 나누고,", "학습에 쓰지 않은 사진으로 평가해야 한다."] },
+    m2b: { title: "② 데이터 양의 문제", parts: ["전체 사진이 100장으로 적고", "깍두기는 20장뿐이라", "깍두기의 특징을 충분히 배우지 못한다.", "따라서 사진을 더 많이 모으고,", "배추김치와 깍두기 사진 수를 비슷하게 맞춰야 한다."] },
+    m2c: { title: "③ 데이터 구성(다양성)의 문제", parts: ["하루 동안 한 반의 식판만", "같은 조명과 은색 식판에서 찍어서", "다른 환경의 사진은 잘못 구분할 수 있다.", "따라서 여러 날, 여러 학년과 반의 식판을", "다양한 조명과 각도에서 촬영해야 한다."] }
+  };
+  let uid = 0;
+  const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+
+  function buildFill(key) {
+    const cfg = FILLS[key];
+    const wrap = el("div", { class: "qs", "data-set": key });
+    const p = el("p", { class: "fill-text" });
+    const answers = [];
+    cfg.text.split(/(\[\[.+?\]\])/).forEach(seg => {
+      const m = seg.match(/^\[\[(.+)\]\]$/);
+      if (m) {
+        answers.push(m[1]);
+        const b = el("span", { class: "blank", role: "button", tabindex: "0", "data-answer": m[1], "data-set": key, "aria-label": "빈칸" });
+        p.appendChild(b);
+      } else p.appendChild(document.createTextNode(seg));
+    });
+    wrap.appendChild(p);
+    wrap.appendChild(el("p", { class: "bank-label" }, "낱말 카드 · 눌러서 넣거나 빈칸으로 끌어다 놓으세요"));
+    const bank = el("div", { class: "bank", "data-set": key });
+    shuffle(answers.concat(cfg.extra)).forEach(w => {
+      const c = el("button", { class: "chip", type: "button", id: "c" + (++uid), "data-drag": "fill", "data-set": key }, w);
+      bank.appendChild(c);
+    });
+    wrap.appendChild(bank);
+    return wrap;
+  }
+  function fillBlank(blank, chip) {
+    if (blank.dataset.chip) unfill(blank);
+    blank.dataset.chip = chip.id;
+    blank.textContent = chip.textContent;
+    blank.classList.add("filled");
+    blank.classList.remove("sel", "ok", "no");
+    blank.setAttribute("aria-label", "빈칸: " + chip.textContent);
+    chip.hidden = true;
+  }
+  function unfill(blank) {
+    const c = document.getElementById(blank.dataset.chip);
+    if (c) c.hidden = false;
+    delete blank.dataset.chip;
+    blank.textContent = "";
+    blank.classList.remove("filled", "ok", "no");
+    blank.setAttribute("aria-label", "빈칸");
+  }
+  function blanksOf(set) { return Array.from(document.querySelectorAll('.blank[data-set="' + set + '"]')); }
+  function checkFill(set) {
+    const bs = blanksOf(set); let ok = 0;
+    bs.forEach(b => { const good = b.textContent === b.dataset.answer; b.classList.toggle("ok", good); b.classList.toggle("no", !good); if (good) ok++; });
+    return { ok, total: bs.length };
+  }
+  function revealFill(set) {
+    blanksOf(set).forEach(b => { if (b.dataset.chip) unfill(b); });
+    const chips = Array.from(document.querySelectorAll('.bank[data-set="' + set + '"] .chip'));
+    blanksOf(set).forEach(b => {
+      const c = chips.find(x => !x.hidden && x.textContent === b.dataset.answer);
+      if (c) fillBlank(b, c);
+      b.classList.add("ok");
+    });
+  }
+  function resetFill(set) { blanksOf(set).forEach(b => { if (b.dataset.chip) unfill(b); b.classList.remove("ok", "no", "sel"); }); }
+
+  function buildOrder(key) {
+    const cfg = ORDERS[key];
+    const wrap = el("div", { class: "sub-block", "data-set": key });
+    wrap.appendChild(el("p", { class: "sub-title" }, cfg.title));
+    const zone = el("div", { class: "answer-zone", "data-set": key, "aria-label": cfg.title + " 답안" });
+    cfg.parts.forEach((t, i) => {
+      const s = el("div", { class: "slot" });
+      s.appendChild(el("span", { class: "slot-num", "aria-hidden": "true" }, String(i + 1)));
+      s.appendChild(el("div", { class: "slot-box", "data-set": key, "data-slot": String(i), role: "button", tabindex: "0", "aria-label": (i + 1) + "번째 칸" }));
+      zone.appendChild(s);
+    });
+    wrap.appendChild(zone);
+    wrap.appendChild(el("p", { class: "bank-label" }, "문장 조각 · 누르면 빈 번호 칸에 차례로 들어가요. 원하는 번호 칸으로 끌어다 놓아도 돼요. 칸에 들어간 조각을 누르면 다시 빠져요."));
+    const pool = el("div", { class: "pool", "data-set": key });
+    let order = shuffle(cfg.parts.map((t, i) => i));
+    if (order.every((v, i) => v === i)) order = order.reverse();
+    order.forEach(i => {
+      pool.appendChild(el("button", { class: "chip", type: "button", id: "c" + (++uid), "data-drag": "order", "data-set": key, "data-i": String(i) }, cfg.parts[i]));
+    });
+    wrap.appendChild(pool);
+    return wrap;
+  }
+  const slotsOf = set => Array.from(document.querySelectorAll('.slot-box[data-set="' + set + '"]'));
+  const poolOf = set => document.querySelector('.pool[data-set="' + set + '"]');
+  function clearOrderMarks(set) { slotsOf(set).forEach(s => s.classList.remove("ok", "no")); markNext(set); }
+  function markNext(set) {
+    const ss = slotsOf(set), first = ss.find(s => !s.firstElementChild);
+    ss.forEach(s => s.classList.toggle("next", s === first));
+  }
+  function putInSlot(slot, chip) {
+    const set = chip.dataset.set, old = slot.firstElementChild;
+    const from = chip.parentElement;
+    if (old && old !== chip) {
+      if (from && from.classList.contains("slot-box")) from.appendChild(old);
+      else poolOf(set).appendChild(old);
+    }
+    slot.appendChild(chip);
+    clearOrderMarks(set);
+  }
+  function checkOrder(set) {
+    const ss = slotsOf(set); let ok = 0, placed = 0;
+    ss.forEach((s, i) => {
+      const c = s.firstElementChild;
+      if (c) placed++;
+      const good = !!c && Number(c.dataset.i) === i;
+      s.classList.toggle("ok", good); s.classList.toggle("no", !good);
+      if (good) ok++;
+    });
+    return { ok, total: ss.length, placed };
+  }
+  function revealOrder(set) {
+    const ss = slotsOf(set);
+    Array.from(document.querySelectorAll('.chip[data-set="' + set + '"]')).forEach(c => { ss[Number(c.dataset.i)].appendChild(c); });
+    ss.forEach(s => { s.classList.add("ok"); s.classList.remove("no", "next"); });
+  }
+  function resetOrder(set) {
+    const p = poolOf(set);
+    shuffle(Array.from(document.querySelectorAll('.chip[data-set="' + set + '"]'))).forEach(c => p.appendChild(c));
+    clearOrderMarks(set);
+  }
+
+  // 탭(누르기)과 끌어다 놓기
+  function tapChip(chip) {
+    const set = chip.dataset.set;
+    if (chip.dataset.drag === "fill") {
+      const bs = blanksOf(set);
+      const target = bs.find(b => b.classList.contains("sel")) || bs.find(b => !b.dataset.chip);
+      if (target) fillBlank(target, chip);
+    } else {
+      if (chip.parentElement.classList.contains("pool")) {
+        const empty = slotsOf(set).find(s => !s.firstElementChild);
+        if (empty) putInSlot(empty, chip);
+      } else { poolOf(set).appendChild(chip); clearOrderMarks(set); }
+    }
+  }
+  function tapBlank(b) {
+    if (b.dataset.chip) { unfill(b); return; }
+    const was = b.classList.contains("sel");
+    blanksOf(b.dataset.set).forEach(x => x.classList.remove("sel"));
+    if (!was) b.classList.add("sel");
+  }
+  function dropChip(chip, target) {
+    if (!target) return;
+    const set = chip.dataset.set;
+    if (chip.dataset.drag === "fill") {
+      const b = target.closest(".blank");
+      if (b && b.dataset.set === set) fillBlank(b, chip);
+      return;
+    }
+    const slot = target.closest(".slot-box");
+    const pool = target.closest(".pool");
+    if (slot && slot.dataset.set === set) putInSlot(slot, chip);
+    else if (pool && pool.dataset.set === set) { pool.appendChild(chip); clearOrderMarks(set); }
+  }
+  let drag = null, suppressClick = false;
+  function clearOver() { document.querySelectorAll(".over").forEach(x => x.classList.remove("over")); }
+  document.addEventListener("pointerdown", e => {
+    const c = e.target.closest("[data-drag]");
+    if (!c || e.button > 0) return;
+    drag = { el: c, x: e.clientX, y: e.clientY, moved: false, ghost: null };
+  });
+  document.addEventListener("pointermove", e => {
+    if (!drag) return;
+    if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 6) {
+      drag.moved = true;
+      const g = drag.el.cloneNode(true);
+      g.removeAttribute("id"); g.classList.add("drag-ghost"); g.classList.remove("ok", "no");
+      g.style.width = drag.el.offsetWidth + "px";
+      document.body.appendChild(g);
+      drag.ghost = g;
+      drag.el.classList.add("dragging");
+    }
+    if (drag.moved) {
+      e.preventDefault();
+      drag.ghost.style.left = e.clientX + "px";
+      drag.ghost.style.top = e.clientY + "px";
+      clearOver();
+      const t = document.elementFromPoint(e.clientX, e.clientY);
+      if (t) {
+        const set = drag.el.dataset.set;
+        const b = t.closest(".blank"), s = t.closest(".slot-box");
+        if (drag.el.dataset.drag === "fill" && b && b.dataset.set === set) b.classList.add("over");
+        if (drag.el.dataset.drag === "order" && s && s.dataset.set === set) s.classList.add("over");
+      }
+    }
+  }, { passive: false });
+  function endDrag(e, cancel) {
+    if (!drag) return;
+    const d = drag; drag = null;
+    clearOver();
+    if (d.moved) {
+      d.ghost.remove(); d.el.classList.remove("dragging");
+      suppressClick = true; setTimeout(() => { suppressClick = false; }, 50);
+      if (!cancel) dropChip(d.el, document.elementFromPoint(e.clientX, e.clientY));
+    }
+  }
+  document.addEventListener("pointerup", e => endDrag(e, false));
+  document.addEventListener("pointercancel", e => endDrag(e, true));
+  window.addEventListener("click", e => { if (suppressClick) { e.stopPropagation(); e.preventDefault(); suppressClick = false; } }, true);
+  document.addEventListener("click", e => {
+    const c = e.target.closest("[data-drag]");
+    if (c) { tapChip(c); return; }
+    const b = e.target.closest(".blank");
+    if (b) tapBlank(b);
+  });
+  document.addEventListener("keydown", e => {
+    const b = e.target.closest && e.target.closest(".blank");
+    if (b && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); tapBlank(b); }
+  });
+
+  function mQuestion(n, body, sets) {
+    const q = el("article", { class: "q", id: "m-q" + n });
+    q.appendChild(qHead(n));
+    q.appendChild(el("p", { class: "prompt" }, PROMPTS[n]));
+    q.appendChild(body);
+    if (!sets) return q;
+    const act = el("div", { class: "actions" });
+    const btn = el("button", { class: "btn", type: "button" }, "답안 확인하기");
+    const show = el("button", { class: "btn ghost", type: "button" }, "정답 보기");
+    const reset = el("button", { class: "btn ghost", type: "button" }, "다시 하기");
+    act.appendChild(btn); act.appendChild(show); act.appendChild(reset);
+    q.appendChild(act);
+    const msg = el("p", { class: "msg", "aria-live": "polite" });
+    q.appendChild(msg);
+    btn.addEventListener("click", () => {
+      let ok = 0, total = 0, missing = false;
+      sets.forEach(s => {
+        if (FILLS[s]) { const r = checkFill(s); ok += r.ok; total += r.total; }
+        else { const r = checkOrder(s); ok += r.ok; total += r.total; if (r.placed < r.total) missing = true; }
+      });
+      if (total === 0) { msg.className = "msg part"; msg.textContent = "먼저 1단계를 마쳐 주세요."; return; }
+      msg.className = "msg " + (ok === total ? "ok" : ok >= total / 2 ? "part" : "no");
+      msg.textContent = ok === total ? "모두 맞았어요! 완성한 문장을 소리 내어 한 번 읽어 보세요." :
+        (missing ? "아직 옮기지 않은 조각이 있어요. " : "") + total + "개 중 " + ok + "개 맞았어요. 빨간 칸을 다시 생각해 보세요.";
+    });
+    show.addEventListener("click", () => { sets.forEach(s => FILLS[s] ? revealFill(s) : revealOrder(s)); msg.className = "msg"; msg.textContent = "정답을 보여 주고 있어요. '다시 하기'로 처음부터 풀 수 있어요."; });
+    reset.addEventListener("click", () => { sets.forEach(s => FILLS[s] ? resetFill(s) : resetOrder(s)); msg.textContent = ""; });
+    return q;
+  }
+
+  function buildM() {
+    const root = panels.m;
+    root.appendChild(el("p", { class: "hint" }, "예시 답안의 빈칸과 순서를 맞히면서 답안을 어떻게 쓰는지 익혀 보세요."));
+    const g1 = el("div", { class: "group" });
+    g1.appendChild(caseCard(1, true));
+    const qs1 = el("div", { class: "qs" });
+    const b1 = el("div", { class: "qs" });
+    b1.appendChild(el("p", { class: "sub-title" }, "1단계 · 사례에서 찾은 특성 2가지를 누르세요"));
+    b1.appendChild(el("p", { class: "hint" }, "어떤 두 특성을 골라도 사례에 근거가 있으면 정답이에요. 고른 특성에 맞는 문장이 나와요."));
+    const tRow = el("div", { class: "picks" });
+    const tBtns = TRAIT_NAMES.map(name => {
+      const t = el("button", { class: "pick", type: "button", "aria-pressed": "false" }, name);
+      t.addEventListener("click", () => {
+        const on = t.getAttribute("aria-pressed") === "true";
+        if (!on && tBtns.filter(x => x.getAttribute("aria-pressed") === "true").length >= 2) { t1Msg.className = "msg part"; t1Msg.textContent = "특성은 2가지만 고를 수 있어요. 다른 것을 먼저 빼 주세요."; return; }
+        t.setAttribute("aria-pressed", on ? "false" : "true");
+        t.classList.toggle("on", !on);
+        t1Msg.textContent = "";
+      });
+      tRow.appendChild(t); return t;
+    });
+    b1.appendChild(tRow);
+    const t1Act = el("div", { class: "actions" });
+    const t1Btn = el("button", { class: "btn", type: "button" }, "이 두 특성으로 문장 만들기");
+    t1Act.appendChild(t1Btn); b1.appendChild(t1Act);
+    const t1Msg = el("p", { class: "msg", "aria-live": "polite" });
+    b1.appendChild(t1Msg);
+    const m1Area = el("div", { class: "qs" });
+    b1.appendChild(m1Area);
+    t1Btn.addEventListener("click", () => {
+      const idx = tBtns.map((t, i) => t.getAttribute("aria-pressed") === "true" ? i : -1).filter(i => i >= 0);
+      if (idx.length !== 2) { t1Msg.className = "msg part"; t1Msg.textContent = "특성을 2가지 골라 주세요."; return; }
+      t1Msg.className = "msg"; t1Msg.textContent = "";
+      FILLS.m1 = { text: "첫째, " + TRAIT_FILL[idx[0]] + " 둘째, " + TRAIT_FILL[idx[1]] + " 두 특성은 서로 연결되어 작동한다. " + PAIR_REL[idx[0] + "-" + idx[1]], extra: M1_EXTRA };
+      m1Area.innerHTML = "";
+      m1Area.appendChild(el("p", { class: "sub-title" }, "2단계 · 빈칸을 채워 답안을 완성하세요"));
+      m1Area.appendChild(buildFill("m1"));
+    });
+    qs1.appendChild(mQuestion(1, b1, ["m1"]));
+    const o = el("div", { class: "qs" });
+    ["m2a", "m2b", "m2c"].forEach(k => o.appendChild(buildOrder(k)));
+    qs1.appendChild(mQuestion(2, o, ["m2a", "m2b", "m2c"]));
+    g1.appendChild(qs1);
+    root.appendChild(g1);
+
+    const g2 = el("div", { class: "group" });
+    g2.appendChild(caseCard(2, true));
+    const qs2 = el("div", { class: "qs" });
+    qs2.appendChild(mQuestion(3, buildFill("m3"), ["m3"]));
+
+    // 문항 4: 1단계 선택 → 2단계 빈칸
+    const b4 = el("div", { class: "qs" });
+    b4.appendChild(el("p", { class: "sub-title" }, "1단계 · 편향이 생길 수 있는 사례를 모두 누르세요"));
+    const row = el("div", { class: "picks" });
+    const toggles = ["㉠", "㉡", "㉢"].map((m, i) => {
+      const t = el("button", { class: "toggle", type: "button", "aria-pressed": "false", "data-correct": i === 0 ? "0" : "1" }, m);
+      t.addEventListener("click", () => { t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true"); row.querySelectorAll(".toggle").forEach(x => x.classList.remove("ok", "no")); });
+      row.appendChild(t); return t;
+    });
+    b4.appendChild(row);
+    const selAct = el("div", { class: "actions" });
+    const selBtn = el("button", { class: "btn", type: "button" }, "선택 확인하기");
+    selAct.appendChild(selBtn);
+    b4.appendChild(selAct);
+    const selMsg = el("p", { class: "msg", "aria-live": "polite" });
+    b4.appendChild(selMsg);
+    const step2 = el("div", { class: "qs step2" }); step2.hidden = true;
+    step2.appendChild(el("p", { class: "sub-title" }, "2단계 · 편향이 생기는 이유, 문제, 해결 방안을 완성하세요"));
+    step2.appendChild(buildFill("m4b"));
+    step2.appendChild(buildFill("m4c"));
+    b4.appendChild(step2);
+    selBtn.addEventListener("click", () => {
+      let good = 0;
+      toggles.forEach(t => { const on = t.getAttribute("aria-pressed") === "true"; const right = on === (t.dataset.correct === "1"); t.classList.toggle("ok", right); t.classList.toggle("no", !right); if (right) good++; });
+      if (good === 3) { selMsg.className = "msg ok"; selMsg.textContent = "정확해요! ㉡과 ㉢은 데이터를 한쪽 학생들에게서만 모았어요."; }
+      else { selMsg.className = "msg no"; selMsg.textContent = "정답은 ㉡, ㉢이에요. ㉠은 1년 동안의 기록을 골고루 모아서 편향이 적어요."; }
+      step2.hidden = false;
+    });
+    qs2.appendChild(mQuestion(4, b4, ["m4b", "m4c"]));
+    g2.appendChild(qs2);
+    root.appendChild(g2);
+  }
+
+  buildPC();
+  buildM();
+  document.querySelectorAll(".answer-zone").forEach(z => markNext(z.dataset.set));
+  const saved = store.get("ai-lunch-tab", null);
+  showTab(saved || (window.matchMedia && window.matchMedia("(max-width: 700px)").matches ? "m" : "pc"));
+})();
+</script>
+
+</body>
+</html>
