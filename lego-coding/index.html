@@ -441,6 +441,111 @@ a.btn { text-decoration: none; }
 .vm-pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .vm-pills .rep { font-size: 15px; min-height: 34px; padding: 4px 14px; }
 
+/* ===== 단계별 화면 ===== */
+.hero { padding-block: 22px 14px; gap: 2px; }
+.hero h1 { font-size: clamp(40px, 8vw, 70px); }
+.hero .kicker { font-size: clamp(20px, 4vw, 30px); }
+.hero .brush { font-size: clamp(24px, 4.6vw, 38px); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.stepbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(8px); border-block: 1px solid var(--line); }
+.sb-in { display: flex; align-items: center; gap: 10px 16px; padding-block: 8px; flex-wrap: wrap; }
+.sb-steps { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.sb-steps button { display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent; color: var(--muted); font-weight: 800; font-size: 15px; padding: 7px 12px 7px 7px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.sb-n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--editor); color: var(--muted); font: 400 14px/1 var(--f-display); }
+.sb-steps button.passed .sb-n { background: var(--green); color: #fff; }
+.sb-steps button[aria-current="step"] { background: var(--blue-soft); color: var(--ink); }
+.sb-steps button[aria-current="step"] .sb-n { background: var(--blue); color: #fff; }
+.sb-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.sb-right .lvl { padding: 3px; }
+.sb-right .lvl-k { padding: 0 4px 0 8px; font-size: 12px; }
+.sb-right .lvl button { font-size: 14px; padding: 5px 11px; min-height: 32px; }
+.home { border: 2px solid var(--line); background: var(--paper); color: var(--ink); font-weight: 800; font-size: 14px; padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 38px; }
+@media (max-width: 720px) { .sb-l { display: none; } .sb-steps button[aria-current="step"] .sb-l { display: inline; } }
+
+main.wrap { gap: 0; padding-block: 22px 56px; }
+.screen { display: flex; flex-direction: column; gap: 20px; }
+.scr-head { display: flex; align-items: center; gap: 14px; }
+.scr-no { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font: 400 26px/1 var(--f-display); }
+.scr-head h2 { margin: 0; font: 400 clamp(26px, 4.6vw, 38px)/1.15 var(--f-display); color: var(--ink); text-wrap: balance; }
+.scr-head p { margin: 2px 0 0; color: var(--muted); }
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px; border-top: 2px solid var(--line); margin-top: 8px; }
+.nav .btn { --acc: var(--blue); font-size: 17px; padding: 10px 22px; min-height: 50px; }
+.nav .btn.next { margin-left: auto; }
+
+.zone-card { gap: 8px; padding: 24px 18px; }
+.zone-card[aria-pressed="true"] { background: var(--acc-soft); box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 24px -14px var(--acc); }
+.need-chip { font-size: 14px; font-weight: 800; color: var(--ink); background: var(--editor); padding: 4px 12px; border-radius: 999px; }
+.lvl-chip { font-size: 13.5px; color: var(--muted); font-weight: 700; }
+.first-pick { font-size: 12.5px; font-weight: 800; color: #fff; background: var(--acc); padding: 3px 10px; border-radius: 999px; }
+@media (max-width: 760px) {
+  .zone-card { grid-template-columns: 46px minmax(0, 1fr); grid-auto-flow: row; padding: 14px 16px; gap: 2px 12px; }
+  .zone-card .ico { grid-row: span 4; }
+  .zone-card .first-pick, .zone-card .need-chip { justify-self: start; }
+}
+
+details.more { border: 2px solid var(--line); border-radius: 18px; background: var(--paper); padding: 0 18px; }
+details.more > summary { cursor: pointer; font-weight: 800; color: var(--ink); padding: 14px 0; list-style: none; display: flex; align-items: center; gap: 10px; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+"; width: 24px; height: 24px; flex: none; border-radius: 50%; background: var(--editor); display: grid; place-items: center; font: 800 16px/1 var(--f-latin); color: var(--muted); }
+details.more[open] > summary::before { content: "−"; }
+details.more[open] { padding-bottom: 16px; }
+details.more .lede { margin: 0 0 12px; text-align: left; }
+details.more .ipo { margin-top: 0; }
+details.more .cmp { border: 0; }
+
+.skip-card { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; background: var(--panel); border-radius: 20px; padding: 16px 20px; }
+.skip-card p { margin: 0; flex: 1 1 260px; font-size: 17px; color: var(--ink); }
+.skip-card .btn { --acc: var(--blue); font-size: 16px; }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.checklist li { display: flex; gap: 12px; align-items: center; background: var(--paper); border: 2px solid var(--line); border-radius: 16px; padding: 14px 16px; font-size: 17px; color: var(--ink); cursor: pointer; user-select: none; }
+.checklist li::before { content: ""; flex: none; width: 24px; height: 24px; border: 3px solid var(--blue); border-radius: 7px; }
+.checklist li.ok { border-color: var(--green); background: var(--green-soft); }
+.checklist li.ok::before { background: var(--green); border-color: var(--green); content: "✓"; color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+body:not([data-code="line"]) [data-for="line"], body:not([data-code="keyboard"]) [data-for="keyboard"], body:not([data-code="joystick"]) [data-for="joystick"] { display: none !important; }
+
+.need-now { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; border: 3px solid var(--blue); border-radius: 20px; padding: 14px 20px; }
+.need-now span { font-weight: 800; color: var(--blue); font-size: 14px; }
+.need-now b { font: 400 clamp(22px, 3.6vw, 28px)/1.2 var(--f-display); color: var(--ink); }
+.need-now small { flex-basis: 100%; color: var(--muted); font-size: 14px; }
+.open-site { margin-bottom: 0; }
+
+.panel { margin-top: 0; }
+body[data-step="code"] .part-run, body[data-step="run"] .part-code { display: none !important; }
+body[data-step="run"] .panel-head p { display: none; }
+body[data-level="e"] .hide-e { display: none !important; }
+
+.run-tip { display: flex; gap: 14px; align-items: center; background: var(--acc-soft); border-radius: 20px; padding: 14px 18px; }
+.rt-ico { flex: none; width: 44px; height: 44px; border-radius: 50%; background: #1ea64a; color: #fff; display: grid; place-items: center; font-size: 18px; }
+.rt-t { margin: 0; font-weight: 800; color: var(--ink); font-size: 17px; }
+.rt-d { margin: 2px 0 0; font-size: 14.5px; }
+
+.calib-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 980px) { .calib-grid { grid-template-columns: minmax(0, 1fr); } }
+.calib-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; font-size: 15px; }
+.calc-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--editor); border-radius: 16px; padding: 14px; }
+.calc-box label { display: flex; flex-direction: column; gap: 4px; font-weight: 800; font-size: 14px; color: var(--ink); }
+.calc-box input { font: 800 22px/1 var(--f-latin); color: var(--ink); background: var(--paper); border: 2px solid var(--line); border-radius: 10px; padding: 8px 10px; width: 100%; font-variant-numeric: tabular-nums; }
+.cal-out { grid-column: 1 / -1; margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cal-out b { font: 800 26px/1 var(--f-latin); color: var(--acc); }
+.calc-box .btn { grid-column: 1 / -1; justify-self: start; }
+.cal-console .console { height: 150px; }
+
+.help-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .help-list { grid-template-columns: minmax(0, 1fr); } }
+.help-list details { background: var(--paper); border: 2px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+.help-list summary { cursor: pointer; font-weight: 800; color: var(--ink); }
+.help-list p { margin: 8px 0 0; font-size: 14.5px; }
+.help .label { --acc: var(--red); }
+.screen > .help .label { color: var(--red); }
+
+.done-box { text-align: center; padding: 30px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.done-brush { margin: 0; font: 400 clamp(30px, 6vw, 46px)/1 var(--f-brush); color: var(--orange); transform: rotate(-3deg); }
+.done-box h2 { margin: 0; font: 400 clamp(54px, 12vw, 104px)/1.05 var(--f-display); background: linear-gradient(90deg, var(--blue), var(--green) 40%, var(--yellow) 70%, var(--red)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.done-code { margin: 6px 0 0; font-size: 19px; color: var(--ink); }
+.done-stamp { margin: 0; font-size: 16px; color: var(--muted); }
+.done-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+.done-btns .btn { --acc: var(--blue); font-size: 17px; padding: 10px 22px; min-height: 50px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -453,53 +558,59 @@ a.btn { text-decoration: none; }
   <p class="kicker"><span class="g">레고 CS&amp;AI</span><span class="o">로 배우는</span></p>
   <h1>피지컬 <span class="blue">컴퓨팅</span></h1>
   <p class="brush">센서로 느끼고, 코드로 생각하고, 모터로 움직여요!</p>
-  <p class="lede">피지컬 컴퓨팅은 컴퓨터가 센서로 바깥 세상을 느끼고, 코드로 판단해서, 모터 같은 장치로 진짜 움직임을 만드는 거예요. 레고 로봇 자동차를 세 가지 코드로 움직여 보고, 블록 하나하나가 무슨 일을 하는지 알아봐요.</p>
-  <dl class="ipo">
-    <div><dt>입력</dt><dd>센서 · 키보드 · 레버</dd><small>로봇이 세상을 느끼는 방법</small></div>
-    <div><dt>처리</dt><dd>블록 코드</dd><small>숫자를 계산하고 판단해요</small></div>
-    <div><dt>출력</dt><dd>왼쪽 · 오른쪽 모터</dd><small>바퀴를 돌려 움직여요</small></div>
-  </dl>
-  <div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명 수준</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div>
-  <p class="lvl-note">학년을 고르면 블록 설명이 그 학년에 맞게 바뀌어요.</p>
 </header>
+<nav class="stepbar" aria-label="체험 단계"><div class="wrap sb-in"><ol class="sb-steps"><li><button type="button" data-to="pick"><span class="sb-n">1</span><span class="sb-l">코드 고르기</span></button></li><li><button type="button" data-to="build"><span class="sb-n">2</span><span class="sb-l">조립하기</span></button></li><li><button type="button" data-to="connect"><span class="sb-n">3</span><span class="sb-l">연결하기</span></button></li><li><button type="button" data-to="code"><span class="sb-n">4</span><span class="sb-l">코딩하기</span></button></li><li><button type="button" data-to="run"><span class="sb-n">5</span><span class="sb-l">작동하기</span></button></li></ol><div class="sb-right"><div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div><button type="button" class="home" id="go-home">처음으로</button></div></div></nav>
 
-<main class="wrap">
+<main class="wrap" id="main">
 
-<!-- ================= 체험 순서 ================= -->
-<section aria-labelledby="h-steps">
-  <div class="sec-head"><h2 id="h-steps">체험 순서</h2><p>조립하고, 코딩하고, 직접 움직여 봐요</p></div>
-  <div class="steps">
-    <div class="step s1">
-      <span class="no">1</span><h3>레고로 조립하기</h3>
-      <p>더블 모터에 바퀴와 센서를 달아 로봇 자동차를 만들어요.</p>
-      <ul><li>더블 모터 양쪽에 바퀴 끼우기</li><li>컬러 센서는 앞쪽 아래에, 바닥을 보도록 달기</li><li>조이스틱 조종을 하려면 컨트롤러 준비하기</li></ul>
-      <span class="skip">완성된 자동차가 있으면 건너뛰어도 돼요</span>
-    </div>
-    <div class="step s4">
-      <span class="no">2</span><h3>하드웨어 연결하기</h3>
-      <p>레고 코딩 사이트를 열고 블루투스로 로봇과 연결해요.</p>
-      <ul><li>오른쪽 위 '연결' 버튼 누르기</li><li>연결 카드를 스캔하고 블루투스 켜기</li><li>하드웨어를 고르고 '페어링' 누르기</li></ul>
-      <button class="go" type="button" data-go="h-connect">연결 방법 자세히 보기 ↓</button>
-    </div>
-    <div class="step s2">
-      <span class="no">3</span><h3>코딩하기</h3>
-      <p>세 코드 중 하나를 골라 블록을 쌓아요.</p>
-      <ul><li>라인트레이서 · 키보드 조종 · 조이스틱 조종 중 고르기</li><li>필요한 변수 먼저 만들기 (라인트레이서: 오차 / 키보드: 속도, 회전)</li><li>아래 블록 코드를 보고 똑같이 만들기</li><li>블록을 눌러 무슨 일을 하는지 읽어 보기</li></ul>
-      <button class="go" type="button" data-go="h-code">블록 코드 보러 가기 ↓</button>
-    </div>
-    <div class="step s3">
-      <span class="no">4</span><h3>작동시켜 보기</h3>
-      <p>▶ 버튼을 누르고 로봇을 직접 움직여요.</p>
-      <ul><li>라인트레이서는 트랙 위에 올려 두기</li><li>키보드나 컨트롤러로 운전해 보기</li><li>숫자를 바꿔 보는 도전 과제 풀기</li></ul>
-      <button class="go" type="button" data-go="h-code">화면에서 먼저 해 보기 ↓</button>
-    </div>
+<!-- ===== 1 코드 고르기 ===== -->
+<section class="screen" data-screen="pick" aria-labelledby="h-pick">
+  <div class="scr-head"><span class="scr-no">1</span><div><h2 id="h-pick">어떤 코드로 체험할까요?</h2><p>카드를 누르면 다음 단계로 넘어가요.</p></div></div>
+  <div class="zones">
+    <button class="zone-card t-line" id="tab-line" data-tab="line">
+      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 22c5 0 5-8 10-8s5-8 10-8"/><circle cx="14" cy="14" r="3.2" fill="currentColor" stroke="none"/></svg></span>
+      <span class="en">라인트레이서</span><span class="ko">스스로 선을 따라가요</span>
+      <span class="need-chip">더블 모터 + 컬러 센서</span><span class="lvl-chip">도전 ★★★ · 변수 1개</span>
+    </button>
+    <button class="zone-card t-key" id="tab-key" data-tab="keyboard">
+      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="10" y="3" width="8" height="8" rx="2"/><rect x="2" y="15" width="8" height="8" rx="2"/><rect x="10" y="15" width="8" height="8" rx="2"/><rect x="18" y="15" width="8" height="8" rx="2"/></svg></span>
+      <span class="en">키보드 조종</span><span class="ko">화살표 키로 운전하기</span>
+      <span class="need-chip">더블 모터 + 키보드</span><span class="lvl-chip">보통 ★★ · 변수 2개</span>
+    </button>
+    <button class="zone-card t-joy" id="tab-joy" data-tab="joystick">
+      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 4v20M20 4v20"/><rect x="4" y="8" width="8" height="5" rx="2" fill="currentColor"/><rect x="16" y="15" width="8" height="5" rx="2" fill="currentColor"/></svg></span>
+      <span class="first-pick">처음이면 추천!</span><span class="en">조이스틱 조종</span><span class="ko">두 레버로 조종하기</span>
+      <span class="need-chip">더블 모터 + 컨트롤러</span><span class="lvl-chip">쉬움 ★ · 변수 없음</span>
+    </button>
   </div>
-  <div class="shortcut"><p>완성된 자동차가 준비되어 있어요. 조립을 건너뛰고 ② 하드웨어 연결하기부터 시작해도 돼요.</p><a class="btn" href="https://code.legoeducation.com/ko-kr/word" target="_blank" rel="noopener">레고 코딩 사이트 열기 ↗</a></div>
+  <details class="more">
+    <summary>피지컬 컴퓨팅이 뭐예요?</summary>
+    <p class="lede">컴퓨터가 센서로 바깥 세상을 느끼고, 코드로 판단해서, 모터 같은 장치로 진짜 움직임을 만드는 거예요.</p>
+    <dl class="ipo">
+      <div><dt>입력</dt><dd>센서 · 키보드 · 레버</dd><small>로봇이 세상을 느끼는 방법</small></div>
+      <div><dt>처리</dt><dd>블록 코드</dd><small>숫자를 계산하고 판단해요</small></div>
+      <div><dt>출력</dt><dd>왼쪽 · 오른쪽 모터</dd><small>바퀴를 돌려 움직여요</small></div>
+    </dl>
+  </details>
 </section>
 
-<!-- ================= 하드웨어 연결 ================= -->
-<section aria-labelledby="h-connect">
-  <div class="sec-head"><h2 id="h-connect">하드웨어 연결하기</h2><p>코딩하기 전에 로봇과 컴퓨터를 블루투스로 연결해요</p></div>
+<!-- ===== 2 조립하기 ===== -->
+<section class="screen" data-screen="build" aria-labelledby="h-build" hidden>
+  <div class="scr-head"><span class="scr-no">2</span><div><h2 id="h-build">레고로 조립하기</h2><p>더블 모터에 바퀴와 필요한 부품을 달아 로봇 자동차를 만들어요.</p></div></div>
+  <div class="skip-card"><p><b>완성된 자동차가 있나요?</b> 조립은 건너뛰고 바로 연결하기로 가요.</p><button type="button" class="btn" data-to="connect">조립 건너뛰기 →</button></div>
+  <ul class="checklist">
+    <li>더블 모터 양쪽에 바퀴 끼우기</li>
+    <li data-for="line">컬러 센서를 앞쪽 아래에, <b>바닥을 보도록</b> 달기</li>
+    <li data-for="joystick">컨트롤러 준비하기</li>
+    <li data-for="keyboard">키보드가 있는 컴퓨터 준비하기</li>
+    <li>바퀴가 잘 굴러가는지 손으로 밀어 확인하기</li>
+  </ul>
+  <div class="nav"><button type="button" class="btn ghost" data-to="pick">← 이전</button><button type="button" class="btn next" data-to="connect">다음: 연결하기 →</button></div>
+</section>
+
+<!-- ===== 3 연결하기 ===== -->
+<section class="screen" data-screen="connect" aria-labelledby="h-connect" hidden>
+  <div class="scr-head"><span class="scr-no">3</span><div><h2 id="h-connect">하드웨어 연결하기</h2><p>코딩 사이트를 열고 블루투스로 로봇과 연결해요.</p></div></div>
   <div class="open-site">
     <div>
       <p class="os-k">레고 코딩 사이트</p>
@@ -508,6 +619,7 @@ a.btn { text-decoration: none; }
     </div>
     <a class="btn big" href="https://code.legoeducation.com/ko-kr/word" target="_blank" rel="noopener">코딩 사이트 열기 ↗</a>
   </div>
+  <div class="need-now"><span>이번에 연결할 하드웨어</span><b id="need-hw">더블 모터 + 컬러 센서</b><small>하드웨어가 여러 개면 아래 과정을 하나씩 반복해요.</small></div>
   <ol class="conn">
     <li><img src="img/connect-1.png" alt="연결 버튼을 누르면 싱글 모터, 더블 모터, 컬러 센서, 컨트롤러가 나오는 화면" width="554" height="319" loading="lazy"><div><b>'연결' 버튼 누르고 하드웨어 고르기</b><span>오른쪽 위 파란 <em>연결</em> 버튼을 눌러요. 연결할 하드웨어(더블 모터, 컬러 센서, 컨트롤러)를 골라요.</span></div></li>
     <li><img src="img/connect-2.png" alt="연결 카드 색을 고르는 화면" width="918" height="516" loading="lazy"><div><b>연결 카드 색 고르기</b><span>로봇과 함께 있는 <em>연결 카드</em>의 색을 골라요. 카드가 없으면 '카드 없이 계속하기'를 눌러요.</span></div></li>
@@ -516,54 +628,73 @@ a.btn { text-decoration: none; }
     <li><img src="img/connect-5.png" alt="버튼을 다시 눌러 블루투스를 켜는 그림" width="923" height="523" loading="lazy"><div><b>블루투스 켜기</b><span>버튼을 <em>한 번 더</em> 눌러 블루투스를 켜요.</span></div></li>
     <li><img src="img/connect-6.png" alt="브라우저 창 목록에서 하드웨어를 선택하고 페어링 버튼을 누르는 그림" width="776" height="507" loading="lazy"><div><b>하드웨어 선택하고 '페어링' 누르기</b><span>작은 창이 뜨면 목록에서 하드웨어 이름을 고르고 <em>페어링</em> 버튼을 눌러요. 연결되면 코딩을 시작할 수 있어요.</span></div></li>
   </ol>
-  <div class="need card">
-    <p class="label" style="--acc:var(--blue)">코드마다 연결할 하드웨어</p>
-    <div class="need-grid">
-      <div><b style="color:var(--orange)">라인트레이서</b><span>더블 모터 + 컬러 센서</span></div>
-      <div><b style="color:var(--magenta)">키보드 조종</b><span>더블 모터</span></div>
-      <div><b style="color:var(--green)">조이스틱 조종</b><span>더블 모터 + 컨트롤러</span></div>
+  <div class="help">
+    <p class="label">연결이 잘 안 될 때</p>
+    <div class="help-list">
+      <details><summary>목록에 내 하드웨어가 안 보여요</summary><p>버튼을 한 번 더 눌러 블루투스를 켜고, 로봇을 컴퓨터 가까이 가져와요. 크롬 브라우저인지도 확인해요.</p></details>
+      <details><summary>다른 모둠 로봇이 연결돼요</summary><p>연결 카드 색을 다시 확인하고, 목록에서 내 로봇 이름을 골라요.</p></details>
+      <details><summary>연결이 자꾸 끊겨요</summary><p>배터리가 충분한지 확인하고, 페이지를 새로고침한 뒤 처음부터 다시 연결해요.</p></details>
     </div>
-    <p style="margin:10px 0 0;font-size:14px;color:var(--muted)">하드웨어가 여러 개면 위 과정을 하나씩 반복해서 연결해요.</p>
   </div>
+  <div class="nav"><button type="button" class="btn ghost" data-to="build">← 이전</button><button type="button" class="btn next" data-to="code">다음: 코딩하기 →</button></div>
 </section>
 
-<!-- ================= 바퀴 기초 ================= -->
-<section aria-labelledby="h-basics">
-  <div class="sec-head"><h2 id="h-basics">바퀴로 움직이기</h2><p>세 코드 모두 마지막 블록에서 두 바퀴 속도를 정해요</p></div>
-  <div class="basics-intro">
+<!-- ===== 4 코딩하기 ===== -->
+<section class="screen" data-screen="code" aria-labelledby="h-code" hidden>
+  <div class="scr-head"><span class="scr-no">4</span><div><h2 id="h-code">코딩하기</h2><p>변수를 먼저 만들고, 블록 코드를 보고 똑같이 쌓아요. 블록을 누르면 설명이 표시돼요.</p></div></div>
+  <div class="panel-slot"></div>
+  <details class="more">
+    <summary>두 바퀴로 방향을 바꾸는 원리</summary>
+    <div class="basics-intro">
     <div class="code" style="padding:20px 22px; flex:0 1 auto; max-width:100%">
       <div class="b mot" style="cursor:default"><span class="mot-ico" aria-hidden="true"><svg viewBox="0 0 30 30" width="26" height="26"><circle cx="15" cy="15" r="11" fill="none" stroke="#1d4f4c" stroke-width="2.4"/><circle cx="15" cy="15" r="4" fill="#1d4f4c"/><path d="M3 15a12 12 0 0 1 3-8M27 15a12 12 0 0 1-3 8" stroke="#1d4f4c" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></span><span class="num">왼쪽 바퀴</span><span class="num">오른쪽 바퀴</span> 에서 % 속도로 이동 시작하기</div>
     </div>
     <p>이 블록에는 숫자 칸이 두 개 있어요. <b>앞 칸은 왼쪽 바퀴, 뒤 칸은 오른쪽 바퀴</b> 속도(%)예요. 로봇에는 운전대가 없지만 두 바퀴 속도를 다르게 하면 방향을 바꿀 수 있어요. 마이너스(−)는 바퀴가 뒤로 돈다는 뜻이에요.</p>
   </div>
   <div class="drive-cards" id="drive-cards"></div>
+  </details>
+  <div class="nav"><button type="button" class="btn ghost" data-to="connect">← 이전</button><button type="button" class="btn next" data-to="run">다음: 작동하기 →</button></div>
 </section>
 
-<!-- ================= 코드 존 ================= -->
-<section aria-labelledby="h-code">
-  <div class="sec-head"><h2 id="h-code">코드 체험</h2><p>세 가지 방법으로 로봇을 움직여 보세요</p><span class="lvl-wrap"><div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명 수준</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div></span></div>
-  <div class="zones" role="tablist" aria-label="코드 고르기">
-    <button class="zone-card t-line" role="tab" id="tab-line" aria-controls="panel-line" data-tab="line">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 22c5 0 5-8 10-8s5-8 10-8"/><circle cx="14" cy="14" r="3.2" fill="currentColor" stroke="none"/></svg></span>
-      <span class="en">라인트레이서</span><span class="ko">스스로 선을 따라가요</span>
-      <span class="desc">컬러 센서 반사값,<br>오차, 비례 제어</span>
-    </button>
-    <button class="zone-card t-key" role="tab" id="tab-key" aria-controls="panel-key" data-tab="keyboard">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="10" y="3" width="8" height="8" rx="2"/><rect x="2" y="15" width="8" height="8" rx="2"/><rect x="10" y="15" width="8" height="8" rx="2"/><rect x="18" y="15" width="8" height="8" rx="2"/></svg></span>
-      <span class="en">키보드 조종</span><span class="ko">화살표 키로 운전하기</span>
-      <span class="desc">변수 속도·회전,<br>만약 ~(이)라면</span>
-    </button>
-    <button class="zone-card t-joy" role="tab" id="tab-joy" aria-controls="panel-joy" data-tab="joystick">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 4v20M20 4v20"/><rect x="4" y="8" width="8" height="5" rx="2" fill="currentColor"/><rect x="16" y="15" width="8" height="5" rx="2" fill="currentColor"/></svg></span>
-      <span class="en">조이스틱 조종</span><span class="ko">두 레버로 조종하기</span>
-      <span class="desc">레버 위치를<br>바퀴 속도로 바로 연결</span>
-    </button>
-  </div>
+<!-- ===== 5 작동하기 ===== -->
+<section class="screen" data-screen="run" aria-labelledby="h-run" hidden>
+  <div class="scr-head"><span class="scr-no">5</span><div><h2 id="h-run">작동시켜 보기</h2><p>진짜 로봇을 움직여 보고, 화면 시뮬레이터로 숫자를 바꿔 실험해요.</p></div></div>
+  <div class="panel-slot"></div>
+  <div class="nav"><button type="button" class="btn ghost" data-to="code">← 이전</button><button type="button" class="btn next" data-to="done">체험 완료 →</button></div>
+</section>
 
+<!-- ===== 완료 ===== -->
+<section class="screen" data-screen="done" aria-labelledby="h-done" hidden>
+  <div class="done-box">
+    <p class="done-brush">참 잘했어요!</p>
+    <h2 id="h-done">체험 완료!</h2>
+    <p class="done-code"><b id="done-code">라인트레이서</b> 코드로 로봇을 움직였어요.</p>
+    <p class="done-stamp">이 화면을 운영 선생님께 보여 주고 스탬프를 받으세요.</p>
+    <div class="done-btns"><button type="button" class="btn" data-to="pick">다른 코드도 해 보기</button><button type="button" class="btn ghost" id="go-home2">처음으로</button></div>
+  </div>
+  <details class="more">
+    <summary>세 코드 한눈에 비교</summary>
+    <div class="cmp"><table>
+    <thead><tr><th scope="col"><span class="sr" style="position:absolute;left:-9999px">항목</span></th><th scope="col">코드 1 라인트레이서</th><th scope="col">코드 2 키보드 조종</th><th scope="col">코드 3 조이스틱 조종</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">입력</th><td>컬러 센서 반사값</td><td>키보드 화살표 키 4개</td><td>컨트롤러 레버 2개</td></tr>
+      <tr><th scope="row">누가 판단해요?</th><td><b>로봇이 스스로</b> (자율 주행)</td><td>사람이 (원격 조종)</td><td>사람이 (원격 조종)</td></tr>
+      <tr><th scope="row">왼쪽 바퀴</th><td><code>7 − 오차 × 0.4</code></td><td><code>속도 + 회전</code></td><td><code>왼쪽 레버 위치</code></td></tr>
+      <tr><th scope="row">오른쪽 바퀴</th><td><code>7 + 오차 × 0.4</code></td><td><code>속도 − 회전</code></td><td><code>오른쪽 레버 위치</code></td></tr>
+      <tr><th scope="row">변수</th><td>오차</td><td>속도, 회전</td><td>없음</td></tr>
+      <tr><th scope="row">속도 조절</th><td>오차에 따라 계속 바뀌어요</td><td>정해진 값만 (40, −30, ±20)</td><td>미는 만큼 자유롭게</td></tr>
+      <tr><th scope="row">닮은 기술</th><td>자율주행 자동차, 물류 창고 로봇</td><td>게임 캐릭터, RC카</td><td>굴착기, 탱크, 전동 휠체어</td></tr>
+    </tbody>
+  </table></div>
+  </details>
+</section>
+
+<div id="panels" hidden>
   <!-- ===== 코드 1: 라인트레이서 ===== -->
-  <div class="panel t-line" role="tabpanel" id="panel-line" aria-labelledby="tab-line">
+  <div class="panel t-line" id="panel-line">
     <div class="panel-head"><span class="tag">코드 1</span><h3>라인트레이서</h3><p>컬러 센서로 바닥의 검은 선을 보고, 선 가장자리를 스스로 따라가요.</p></div>
-    <div class="varmake">
+    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">트랙의 검은 선 <b>가장자리</b>에 컬러 센서가 오도록 로봇을 놓고 시작해요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
+    <div class="part-code varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 1개를 만들어요</p><p class="vm-d">오차는 센서 값이 기준값 60에서 얼마나 벗어났는지 담아 두는 숫자 상자예요. 변수를 먼저 만들어야 '오차 을(를) ~(으)로 설정하기' 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
         <ol class="vm-steps">
@@ -574,7 +705,7 @@ a.btn { text-decoration: none; }
         <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">오차</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '오차'</span></div>
       </div>
     </div>
-    <div class="row wide-code">
+    <div class="part-code row wide-code">
       <div>
         <p class="label">블록 코드</p>
         <div class="code" data-code="line">
@@ -613,7 +744,25 @@ a.btn { text-decoration: none; }
       </div>
     </div>
 
-    <div class="row">
+    <div class="part-run card calib">
+      <p class="label">먼저 기준값 정하기</p>
+      <div class="calib-grid">
+        <ol class="calib-steps">
+          <li>▶ 시작을 눌러 <b>묶음 A</b>가 반사값을 쓰게 해요.</li>
+          <li>센서를 <b>검은 선 위</b>에 놓고 숫자를 적어요.</li>
+          <li>센서를 <b>흰 바닥 위</b>에 놓고 숫자를 적어요.</li>
+          <li>두 숫자의 <b>가운데 값</b>을 오차 블록의 60 자리에 넣어요.</li>
+        </ol>
+        <div class="calc-box">
+          <label for="cal-black">검은 선 <input id="cal-black" type="number" inputmode="numeric" min="0" max="100" value="20"></label>
+          <label for="cal-white">흰 바닥 <input id="cal-white" type="number" inputmode="numeric" min="0" max="100" value="100"></label>
+          <p class="cal-out">기준값 = (<span id="cal-b">20</span> + <span id="cal-w">100</span>) ÷ 2 = <b id="cal-mid">60</b></p>
+          <button class="btn ghost" id="cal-apply" type="button">화면 시뮬레이터에 넣기</button>
+        </div>
+        <div class="cal-console"><p class="vm-k">화면 시뮬레이터의 콘솔 (로봇을 끌어서 값을 확인해요)</p><div class="console" id="l-console" aria-live="off"></div></div>
+      </div>
+    </div>
+    <div class="part-run row">
       <div class="sim">
         <canvas id="cv-line" aria-label="라인트레이서 시뮬레이터. 로봇을 끌어서 옮길 수 있어요."></canvas>
         <div class="ctrls">
@@ -622,7 +771,7 @@ a.btn { text-decoration: none; }
           <span style="font-size:13.5px;color:var(--muted)">로봇을 손가락이나 마우스로 끌어서 옮길 수 있어요.</span>
         </div>
         <div class="sliders">
-          <label class="sl" for="sl-target"><span class="top">기준값 <output id="o-target">60</output></span><input type="range" id="sl-target" min="20" max="95" step="5" value="60"></label>
+          <label class="sl" for="sl-target"><span class="top">기준값 <output id="o-target">60</output></span><input type="range" id="sl-target" min="20" max="95" step="1" value="60"></label>
           <label class="sl" for="sl-gain"><span class="top">곱하는 수 <output id="o-gain">0.4</output></span><input type="range" id="sl-gain" min="0" max="1.5" step="0.1" value="0.4"></label>
           <label class="sl" for="sl-base"><span class="top">기본 속도 <output id="o-base">7</output></span><input type="range" id="sl-base" min="0" max="20" step="1" value="7"></label>
         </div>
@@ -631,7 +780,7 @@ a.btn { text-decoration: none; }
         <div class="card">
           <p class="label">지금 로봇이 계산하는 값</p>
           <div class="formula"><span class="k">반사</span><span class="v" id="l-refl">0</span><span>−</span><span class="v" id="l-target">60</span><span>=</span><span class="k">오차</span><span class="v" id="l-err">0</span></div>
-          <div class="calc">
+          <div class="calc hide-e">
             <div><span>왼쪽 바퀴 = <span id="l-lcalc">7 − 0 × 0.4</span></span><b id="l-lres">7%</b></div>
             <div><span>오른쪽 바퀴 = <span id="l-rcalc">7 + 0 × 0.4</span></span><b id="l-rres">7%</b></div>
           </div>
@@ -640,15 +789,11 @@ a.btn { text-decoration: none; }
           <div class="meters" data-meters="line"></div>
           <div class="motion" id="l-motion">똑바로</div>
         </div>
-        <div class="card">
-          <p class="label">콘솔 · 묶음 A가 0.2초마다 쓴 반사값</p>
-          <div class="console" id="l-console" aria-live="off"></div>
-        </div>
       </div>
     </div>
 
-    <div class="card">
-      <p class="label">센서가 보는 곳에 따라 달라지는 바퀴 속도 (기준값 60, 곱하는 수 0.4)</p>
+    <details class="part-run more hide-e">
+      <summary>예시 값 표 보기 · 센서 위치에 따라 달라지는 바퀴 속도</summary>
       <div class="tbl"><table class="ex">
         <thead><tr><th>센서 위치</th><th>반사</th><th>오차</th><th>왼쪽 바퀴</th><th>오른쪽 바퀴</th><th>움직임</th></tr></thead>
         <tbody>
@@ -660,14 +805,14 @@ a.btn { text-decoration: none; }
         </tbody>
       </table></div>
       <p style="margin:12px 0 0;font-size:14px;color:var(--muted)">실제 반사값은 바닥 종이와 조명에 따라 달라요. 먼저 묶음 A로 검은 선과 흰 바닥의 값을 재고, 두 값의 중간을 기준값으로 정해요. 예) 검은색 20, 흰색 100 → (20 + 100) ÷ 2 = 60</p>
-    </div>
+    </details>
 
-    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p>로봇은 검은 선과 흰 바닥의 <b>경계</b>를 따라가요. 흰색이 보이면 왼쪽으로, 검은색이 보이면 오른쪽으로 꺾으면서요.</p></div>
-    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">조향량 = Kp × e &nbsp;·&nbsp; 왼쪽 = 7 − Kp·e &nbsp;·&nbsp; 오른쪽 = 7 + Kp·e &nbsp;(Kp = 0.4, e = 반사 − 60)</p>
+    <div class="part-code sum-card lv-e"><p class="label">한 줄 정리</p><p>로봇은 검은 선과 흰 바닥의 <b>경계</b>를 따라가요. 흰색이 보이면 왼쪽으로, 검은색이 보이면 오른쪽으로 꺾으면서요.</p></div>
+    <div class="part-run card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">조향량 = Kp × e &nbsp;·&nbsp; 왼쪽 = 7 − Kp·e &nbsp;·&nbsp; 오른쪽 = 7 + Kp·e &nbsp;(Kp = 0.4, e = 반사 − 60)</p>
 <ul><li>시뮬레이터에서 Kp(곱하는 수)를 0.1씩 올리며 지그재그가 시작되는 값을 찾아보세요. 기본 속도를 올리면 그 값이 어떻게 달라지나요?</li>
 <li><b>PD 제어로 바꾸기:</b> 변수 '이전 오차'를 만들고, 조향량 = Kp·e + Kd·(e − 이전 오차)로 계산한 뒤 이전 오차에 e를 넣어요. 흔들림이 줄어들어요.</li>
 <li>컬러 센서를 바퀴에서 더 앞쪽에 달면 앞을 미리 내다보는 효과가 생겨 더 안정적으로 달려요. 왜 그런지 설명해 보세요.</li></ul></div>
-    <div>
+    <div class="part-run">
       <p class="label">도전 과제 · 슬라이더를 바꿔 보고 눌러서 확인해요</p>
       <div class="challenges">
         <details><summary>곱하는 수를 0으로 바꾸면?</summary><p>오차에 0을 곱하면 언제나 0이라서 두 바퀴가 똑같이 7로 돌아요. 로봇이 선을 보지 않고 똑바로만 가다가 선을 벗어나요.</p></details>
@@ -675,12 +820,17 @@ a.btn { text-decoration: none; }
         <details><summary>기본 속도를 20으로 올리면?</summary><p>빨리 달리는 만큼 굽은 길에서 꺾을 시간이 모자라 선을 놓치기 쉬워요. 빠르게 달리려면 곱하는 수도 함께 맞춰야 해요.</p></details>
       </div>
     </div>
+    <div class="part-run help">
+      <p class="label">잘 안 될 때</p>
+      <div class="help-list"><details><summary>로봇이 선 반대쪽으로 빙글빙글 돌아요</summary><p>센서가 선의 다른 쪽 가장자리를 따라가고 있어요. 이동 블록의 <b>7 −</b> 와 <b>7 +</b> 를 서로 바꿔 보세요.</p></details><details><summary>굽은 길에서 선을 놓쳐요</summary><p>기준값을 다시 재고, 기본 속도 7을 5 정도로 낮춰 보세요. 곱하는 수를 조금 키워도 좋아요.</p></details><details><summary>똑바로만 가고 꺾지 않아요</summary><p>오차 설정 블록과 이동 블록에 같은 변수 <b>오차</b>가 들어갔는지, 곱하는 수가 0이 아닌지 확인해요.</p></details><details><summary>바퀴가 거꾸로 돌아요</summary><p>모터 방향이 반대로 끼워졌을 수 있어요. 이동 블록의 숫자 앞에 − 를 붙이거나 두 칸을 바꿔 보세요.</p></details></div>
+    </div>
   </div>
 
   <!-- ===== 코드 2: 키보드 ===== -->
-  <div class="panel t-key" role="tabpanel" id="panel-key" aria-labelledby="tab-key" hidden>
+  <div class="panel t-key" id="panel-key" hidden>
     <div class="panel-head"><span class="tag">코드 2</span><h3>키보드 조종</h3><p>화살표 키로 속도와 회전을 정하고, 두 값을 더하고 빼서 바퀴 속도를 만들어요.</p></div>
-    <div class="varmake">
+    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">키보드 화살표 키를 누르고 있는 동안 움직여요. 키가 안 먹으면 코딩 화면을 한 번 누른 뒤 다시 눌러요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
+    <div class="part-code varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 2개를 만들어요</p><p class="vm-d">속도는 앞뒤로 가는 빠르기, 회전은 왼쪽·오른쪽으로 도는 정도를 담는 숫자 상자예요. 두 변수를 먼저 만들어야 설정하기 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
         <ol class="vm-steps">
@@ -691,7 +841,7 @@ a.btn { text-decoration: none; }
         <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">속도</span><span class="rep r-var">회전</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '속도' · '회전'</span></div>
       </div>
     </div>
-    <div class="row">
+    <div class="part-code row">
       <div>
         <p class="label">블록 코드</p>
         <div class="code" data-code="keyboard">
@@ -736,7 +886,7 @@ a.btn { text-decoration: none; }
       </div>
     </div>
 
-    <div class="row">
+    <div class="part-run row">
       <div class="sim">
         <canvas id="cv-key" aria-label="키보드 조종 시뮬레이터"></canvas>
         <div class="kb-row">
@@ -758,7 +908,7 @@ a.btn { text-decoration: none; }
         <div class="card">
           <p class="label">변수 상자</p>
           <div class="formula"><span class="k">속도</span><span class="v" id="k-speed">0</span><span class="k">회전</span><span class="v" id="k-turn">0</span></div>
-          <div class="calc">
+          <div class="calc hide-e">
             <div><span>왼쪽 바퀴 = 속도 + 회전 = <span id="k-lcalc">0 + 0</span></span><b id="k-lres">0%</b></div>
             <div><span>오른쪽 바퀴 = 속도 − 회전 = <span id="k-rcalc">0 − 0</span></span><b id="k-rres">0%</b></div>
           </div>
@@ -767,8 +917,12 @@ a.btn { text-decoration: none; }
           <div class="meters" data-meters="key"></div>
           <div class="motion" id="k-motion">멈춤</div>
         </div>
-        <div class="card">
-          <div class="tbl"><table class="ex">
+      </div>
+    </div>
+
+    <details class="part-run more hide-e">
+      <summary>예시 값 표 보기 · 누른 키에 따라 달라지는 바퀴 속도</summary>
+      <div class="tbl"><table class="ex">
             <thead><tr><th>누른 키</th><th>속도</th><th>회전</th><th>왼쪽</th><th>오른쪽</th><th>움직임</th></tr></thead>
             <tbody id="k-table">
               <tr data-combo=""><td>없음</td><td>0</td><td>0</td><td>0</td><td>0</td><td>멈춤</td></tr>
@@ -780,16 +934,14 @@ a.btn { text-decoration: none; }
               <tr data-combo="up+right"><td>↑ + →</td><td>40</td><td>20</td><td>60</td><td>20</td><td>오른쪽으로 꺾으며 앞으로</td></tr>
             </tbody>
           </table></div>
-        </div>
-      </div>
-    </div>
+    </details>
 
-    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p>화살표 키가 <b>운전대와 페달</b>이에요. 키에서 손을 떼면 로봇이 멈춰요.</p></div>
-    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">왼쪽 = v + ω &nbsp;·&nbsp; 오른쪽 = v − ω &nbsp;(v = 속도, ω = 회전)</p>
+    <div class="part-code sum-card lv-e"><p class="label">한 줄 정리</p><p>화살표 키가 <b>운전대와 페달</b>이에요. 키에서 손을 떼면 로봇이 멈춰요.</p></div>
+    <div class="part-run card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">왼쪽 = v + ω &nbsp;·&nbsp; 오른쪽 = v − ω &nbsp;(v = 속도, ω = 회전)</p>
 <ul><li>키보드는 눌렀다/안 눌렀다만 아는 디지털 입력이라 속도가 0에서 40으로 갑자기 바뀌어요.</li>
 <li><b>부드럽게 출발하기:</b> 변수 '목표 속도'를 만들고 반복마다 속도 = 속도 + (목표 속도 − 속도) × 0.2로 바꾸면 천천히 빨라지는 가속 효과가 생겨요.</li>
 <li>'만약 ~ (이)라면, 아니면'으로 바꿔 왼쪽 키가 우선이 되게 하려면 블록을 어떻게 배치해야 할까요?</li></ul></div>
-    <div>
+    <div class="part-run">
       <p class="label">도전 과제 · 직접 눌러 보고 확인해요</p>
       <div class="challenges">
         <details><summary>← 와 → 를 동시에 누르면?</summary><p>왼쪽 블록이 회전을 −20으로 바꾼 다음, 오른쪽 블록이 다시 20으로 바꿔요. 그래서 오른쪽으로 돌아요. 블록의 <b>순서</b>가 결과를 바꿔요.</p></details>
@@ -797,13 +949,18 @@ a.btn { text-decoration: none; }
         <details><summary>뒤로 가면서 ← 를 누르면?</summary><p>속도 −30, 회전 −20이라 왼쪽 바퀴 −50, 오른쪽 바퀴 −10이에요. 두 바퀴 모두 뒤로 돌지만 왼쪽이 더 빨라서 휘어지며 후진해요.</p></details>
       </div>
     </div>
+    <div class="part-run help">
+      <p class="label">잘 안 될 때</p>
+      <div class="help-list"><details><summary>손을 떼도 계속 움직여요</summary><p><b>속도 = 0, 회전 = 0</b> 블록이 무한 반복 안쪽 맨 위에 있는지 확인해요.</p></details><details><summary>왼쪽 키를 눌렀는데 오른쪽으로 돌아요</summary><p>이동 블록의 앞 칸이 <b>속도 + 회전</b>, 뒤 칸이 <b>속도 − 회전</b>인지 확인해요.</p></details><details><summary>키를 눌러도 안 움직여요</summary><p>▶ 시작을 눌렀는지, 변수 이름이 <b>속도 · 회전</b>으로 똑같은지 확인해요.</p></details><details><summary>바퀴가 거꾸로 돌아요</summary><p>모터 방향이 반대로 끼워졌을 수 있어요. 이동 블록의 숫자 앞에 − 를 붙이거나 두 칸을 바꿔 보세요.</p></details></div>
+    </div>
   </div>
 
   <!-- ===== 코드 3: 조이스틱 ===== -->
-  <div class="panel t-joy" role="tabpanel" id="panel-joy" aria-labelledby="tab-joy" hidden>
+  <div class="panel t-joy" id="panel-joy" hidden>
     <div class="panel-head"><span class="tag">코드 3</span><h3>조이스틱 조종</h3><p>컨트롤러의 두 레버가 두 바퀴와 하나씩 짝을 이뤄요. 코드가 가장 짧아요.</p></div>
-    <div class="varmake none"><div class="vm-head"><span class="vm-no">변수 없음</span><div><p class="vm-t">이 코드는 변수를 만들지 않아도 돼요</p><p class="vm-d">레버 위치를 바퀴에 바로 보내서 숫자를 담아 둘 상자가 필요 없어요. 바로 블록을 쌓으면 돼요.</p></div></div></div>
-    <div class="row">
+    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">컨트롤러의 두 레버를 앞뒤로 밀어서 운전해요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
+    <div class="part-code varmake none"><div class="vm-head"><span class="vm-no">변수 없음</span><div><p class="vm-t">이 코드는 변수를 만들지 않아도 돼요</p><p class="vm-d">레버 위치를 바퀴에 바로 보내서 숫자를 담아 둘 상자가 필요 없어요. 바로 블록을 쌓으면 돼요.</p></div></div></div>
+    <div class="part-code row">
       <div>
         <p class="label">블록 코드</p>
         <div class="code" data-code="joystick">
@@ -831,7 +988,7 @@ a.btn { text-decoration: none; }
       </div>
     </div>
 
-    <div class="row">
+    <div class="part-run row">
       <div class="sim">
         <canvas id="cv-joy" aria-label="조이스틱 조종 시뮬레이터"></canvas>
         <div class="levers">
@@ -860,7 +1017,7 @@ a.btn { text-decoration: none; }
       <div class="live">
         <div class="card">
           <p class="label">레버 → 바퀴</p>
-          <div class="calc">
+          <div class="calc hide-e">
             <div><span>왼쪽 바퀴 = 왼쪽 레버 위치</span><b id="j-lres">0%</b></div>
             <div><span>오른쪽 바퀴 = 오른쪽 레버 위치</span><b id="j-rres">0%</b></div>
           </div>
@@ -869,8 +1026,12 @@ a.btn { text-decoration: none; }
           <div class="meters" data-meters="joy"></div>
           <div class="motion" id="j-motion">멈춤</div>
         </div>
-        <div class="card">
-          <div class="tbl"><table class="ex">
+      </div>
+    </div>
+
+    <details class="part-run more hide-e">
+      <summary>예시 값 표 보기 · 레버 위치에 따른 움직임</summary>
+      <div class="tbl"><table class="ex">
             <thead><tr><th>왼쪽 레버</th><th>오른쪽 레버</th><th>움직임</th></tr></thead>
             <tbody>
               <tr><td>가운데 0</td><td>가운데 0</td><td>멈춤</td></tr>
@@ -881,44 +1042,30 @@ a.btn { text-decoration: none; }
               <tr><td>앞으로 많이</td><td>앞으로 조금</td><td>오른쪽으로 꺾으며 앞으로</td></tr>
             </tbody>
           </table></div>
-        </div>
-      </div>
-    </div>
+    </details>
 
-    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p><b>왼손은 왼쪽 바퀴, 오른손은 오른쪽 바퀴!</b> 두 레버를 함께 밀면 앞으로 가요.</p></div>
-    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">탱크 드라이브: 왼쪽 = 왼쪽 레버, 오른쪽 = 오른쪽 레버 &nbsp;→&nbsp; 아케이드 드라이브: 왼쪽 = 레버1 + 레버2, 오른쪽 = 레버1 − 레버2</p>
+    <div class="part-code sum-card lv-e"><p class="label">한 줄 정리</p><p><b>왼손은 왼쪽 바퀴, 오른손은 오른쪽 바퀴!</b> 두 레버를 함께 밀면 앞으로 가요.</p></div>
+    <div class="part-run card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">탱크 드라이브: 왼쪽 = 왼쪽 레버, 오른쪽 = 오른쪽 레버 &nbsp;→&nbsp; 아케이드 드라이브: 왼쪽 = 레버1 + 레버2, 오른쪽 = 레버1 − 레버2</p>
 <ul><li>레버는 미는 만큼 값이 변하는 아날로그 입력이라 속도를 세밀하게 조절할 수 있어요.</li>
 <li><b>데드존 만들기:</b> 손을 떼도 레버 값이 정확히 0이 아닐 수 있어요. '만약 레버 위치의 절댓값이 5보다 작다면 0으로' 처리하면 로봇이 저절로 움직이지 않아요.</li>
 <li>아케이드 방식으로 바꾸면 두 값을 더했을 때 100을 넘을 수 있어요. 어떻게 처리하면 좋을까요?</li></ul></div>
-    <div>
+    <div class="part-run">
       <p class="label">도전 과제 · 레버를 움직여 확인해요</p>
       <div class="challenges">
         <details><summary>왼쪽 레버만 앞으로 밀면?</summary><p>오른쪽 바퀴는 멈춰 있고 왼쪽 바퀴만 돌아서, 멈춘 오른쪽 바퀴를 중심으로 오른쪽으로 빙글 돌아요.</p></details>
         <details><summary>두 레버를 조금씩만 밀면?</summary><p>레버를 미는 만큼 숫자가 정해지니까 천천히 움직여요. 키보드 코드는 속도가 40으로 정해져 있지만, 레버는 속도를 자유롭게 조절할 수 있어요.</p></details>
         <details><summary>레버를 바꿔 끼운 것처럼 하려면?</summary><p>이동 블록의 두 칸을 바꿔서 <b>오른쪽 레버 위치, 왼쪽 레버 위치</b> 순서로 넣으면 돼요. 앞으로는 똑같이 가지만 회전 방향이 반대가 돼요.</p></details>
       </div>
+      <div class="part-run help">
+      <p class="label">잘 안 될 때</p>
+      <div class="help-list"><details><summary>레버를 움직여도 안 움직여요</summary><p>컨트롤러도 더블 모터처럼 <b>연결(페어링)</b>했는지 확인해요.</p></details><details><summary>방향이 반대로 가요</summary><p>이동 블록의 두 칸을 확인해요. 앞 칸은 <b>왼쪽</b> 레버, 뒤 칸은 <b>오른쪽</b> 레버예요.</p></details><details><summary>가만히 있어도 조금씩 움직여요</summary><p>레버가 가운데로 완전히 돌아왔는지 확인하고, 정지 버튼으로 멈춘 뒤 다시 시작해요.</p></details><details><summary>바퀴가 거꾸로 돌아요</summary><p>모터 방향이 반대로 끼워졌을 수 있어요. 이동 블록의 숫자 앞에 − 를 붙이거나 두 칸을 바꿔 보세요.</p></details></div>
     </div>
   </div>
-</section>
-
-<!-- ================= 비교 ================= -->
-<section aria-labelledby="h-cmp">
-  <div class="sec-head"><h2 id="h-cmp">한눈에 비교</h2><p>세 코드를 한눈에 비교해요</p></div>
-  <div class="cmp"><table>
-    <thead><tr><th scope="col"><span class="sr" style="position:absolute;left:-9999px">항목</span></th><th scope="col">코드 1 라인트레이서</th><th scope="col">코드 2 키보드 조종</th><th scope="col">코드 3 조이스틱 조종</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">입력</th><td>컬러 센서 반사값</td><td>키보드 화살표 키 4개</td><td>컨트롤러 레버 2개</td></tr>
-      <tr><th scope="row">누가 판단해요?</th><td><b>로봇이 스스로</b> (자율 주행)</td><td>사람이 (원격 조종)</td><td>사람이 (원격 조종)</td></tr>
-      <tr><th scope="row">왼쪽 바퀴</th><td><code>7 − 오차 × 0.4</code></td><td><code>속도 + 회전</code></td><td><code>왼쪽 레버 위치</code></td></tr>
-      <tr><th scope="row">오른쪽 바퀴</th><td><code>7 + 오차 × 0.4</code></td><td><code>속도 − 회전</code></td><td><code>오른쪽 레버 위치</code></td></tr>
-      <tr><th scope="row">변수</th><td>오차</td><td>속도, 회전</td><td>없음</td></tr>
-      <tr><th scope="row">속도 조절</th><td>오차에 따라 계속 바뀌어요</td><td>정해진 값만 (40, −30, ±20)</td><td>미는 만큼 자유롭게</td></tr>
-      <tr><th scope="row">닮은 기술</th><td>자율주행 자동차, 물류 창고 로봇</td><td>게임 캐릭터, RC카</td><td>굴착기, 탱크, 전동 휠체어</td></tr>
-    </tbody>
-  </table></div>
-</section>
+  </div>
+</div>
 
 </main>
+
 
 <footer class="wrap">
   <p><b>2026 여주교육 페스타</b> · 과학·인공지능 놀이터 코딩 체험<br>레고 CS&amp;AI 피지컬 컴퓨팅 블록 코드 설명</p>
@@ -1203,7 +1350,7 @@ a.btn { text-decoration: none; }
   }
   const keyMap = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
   window.addEventListener('keydown', e => {
-    if (current !== 'keyboard' || !keyMap[e.key]) return;
+    if (step !== 'run' || current !== 'keyboard' || !keyMap[e.key]) return;
     if (e.target.closest && e.target.closest('input, textarea, [role="slider"]')) return;
     e.preventDefault(); KS.keys[keyMap[e.key]] = true;
   });
@@ -1261,25 +1408,65 @@ a.btn { text-decoration: none; }
   }
   window.addEventListener('resize', () => { lvL.set(lvL.v); lvR.set(lvR.v); });
 
-  /* ---------- 탭 ---------- */
-  const tabs = { line: ['tab-line', 'panel-line'], keyboard: ['tab-key', 'panel-key'], joystick: ['tab-joy', 'panel-joy'] };
-  let current = 'line';
+  /* ---------- 코드 선택 ---------- */
+  const CODES = { line: ['panel-line', '라인트레이서', '더블 모터 + 컬러 센서'], keyboard: ['panel-key', '키보드 조종', '더블 모터'], joystick: ['panel-joy', '조이스틱 조종', '더블 모터 + 컨트롤러'] };
+  let current = 'line', step = 'pick';
   function show(name) {
-    if (!tabs[name]) name = 'line';
-    current = name;
-    Object.entries(tabs).forEach(([k, [t, p]]) => {
-      const on = k === name; const tb = document.getElementById(t);
-      tb.setAttribute('aria-selected', on); document.getElementById(p).hidden = !on;
-    });
+    if (!CODES[name]) name = 'line';
+    current = name; document.body.dataset.code = name;
+    Object.entries(CODES).forEach(([k, [pid]]) => { document.getElementById(pid).hidden = k !== name; });
+    $$('.zone-card').forEach(c => c.setAttribute('aria-pressed', c.dataset.tab === name));
+    $('#need-hw').textContent = CODES[name][2]; $('#done-code').textContent = CODES[name][1];
     Object.keys(KS.keys).forEach(k => KS.keys[k] = false);
-    if (name === 'joystick') { lvL.set(lvL.v); lvR.set(lvR.v); }
+    try { localStorage.setItem('lego-code', name); } catch (e) {}
   }
-  $$('[role="tab"]').forEach(tb => {
-    tb.addEventListener('click', () => { const n = tb.dataset.tab; if (location.hash !== '#' + n) history.replaceState(null, '', '#' + n); show(n); });
+  /* ---------- 단계 ---------- */
+  const ORDER = ['pick', 'build', 'connect', 'code', 'run', 'done'];
+  const panelsBox = $('#panels');
+  function go(name, scroll = true) {
+    if (!ORDER.includes(name)) name = 'pick';
+    step = name; document.body.dataset.step = name;
+    $$('.screen').forEach(sc => { sc.hidden = sc.dataset.screen !== name; });
+    const slot = $(`.screen[data-screen="${name}"] .panel-slot`);
+    if (slot) { slot.appendChild(panelsBox); panelsBox.hidden = false; } else panelsBox.hidden = true;
+    const idx = ORDER.indexOf(name);
+    $$('.sb-steps button').forEach(b => {
+      const i = ORDER.indexOf(b.dataset.to);
+      if (i === idx) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      b.classList.toggle('passed', i < idx);
+    });
+    if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+    if (name === 'run' && current === 'joystick') requestAnimationFrame(() => { lvL.set(lvL.v); lvR.set(lvR.v); });
+    if (scroll) window.scrollTo({ top: Math.max(0, $('.stepbar').offsetTop - 2), behavior: 'auto' });
+    const cur = $('.sb-steps [aria-current="step"]'); if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-to]'); if (!t) return;
+    go(t.dataset.to);
   });
-  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
-  show(location.hash.slice(1) || 'line');
+  $$('.zone-card').forEach(c => c.addEventListener('click', () => { show(c.dataset.tab); go('build'); }));
+  $$('.checklist li').forEach(li => li.addEventListener('click', () => li.classList.toggle('ok')));
+  function home() {
+    $$('.checklist li').forEach(li => li.classList.remove('ok'));
+    lineReset(); KS.robot = { x: 110, y: 200, th: 0 }; JS.robot = { x: 110, y: 200, th: 0 };
+    $$('details[open]').forEach(d => d.open = false);
+    show('line'); go('pick');
+  }
+  $('#go-home').addEventListener('click', home); $('#go-home2').addEventListener('click', home);
+  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h !== step) go(h); });
+  let savedCode = 'line'; try { savedCode = localStorage.getItem('lego-code') || 'line'; } catch (e) {}
+  show(savedCode); go(location.hash.slice(1) || 'pick', false);
 
+  /* ---------- 기준값 계산 ---------- */
+  function calib() {
+    const bv = clamp(+$('#cal-black').value || 0, 0, 100), wv = clamp(+$('#cal-white').value || 0, 0, 100);
+    $('#cal-b').textContent = bv; $('#cal-w').textContent = wv; const mid = Math.round((bv + wv) / 2);
+    $('#cal-mid').textContent = mid; return mid;
+  }
+  ['#cal-black', '#cal-white'].forEach(id => $(id).addEventListener('input', calib));
+  $('#cal-apply').addEventListener('click', () => {
+    const inp = $('#sl-target'); inp.value = clamp(calib(), 20, 95); inp.dispatchEvent(new Event('input'));
+  });
 
   /* ---------- 설명 수준 ---------- */
   function setLevel(lv) {
@@ -1299,6 +1486,7 @@ a.btn { text-decoration: none; }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (step !== 'run') { requestAnimationFrame(frame); return; }
     if (current === 'line') {
       if (LS.running && !LS.drag) {
         let t = dt; while (t > 1e-6) { const h = Math.min(t, 1 / 240); lineStep(h); t -= h; }
