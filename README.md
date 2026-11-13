@@ -11,6 +11,7 @@
 | [ai-lesson2](ai-lesson2/) | 인공지능 2차시 | Ⅳ. 인공지능 · 1. 인공지능과 학습 · 2차시 | ① 결과 모양으로 분류·회귀·군집 구분하기 ② 티처블 머신으로 바른 자세 판별 모델 만들기(학습용 그림 40장·테스트 5장 제공) ③ 데이터 진단 클리닉 ④ 학습 실험실(평가 방법·데이터 양·다양성에 따라 학습 결과가 달라지는 시뮬레이션) ⑤ 수행평가 문항 2 형식의 개선 방안 쓰기(반별 패들렛 제출) — 2차시 PPT 순서와 같음 |
 | [ai-lesson3](ai-lesson3/) | 인공지능 3차시 | Ⅳ. 인공지능 · 2. 인공지능과 문제 해결 · 3차시 | ① 개인 정보 동의서 고치기(필요한 항목·목적·보유 기간) ② 데이터 편향 탐지기(O/X와 이유) ③ 수행평가 문항 4(2) 형식의 편향 피해와 해결 방안 쓰기(자가 점검표·예시답안·반별 패들렛 제출) — 3차시 PPT 순서와 같음 |
 | [ai-practice](ai-practice/) | AI 급식 도우미 연습문제 | Ⅳ. 인공지능 · 수행평가(논술형) 대비 | 연습문제 4문항(AI 급식 도우미 사례). 컴퓨터 탭: 직접 쓰고 '답안 확인하기'로 평가기준 예상 점수·부족한 점 확인, 예시답안 보기 / 스마트폰 탭: 문항 1은 고른 두 특성에 맞춘 빈칸 채우기, 문항 2는 문장 조각을 번호 칸에 배열, 문항 3·4는 낱말 카드 빈칸 채우기 |
+| [lego-coding](lego-coding/) | 레고 로봇 코드 탐험 | 2026 여주교육 FESTA · Science & AI PLAYGROUND 코딩 체험 | 레고 CS&AI 피지컬 컴퓨팅 블록 코드 3가지(컬러 센서 라인트레이서 · 키보드 조종 · 조이스틱 조종) 설명. 블록을 누르면 설명과 짝이 표시되고, 시뮬레이터에서 슬라이더·화살표 키·레버로 직접 움직여 봄 |
 | [lesson-timer](lesson-timer/) | 수업 타이머 | 교사용 (모든 차시) | 도입·전개·정리 활동별 타이머, 원형 타이머·작게 보기·예약 시작. 윈도우 exe와 웹 버전 |
 
 ## GitHub Pages 주소
@@ -23,6 +24,7 @@ Pages를 켜면 각 사이트는 아래 형식의 주소로 열립니다.
 - `https://kyeongsoon.github.io/info/ai-lesson2/`
 - `https://kyeongsoon.github.io/info/ai-lesson3/`
 - `https://kyeongsoon.github.io/info/ai-practice/`
+- `https://kyeongsoon.github.io/info/lego-coding/`
 - `https://kyeongsoon.github.io/info/lesson-timer/`
 
 ## 반별 패들렛 연결 (ai-lesson1, ai-lesson2, ai-lesson3)
