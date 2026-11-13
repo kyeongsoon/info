@@ -546,6 +546,49 @@ body[data-level="e"] .hide-e { display: none !important; }
 .done-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
 .done-btns .btn { --acc: var(--blue); font-size: 17px; padding: 10px 22px; min-height: 50px; }
 
+.sb-steps { counter-reset: sb; }
+.sb-steps li { counter-increment: sb; }
+.sb-n::before { content: counter(sb); }
+.run-guide { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 860px) { .run-guide { grid-template-columns: minmax(0, 1fr); } }
+.rg-item { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 2px solid var(--line); border-radius: 18px; padding: 14px 16px; }
+.rg-item.safe { border-color: var(--red); }
+.rg-item b { display: block; color: var(--ink); font-size: 17px; }
+.rg-item span { font-size: 14.5px; }
+.rg-item em { font-style: normal; font-weight: 800; color: var(--ink); }
+.rg-ico { flex: none; width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; font: 800 24px/1 var(--f-latin); }
+.rg-ico.go { background: #1ea64a; } .rg-ico.stop { background: #d93a3a; } .rg-ico.warn { background: var(--yellow); color: #1b1b1b; border-radius: 50%; }
+.rg-ico .tri { border-left: 15px solid #fff; border-block: 10px solid transparent; margin-left: 4px; }
+.rg-ico .sq { width: 16px; height: 16px; background: #fff; border-radius: 2px; }
+.rg-tip { margin: 0; font-weight: 700; color: var(--ink); background: var(--panel); border-radius: 14px; padding: 10px 16px; }
+
+.cal-prep { background: var(--orange-soft); border-radius: 20px; padding: 14px 18px; display: grid; gap: 6px; }
+.cal-prep p { margin: 0; color: var(--ink); }
+.cal-warn { color: var(--text) !important; font-size: 15px; }
+.cal-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; counter-reset: cs; }
+@media (max-width: 860px) { .cal-steps { grid-template-columns: minmax(0, 1fr); } }
+.cal-steps li { counter-increment: cs; position: relative; background: var(--paper); border: 3px solid var(--orange); border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.cal-steps li::before { content: counter(cs); position: absolute; left: 14px; top: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--orange); color: #fff; display: grid; place-items: center; font: 400 17px/1 var(--f-display); z-index: 1; }
+.cal-steps b { font-size: 18px; color: var(--ink); }
+.cal-steps li > span { font-size: 14.5px; }
+.cal-pic { position: relative; height: 96px; border-radius: 14px; background: #eef1f5; overflow: hidden; margin-bottom: 4px; }
+.cal-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 34px; background: #fff; border-top: 1px solid #d5dae3; }
+.cal-pic.black .cal-floor { background: linear-gradient(90deg, #fff 0 30%, #1d1d1f 30% 70%, #fff 70%); }
+.cal-pic.half .cal-floor { background: linear-gradient(90deg, #fff 0 50%, #1d1d1f 50% 90%, #fff 90%); }
+.cal-sensor { position: absolute; left: 50%; bottom: 40px; width: 44px; height: 30px; margin-left: -22px; border-radius: 8px; background: #e0685c; border: 2px solid #c24d42; }
+.cal-sensor::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 3px; height: 10px; margin-left: -1.5px; background: #ff4d4d; box-shadow: 0 6px 10px 3px rgba(255,77,77,.5); }
+.cal-in { margin-top: auto; display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--ink); }
+.cal-in input { flex: 1; min-width: 0; font: 800 26px/1 var(--f-latin); color: var(--ink); background: var(--paper); border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; font-variant-numeric: tabular-nums; }
+.cal-in input:focus { border-color: var(--orange); outline: none; }
+.cal-out { margin: auto 0 0; font: 800 22px/1.3 var(--f-latin); color: var(--ink); font-variant-numeric: tabular-nums; }
+.cal-out b { font-size: 34px; color: var(--orange); }
+.cal-msg { margin: 0; font-weight: 700; color: var(--ink); background: var(--panel); border-radius: 14px; padding: 12px 16px; }
+.cal-msg.warn { background: var(--orange-soft); }
+.cal-msg.good { background: var(--green-soft); }
+.cal-result { --acc: var(--orange); }
+.cal-code { padding: 18px 22px; align-items: flex-start; }
+.cal-num { min-width: 44px; font-size: 16px; box-shadow: 0 0 0 3px var(--orange); }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -559,7 +602,7 @@ body[data-level="e"] .hide-e { display: none !important; }
   <h1>피지컬 <span class="blue">컴퓨팅</span></h1>
   <p class="brush">센서로 느끼고, 코드로 생각하고, 모터로 움직여요!</p>
 </header>
-<nav class="stepbar" aria-label="체험 단계"><div class="wrap sb-in"><ol class="sb-steps"><li><button type="button" data-to="pick"><span class="sb-n">1</span><span class="sb-l">코드 고르기</span></button></li><li><button type="button" data-to="build"><span class="sb-n">2</span><span class="sb-l">조립하기</span></button></li><li><button type="button" data-to="connect"><span class="sb-n">3</span><span class="sb-l">연결하기</span></button></li><li><button type="button" data-to="code"><span class="sb-n">4</span><span class="sb-l">코딩하기</span></button></li><li><button type="button" data-to="run"><span class="sb-n">5</span><span class="sb-l">작동하기</span></button></li></ol><div class="sb-right"><div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div><button type="button" class="home" id="go-home">처음으로</button></div></div></nav>
+<nav class="stepbar" aria-label="체험 단계"><div class="wrap sb-in"><ol class="sb-steps"><li><button type="button" data-to="pick"><span class="sb-n"></span><span class="sb-l">코드 고르기</span></button></li><li><button type="button" data-to="build"><span class="sb-n"></span><span class="sb-l">조립하기</span></button></li><li><button type="button" data-to="connect"><span class="sb-n"></span><span class="sb-l">연결하기</span></button></li><li><button type="button" data-to="code"><span class="sb-n"></span><span class="sb-l">코딩하기</span></button></li><li data-for="line"><button type="button" data-to="calib"><span class="sb-n"></span><span class="sb-l">기준값 재기</span></button></li><li><button type="button" data-to="run"><span class="sb-n"></span><span class="sb-l">작동하기</span></button></li></ol><div class="sb-right"><div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div><button type="button" class="home" id="go-home">처음으로</button></div></div></nav>
 
 <main class="wrap" id="main">
 
@@ -653,14 +696,57 @@ body[data-level="e"] .hide-e { display: none !important; }
   </div>
   <div class="drive-cards" id="drive-cards"></div>
   </details>
-  <div class="nav"><button type="button" class="btn ghost" data-to="connect">← 이전</button><button type="button" class="btn next" data-to="run">다음: 작동하기 →</button></div>
+  <div class="nav"><button type="button" class="btn ghost" data-to="connect">← 이전</button><button type="button" class="btn next" data-to="calib">다음 단계로 →</button></div>
+</section>
+
+<!-- ===== 기준값 재기 (라인트레이서) ===== -->
+<section class="screen t-line" data-screen="calib" aria-labelledby="h-calib" hidden>
+  <div class="scr-head"><span class="scr-no">5</span><div><h2 id="h-calib">기준값 재기</h2><p>트랙마다 검은색과 흰색 숫자가 달라요. 내 트랙에 맞는 기준값을 먼저 정해요.</p></div></div>
+  <div class="cal-prep">
+    <p><b>준비</b> 코딩하기에서 만든 코드를 <b>▶ 시작</b>으로 실행해요. 묶음 A의 '반사 쓰기'가 반사값을 0.2초마다 화면에 써요.</p>
+    <p class="cal-warn">로봇이 움직일 수 있으니 <b>손으로 꼭 잡고</b> 센서만 바닥 가까이 대서 재요. 다 재면 <b>■ 정지</b>를 눌러요.</p>
+  </div>
+  <ol class="cal-steps">
+    <li>
+      <div class="cal-pic black" aria-hidden="true"><span class="cal-sensor"></span><span class="cal-floor"></span></div>
+      <b>검은 선 위 값</b>
+      <span>센서를 검은 선 한가운데에 대고, 화면에 나오는 숫자를 적어요.</span>
+      <label class="cal-in" for="cal-black">검은 선 <input id="cal-black" type="number" inputmode="numeric" min="0" max="100" placeholder="예: 20"></label>
+    </li>
+    <li>
+      <div class="cal-pic white" aria-hidden="true"><span class="cal-sensor"></span><span class="cal-floor"></span></div>
+      <b>흰 바닥 값</b>
+      <span>센서를 흰 바닥 위에 대고, 화면에 나오는 숫자를 적어요.</span>
+      <label class="cal-in" for="cal-white">흰 바닥 <input id="cal-white" type="number" inputmode="numeric" min="0" max="100" placeholder="예: 100"></label>
+    </li>
+    <li>
+      <div class="cal-pic half" aria-hidden="true"><span class="cal-sensor"></span><span class="cal-floor"></span></div>
+      <b>두 값의 가운데</b>
+      <span>두 숫자를 더해서 2로 나누면 선 가장자리의 값이에요.</span>
+      <p class="cal-out">(<span id="cal-b">?</span> + <span id="cal-w">?</span>) ÷ 2 = <b id="cal-mid">?</b></p>
+    </li>
+  </ol>
+  <p class="cal-msg" id="cal-msg" role="status">검은 선과 흰 바닥의 숫자를 적어 보세요. 숫자가 조금씩 바뀌면 가장 자주 나오는 숫자를 적어요.</p>
+  <div class="cal-result">
+    <p class="label">이 숫자를 오차 블록의 60 자리에 넣어요</p>
+    <div class="code cal-code"><div class="b var" style="cursor:default"><span class="dd">오차</span> 을(를) <span class="rep r-op"><span class="rep r-sen">반사</span><span class="dd">−</span><span class="num cal-num" id="cal-num">60</span></span> (으)로 설정하기</div></div>
+  </div>
+  <div class="nav"><button type="button" class="btn ghost" data-to="code">← 이전</button><button type="button" class="btn next" data-to="run">다음: 작동하기 →</button></div>
 </section>
 
 <!-- ===== 5 작동하기 ===== -->
 <section class="screen" data-screen="run" aria-labelledby="h-run" hidden>
   <div class="scr-head"><span class="scr-no">5</span><div><h2 id="h-run">작동시켜 보기</h2><p>진짜 로봇을 움직여 보고, 화면 시뮬레이터로 숫자를 바꿔 실험해요.</p></div></div>
+  <div class="run-guide">
+    <div class="rg-item"><span class="rg-ico go" aria-hidden="true"><i class="tri"></i></span><div><b>시작 ▶</b><span>코딩 화면의 ▶ 시작 버튼을 누르면 '▶ 을(를) 클릭했을 때' 블록부터 코드가 실행돼요.</span></div></div>
+    <div class="rg-item"><span class="rg-ico stop" aria-hidden="true"><i class="sq"></i></span><div><b>정지 ■</b><span>■ 정지 버튼을 누르면 코드가 멈추고 로봇도 멈춰요. 코드를 고친 뒤에는 <em>정지 → 시작</em> 순서로 다시 실행해요.</span></div></div>
+    <div class="rg-item safe"><span class="rg-ico warn" aria-hidden="true">!</span><div><b>안전하게</b><span>책상 끝에서는 로봇을 손으로 잡아 주세요. 로봇을 들어 올리거나 옮길 때는 먼저 정지해요. 돌아가는 바퀴에 손가락이나 머리카락이 끼지 않게 조심해요.</span></div></div>
+  </div>
+  <p class="rg-tip" data-for="line">트랙의 검은 선 <b>가장자리</b>에 컬러 센서가 오도록 로봇을 놓고 시작해요.</p>
+  <p class="rg-tip" data-for="keyboard">키보드 화살표 키를 누르고 있는 동안 움직여요. 키가 안 먹으면 코딩 화면을 한 번 누른 뒤 다시 눌러요.</p>
+  <p class="rg-tip" data-for="joystick">컨트롤러의 두 레버를 앞뒤로 밀어서 운전해요.</p>
   <div class="panel-slot"></div>
-  <div class="nav"><button type="button" class="btn ghost" data-to="code">← 이전</button><button type="button" class="btn next" data-to="done">체험 완료 →</button></div>
+  <div class="nav"><button type="button" class="btn ghost" data-to="calib">← 이전</button><button type="button" class="btn next" data-to="done">체험 완료 →</button></div>
 </section>
 
 <!-- ===== 완료 ===== -->
@@ -693,7 +779,6 @@ body[data-level="e"] .hide-e { display: none !important; }
   <!-- ===== 코드 1: 라인트레이서 ===== -->
   <div class="panel t-line" id="panel-line">
     <div class="panel-head"><span class="tag">코드 1</span><h3>라인트레이서</h3><p>컬러 센서로 바닥의 검은 선을 보고, 선 가장자리를 스스로 따라가요.</p></div>
-    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">트랙의 검은 선 <b>가장자리</b>에 컬러 센서가 오도록 로봇을 놓고 시작해요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
     <div class="part-code varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 1개를 만들어요</p><p class="vm-d">오차는 센서 값이 기준값 60에서 얼마나 벗어났는지 담아 두는 숫자 상자예요. 변수를 먼저 만들어야 '오차 을(를) ~(으)로 설정하기' 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
@@ -744,24 +829,6 @@ body[data-level="e"] .hide-e { display: none !important; }
       </div>
     </div>
 
-    <div class="part-run card calib">
-      <p class="label">먼저 기준값 정하기</p>
-      <div class="calib-grid">
-        <ol class="calib-steps">
-          <li>▶ 시작을 눌러 <b>묶음 A</b>가 반사값을 쓰게 해요.</li>
-          <li>센서를 <b>검은 선 위</b>에 놓고 숫자를 적어요.</li>
-          <li>센서를 <b>흰 바닥 위</b>에 놓고 숫자를 적어요.</li>
-          <li>두 숫자의 <b>가운데 값</b>을 오차 블록의 60 자리에 넣어요.</li>
-        </ol>
-        <div class="calc-box">
-          <label for="cal-black">검은 선 <input id="cal-black" type="number" inputmode="numeric" min="0" max="100" value="20"></label>
-          <label for="cal-white">흰 바닥 <input id="cal-white" type="number" inputmode="numeric" min="0" max="100" value="100"></label>
-          <p class="cal-out">기준값 = (<span id="cal-b">20</span> + <span id="cal-w">100</span>) ÷ 2 = <b id="cal-mid">60</b></p>
-          <button class="btn ghost" id="cal-apply" type="button">화면 시뮬레이터에 넣기</button>
-        </div>
-        <div class="cal-console"><p class="vm-k">화면 시뮬레이터의 콘솔 (로봇을 끌어서 값을 확인해요)</p><div class="console" id="l-console" aria-live="off"></div></div>
-      </div>
-    </div>
     <div class="part-run row">
       <div class="sim">
         <canvas id="cv-line" aria-label="라인트레이서 시뮬레이터. 로봇을 끌어서 옮길 수 있어요."></canvas>
@@ -788,6 +855,10 @@ body[data-level="e"] .hide-e { display: none !important; }
         <div class="card">
           <div class="meters" data-meters="line"></div>
           <div class="motion" id="l-motion">똑바로</div>
+        </div>
+        <div class="card hide-e">
+          <p class="label">콘솔 · 묶음 A가 0.2초마다 쓴 반사값</p>
+          <div class="console" id="l-console" aria-live="off"></div>
         </div>
       </div>
     </div>
@@ -829,7 +900,6 @@ body[data-level="e"] .hide-e { display: none !important; }
   <!-- ===== 코드 2: 키보드 ===== -->
   <div class="panel t-key" id="panel-key" hidden>
     <div class="panel-head"><span class="tag">코드 2</span><h3>키보드 조종</h3><p>화살표 키로 속도와 회전을 정하고, 두 값을 더하고 빼서 바퀴 속도를 만들어요.</p></div>
-    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">키보드 화살표 키를 누르고 있는 동안 움직여요. 키가 안 먹으면 코딩 화면을 한 번 누른 뒤 다시 눌러요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
     <div class="part-code varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 2개를 만들어요</p><p class="vm-d">속도는 앞뒤로 가는 빠르기, 회전은 왼쪽·오른쪽으로 도는 정도를 담는 숫자 상자예요. 두 변수를 먼저 만들어야 설정하기 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
@@ -958,7 +1028,6 @@ body[data-level="e"] .hide-e { display: none !important; }
   <!-- ===== 코드 3: 조이스틱 ===== -->
   <div class="panel t-joy" id="panel-joy" hidden>
     <div class="panel-head"><span class="tag">코드 3</span><h3>조이스틱 조종</h3><p>컨트롤러의 두 레버가 두 바퀴와 하나씩 짝을 이뤄요. 코드가 가장 짧아요.</p></div>
-    <div class="part-run run-tip"><span class="rt-ico" aria-hidden="true">▶</span><div><p class="rt-t">▶ 시작 버튼으로 실행하고, 정지 버튼으로 멈춰요</p><p class="rt-d">컨트롤러의 두 레버를 앞뒤로 밀어서 운전해요. 로봇이 책상 끝으로 가면 손으로 잡아 주세요.</p></div></div>
     <div class="part-code varmake none"><div class="vm-head"><span class="vm-no">변수 없음</span><div><p class="vm-t">이 코드는 변수를 만들지 않아도 돼요</p><p class="vm-d">레버 위치를 바퀴에 바로 보내서 숫자를 담아 둘 상자가 필요 없어요. 바로 블록을 쌓으면 돼요.</p></div></div></div>
     <div class="part-code row">
       <div>
@@ -1419,25 +1488,29 @@ body[data-level="e"] .hide-e { display: none !important; }
     $('#need-hw').textContent = CODES[name][2]; $('#done-code').textContent = CODES[name][1];
     Object.keys(KS.keys).forEach(k => KS.keys[k] = false);
     try { localStorage.setItem('lego-code', name); } catch (e) {}
+    if (typeof step !== 'undefined' && document.body.dataset.step) go(step, false);
   }
   /* ---------- 단계 ---------- */
-  const ORDER = ['pick', 'build', 'connect', 'code', 'run', 'done'];
+  const ALL = ['pick', 'build', 'connect', 'code', 'calib', 'run', 'done'];
+  const order = () => ALL.filter(x => x !== 'calib' || current === 'line');
   const panelsBox = $('#panels');
   function go(name, scroll = true) {
-    if (!ORDER.includes(name)) name = 'pick';
+    if (!ALL.includes(name)) name = 'pick';
+    if (name === 'calib' && current !== 'line') name = step === 'run' ? 'code' : 'run';
     step = name; document.body.dataset.step = name;
     $$('.screen').forEach(sc => { sc.hidden = sc.dataset.screen !== name; });
     const slot = $(`.screen[data-screen="${name}"] .panel-slot`);
     if (slot) { slot.appendChild(panelsBox); panelsBox.hidden = false; } else panelsBox.hidden = true;
-    const idx = ORDER.indexOf(name);
+    const ord = order(), idx = ord.indexOf(name);
     $$('.sb-steps button').forEach(b => {
-      const i = ORDER.indexOf(b.dataset.to);
+      const i = ord.indexOf(b.dataset.to);
       if (i === idx) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
-      b.classList.toggle('passed', i < idx);
+      b.classList.toggle('passed', i >= 0 && i < idx);
     });
+    const no = $(`.screen[data-screen="${name}"] .scr-no`); if (no) no.textContent = idx + 1;
     if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
     if (name === 'run' && current === 'joystick') requestAnimationFrame(() => { lvL.set(lvL.v); lvR.set(lvR.v); });
-    if (scroll) window.scrollTo({ top: Math.max(0, $('.stepbar').offsetTop - 2), behavior: 'auto' });
+    if (scroll) { const hd = $('header.hero'); const y = hd.offsetTop + hd.offsetHeight; if (window.scrollY > y) window.scrollTo({ top: y, behavior: 'auto' }); }
     const cur = $('.sb-steps [aria-current="step"]'); if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
   document.addEventListener('click', e => {
@@ -1448,6 +1521,8 @@ body[data-level="e"] .hide-e { display: none !important; }
   $$('.checklist li').forEach(li => li.addEventListener('click', () => li.classList.toggle('ok')));
   function home() {
     $$('.checklist li').forEach(li => li.classList.remove('ok'));
+    $('#cal-black').value = ''; $('#cal-white').value = ''; calib();
+    const ti = $('#sl-target'); ti.value = 60; ti.dispatchEvent(new Event('input'));
     lineReset(); KS.robot = { x: 110, y: 200, th: 0 }; JS.robot = { x: 110, y: 200, th: 0 };
     $$('details[open]').forEach(d => d.open = false);
     show('line'); go('pick');
@@ -1457,16 +1532,21 @@ body[data-level="e"] .hide-e { display: none !important; }
   let savedCode = 'line'; try { savedCode = localStorage.getItem('lego-code') || 'line'; } catch (e) {}
   show(savedCode); go(location.hash.slice(1) || 'pick', false);
 
-  /* ---------- 기준값 계산 ---------- */
+  /* ---------- 기준값 재기 ---------- */
   function calib() {
-    const bv = clamp(+$('#cal-black').value || 0, 0, 100), wv = clamp(+$('#cal-white').value || 0, 0, 100);
-    $('#cal-b').textContent = bv; $('#cal-w').textContent = wv; const mid = Math.round((bv + wv) / 2);
-    $('#cal-mid').textContent = mid; return mid;
+    const bi = $('#cal-black').value.trim(), wi = $('#cal-white').value.trim();
+    const bv = bi === '' ? null : clamp(+bi, 0, 100), wv = wi === '' ? null : clamp(+wi, 0, 100);
+    $('#cal-b').textContent = bv ?? '?'; $('#cal-w').textContent = wv ?? '?';
+    const msg = $('#cal-msg'); msg.className = 'cal-msg';
+    if (bv === null || wv === null) { $('#cal-mid').textContent = '?'; msg.textContent = '검은 선과 흰 바닥의 숫자를 적어 보세요. 숫자가 조금씩 바뀌면 가장 자주 나오는 숫자를 적어요.'; return; }
+    const mid = Math.round((bv + wv) / 2);
+    $('#cal-mid').textContent = mid; $('#cal-num').textContent = mid;
+    if (bv >= wv) { msg.classList.add('warn'); msg.textContent = '검은 선 숫자가 흰 바닥보다 작아야 해요. 두 숫자를 바꿔 적지 않았는지 확인해요.'; return; }
+    if (wv - bv < 30) { msg.classList.add('warn'); msg.textContent = `두 숫자 차이가 ${wv - bv}밖에 안 돼요. 센서가 바닥에서 너무 멀지 않은지 확인하고 다시 재 보세요.`; }
+    else { msg.classList.add('good'); msg.textContent = `좋아요! 오차 블록의 60 자리에 넣을 기준값 = ${mid}`; }
+    const inp = $('#sl-target'); inp.value = clamp(mid, 20, 95); inp.dispatchEvent(new Event('input'));
   }
   ['#cal-black', '#cal-white'].forEach(id => $(id).addEventListener('input', calib));
-  $('#cal-apply').addEventListener('click', () => {
-    const inp = $('#sl-target'); inp.value = clamp(calib(), 20, 95); inp.dispatchEvent(new Event('input'));
-  });
 
   /* ---------- 설명 수준 ---------- */
   function setLevel(lv) {
