@@ -893,7 +893,7 @@ body[data-level="e"] .hide-e { display: none !important; }
     </div>
     <div class="part-run help">
       <p class="label">잘 안 될 때</p>
-      <div class="help-list"><details><summary>로봇이 선 반대쪽으로 빙글빙글 돌아요</summary><p>센서가 선의 다른 쪽 가장자리를 따라가고 있어요. 이동 블록의 <b>7 −</b> 와 <b>7 +</b> 를 서로 바꿔 보세요.</p></details><details><summary>굽은 길에서 선을 놓쳐요</summary><p>기준값을 다시 재고, 기본 속도 7을 5 정도로 낮춰 보세요. 곱하는 수를 조금 키워도 좋아요.</p></details><details><summary>똑바로만 가고 꺾지 않아요</summary><p>오차 설정 블록과 이동 블록에 같은 변수 <b>오차</b>가 들어갔는지, 곱하는 수가 0이 아닌지 확인해요.</p></details><details><summary>바퀴가 거꾸로 돌아요</summary><p>모터 방향이 반대로 끼워졌을 수 있어요. 이동 블록의 숫자 앞에 − 를 붙이거나 두 칸을 바꿔 보세요.</p></details></div>
+      <div class="help-list"><details><summary>조금만 틀어져도 너무 세게 꺾어요</summary><p><b>곱하는 수 0.4</b>를 0.2나 0.1로 줄여요. 오차가 40이면 40 × 0.4 = 16이라서 기본 속도 7보다 커지고, 한쪽 바퀴가 거꾸로 돌면서 제자리에서 홱 돌아요. <b>곱하는 수 × 40</b>이 기본 속도보다 작으면 두 바퀴가 모두 앞으로 돌면서 부드럽게 꺾어요. 예) 0.15 × 40 = 6 &lt; 7</p></details><details><summary>로봇이 선 반대쪽으로 빙글빙글 돌아요</summary><p>센서가 선의 다른 쪽 가장자리를 따라가고 있어요. 이동 블록의 <b>7 −</b> 와 <b>7 +</b> 를 서로 바꿔 보세요.</p></details><details><summary>굽은 길에서 선을 놓쳐요</summary><p>기준값을 다시 재고, 기본 속도 7을 5 정도로 낮춰 보세요. 곱하는 수를 조금 키워도 좋아요.</p></details><details><summary>똑바로만 가고 꺾지 않아요</summary><p>오차 설정 블록과 이동 블록에 같은 변수 <b>오차</b>가 들어갔는지, 곱하는 수가 0이 아닌지 확인해요.</p></details><details><summary>바퀴가 거꾸로 돌아요</summary><p>모터 방향이 반대로 끼워졌을 수 있어요. 이동 블록의 숫자 앞에 − 를 붙이거나 두 칸을 바꿔 보세요.</p></details></div>
     </div>
   </div>
 
