@@ -168,7 +168,8 @@ h1 .blue { color: var(--blue); }
 .panel-head p { margin: 0; color: var(--muted); flex: 1 1 260px; }
 .row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
 .row > * { min-width: 0; }
-@media (min-width: 981px) { .row.wide-code { grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); } }
+.row.wide-code { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 981px) { .wide-code .explain { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .wide-code .code { flex-direction: row; flex-wrap: wrap; gap: 30px 48px; } }
 @media (max-width: 980px) { .row { grid-template-columns: minmax(0, 1fr); } }
 .label { font: 800 13px/1.2 var(--f-ui); letter-spacing: .04em; color: var(--acc); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
 .label::before { content: ""; width: 14px; height: 4px; border-radius: 2px; background: var(--acc); }
@@ -347,10 +348,53 @@ table.ex tr.hl td { background: var(--acc-soft); font-weight: 800; color: var(--
 footer { text-align: center; color: var(--muted); font-size: 14px; padding-block: 0 26px; }
 footer b { color: var(--ink); }
 
+
+/* 설명 수준 */
+.lv-e, .lv-h { display: none; }
+body[data-level="e"] .lv-e, body[data-level="h"] .lv-h { display: revert; }
+body[data-level="e"] .lv-m, body[data-level="h"] .lv-m { display: none; }
+body[data-level="e"] .card.lv-e, body[data-level="h"] .card.lv-h, body[data-level="e"] .sum-card.lv-e { display: block; }
+body[data-level="h"] .deep.lv-h { display: grid; }
+.explain li > .lv-e, .explain li > .lv-m, .explain li > .lv-h { font-size: 14.5px; color: var(--text); }
+body[data-level="e"] .explain li > .lv-e { font-size: 16px; }
+.lvl { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: var(--paper); border: 2px solid var(--panel-line); }
+.lvl-k { font-size: 13px; font-weight: 800; color: var(--blue); padding: 0 8px 0 10px; }
+.lvl button { border: 0; background: transparent; color: var(--ink); font-weight: 800; font-size: 15px; padding: 7px 16px; border-radius: 999px; cursor: pointer; min-height: 38px; }
+.lvl button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.hero .lvl { margin-top: 18px; }
+.lvl-note { font-size: 13.5px; color: var(--muted); margin: 6px 0 0; }
+.sec-head .lvl-wrap { margin-left: auto; }
+.sum-card { border-radius: 20px; padding: 16px 20px; background: var(--acc-soft); border: 2px solid var(--acc); }
+.sum-card .label { margin-bottom: 6px; }
+.sum-card p:not(.label) { margin: 0; font-size: 18px; font-weight: 800; color: var(--ink); }
+.deep { gap: 10px; }
+.deep p, .deep li { margin: 0; font-size: 15px; }
+.deep ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.deep .eq { font: 800 16px/1.5 var(--f-ui); color: var(--ink); background: var(--editor); border-radius: 12px; padding: 10px 14px; font-variant-numeric: tabular-nums; overflow-x: auto; }
+
+/* 체험 순서 */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+.step { position: relative; background: var(--paper); border: 3px solid var(--sc); border-radius: 24px; padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 8px; }
+.step .no { width: 46px; height: 46px; border-radius: 50%; background: var(--sc); color: #fff; display: grid; place-items: center; font: 400 24px/1 var(--f-display); }
+.step h3 { margin: 0; font: 400 26px/1.2 var(--f-display); color: var(--ink); }
+.step p { margin: 0; font-size: 15px; }
+.step ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; font-size: 14.5px; }
+.step li { display: flex; gap: 8px; }
+.step li::before { content: ""; flex: none; width: 15px; height: 15px; margin-top: 4px; border: 2px solid var(--sc); border-radius: 4px; }
+.step .go { margin-top: auto; align-self: flex-start; border: 2px solid var(--sc); background: transparent; color: var(--sc); font-weight: 800; font-size: 14.5px; padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.step .skip { margin-top: auto; align-self: flex-start; font-size: 12.5px; font-weight: 800; color: var(--sc); background: var(--sc-soft); padding: 4px 10px; border-radius: 999px; }
+.s1 { --sc: var(--blue); --sc-soft: var(--blue-soft); }
+.s2 { --sc: var(--magenta); --sc-soft: var(--magenta-soft); }
+.s3 { --sc: var(--green); --sc-soft: var(--green-soft); }
+.shortcut { margin: 14px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; background: var(--panel); border-radius: 18px; padding: 14px 18px; }
+.shortcut p { margin: 0; font-weight: 800; color: var(--ink); flex: 1 1 260px; }
+.shortcut .btn { --acc: var(--magenta); }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
-<body>
+<body data-level="m">
 
 <div class="stripe" aria-hidden="true"><i class="c-magenta"></i><i class="c-green"></i><i class="c-blue"></i></div>
 
@@ -365,9 +409,37 @@ footer b { color: var(--ink); }
     <div><dt>처리</dt><dd>블록 코드</dd><small>숫자를 계산하고 판단해요</small></div>
     <div><dt>출력</dt><dd>왼쪽 · 오른쪽 모터</dd><small>바퀴를 돌려 움직여요</small></div>
   </dl>
+  <div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명 수준</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div>
+  <p class="lvl-note">학년을 고르면 블록 설명이 그 학년에 맞게 바뀌어요.</p>
 </header>
 
 <main class="wrap">
+
+<!-- ================= 체험 순서 ================= -->
+<section aria-labelledby="h-steps">
+  <div class="sec-head"><h2 id="h-steps">체험 순서</h2><p>조립하고, 코딩하고, 직접 움직여 봐요</p></div>
+  <div class="steps">
+    <div class="step s1">
+      <span class="no">1</span><h3>레고로 조립하기</h3>
+      <p>허브, 모터 2개, 바퀴, 컬러 센서로 로봇 자동차를 만들어요.</p>
+      <ul><li>왼쪽·오른쪽 모터에 바퀴 끼우기</li><li>컬러 센서는 앞쪽 아래에, 바닥을 보도록 달기</li><li>허브 전원을 켜고 앱과 연결하기</li></ul>
+      <span class="skip">완성된 자동차가 있으면 건너뛰어도 돼요</span>
+    </div>
+    <div class="step s2">
+      <span class="no">2</span><h3>코딩하기</h3>
+      <p>세 코드 중 하나를 골라 레고 앱에서 블록을 쌓아요.</p>
+      <ul><li>라인트레이서 · 키보드 조종 · 조이스틱 조종 중 고르기</li><li>아래 블록 코드를 보고 똑같이 만들기</li><li>블록을 눌러 무슨 일을 하는지 읽어 보기</li></ul>
+      <button class="go" type="button" data-go="h-code">블록 코드 보러 가기 ↓</button>
+    </div>
+    <div class="step s3">
+      <span class="no">3</span><h3>작동시켜 보기</h3>
+      <p>▶ 버튼을 누르고 로봇을 직접 움직여요.</p>
+      <ul><li>라인트레이서는 트랙 위에 올려 두기</li><li>키보드나 컨트롤러로 운전해 보기</li><li>숫자를 바꿔 보는 도전 과제 풀기</li></ul>
+      <button class="go" type="button" data-go="h-code">화면에서 먼저 해 보기 ↓</button>
+    </div>
+  </div>
+  <div class="shortcut"><p>완성된 자동차가 준비되어 있어요. 조립을 건너뛰고 바로 ② 코딩하기부터 시작해도 돼요.</p><button class="btn" type="button" data-go="h-code">바로 코딩하기</button></div>
+</section>
 
 <!-- ================= 바퀴 기초 ================= -->
 <section aria-labelledby="h-basics">
@@ -383,7 +455,7 @@ footer b { color: var(--ink); }
 
 <!-- ================= 코드 존 ================= -->
 <section aria-labelledby="h-code">
-  <div class="sec-head"><h2 id="h-code">코드 체험</h2><p>세 가지 방법으로 로봇을 움직여 보세요</p></div>
+  <div class="sec-head"><h2 id="h-code">코드 체험</h2><p>세 가지 방법으로 로봇을 움직여 보세요</p><span class="lvl-wrap"><div class="lvl" role="group" aria-label="설명 수준 고르기"><span class="lvl-k">설명 수준</span><button type="button" data-lv="e">초등</button><button type="button" data-lv="m">중등</button><button type="button" data-lv="h">고등</button></div></span></div>
   <div class="zones" role="tablist" aria-label="코드 고르기">
     <button class="zone-card t-line" role="tab" id="tab-line" aria-controls="panel-line" data-tab="line">
       <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 22c5 0 5-8 10-8s5-8 10-8"/><circle cx="14" cy="14" r="3.2" fill="currentColor" stroke="none"/></svg></span>
@@ -434,12 +506,12 @@ footer b { color: var(--ink); }
         <p class="label">블록 설명</p>
         <p class="hint-tap">블록이나 설명을 누르면 서로 짝이 표시돼요.</p>
         <ol class="explain">
-          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span>앱의 ▶ 시작 버튼을 누르면 아래 블록이 실행돼요. 이 코드는 시작 블록이 두 개라서 묶음 A와 묶음 B가 <em>동시에</em> 실행돼요.</span></li>
-          <li data-ref="2"><span class="n">2</span><b>무한</b><span>안에 든 블록을 멈추지 않고 계속 되풀이해요. 그래서 로봇은 쉬지 않고 센서를 다시 보고 바퀴 속도를 고쳐요.</span></li>
-          <li data-ref="3"><span class="n">3</span><b>반사 쓰기</b><span>컬러 센서가 바닥에 빛을 비추고, 되돌아온 빛의 양(<em>반사값</em>)을 화면에 숫자로 써요. 검은 선은 빛을 흡수해서 숫자가 작고, 흰 바닥은 빛을 많이 반사해서 숫자가 커요.</span></li>
-          <li data-ref="4"><span class="n">4</span><b>0.2초 기다리기</b><span>숫자가 너무 빨리 지나가지 않게 0.2초씩 쉬어요. 1초에 5번 써요. 묶음 A는 사람이 센서 값을 확인하려고 넣은 코드라서 로봇 움직임은 바꾸지 않아요.</span></li>
-          <li data-ref="5"><span class="n">5</span><b>오차 = 반사 − 60</b><span>60은 검은색과 흰색의 중간인 <em>기준값</em>이에요. 오차는 센서가 기준에서 얼마나 벗어났는지 알려 줘요. 흰 바닥 쪽이면 +, 검은 선 쪽이면 −가 돼요.</span></li>
-          <li data-ref="6"><span class="n">6</span><b>이동 시작하기</b><span>왼쪽 바퀴는 <em>7 − 오차×0.4</em>, 오른쪽 바퀴는 <em>7 + 오차×0.4</em>예요. 7은 기본 속도, 0.4는 얼마나 세게 꺾을지 정하는 수예요. 많이 벗어날수록 많이 꺾어요. 벗어난 만큼 고치는 이 방법을 <em>비례 제어</em>라고 해요.</span></li>
+          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span class="lv-e">▶ 버튼을 누르면 시작해요. 이 코드는 두 묶음이 <em>함께</em> 움직여요.</span><span class="lv-m">앱의 ▶ 시작 버튼을 누르면 아래 블록이 실행돼요. 이 코드는 시작 블록이 두 개라서 묶음 A와 묶음 B가 <em>동시에</em> 실행돼요.</span><span class="lv-h">이벤트 블록이에요. 시작 블록이 두 개라서 두 스크립트가 <em>동시에(병렬로)</em> 실행돼요. 묶음 A는 센서 값을 지켜보는 일, 묶음 B는 로봇을 제어하는 일을 나눠 맡아요.</span></li>
+          <li data-ref="2"><span class="n">2</span><b>무한</b><span class="lv-e">안에 있는 블록을 계속, 계속 되풀이해요.</span><span class="lv-m">안에 든 블록을 멈추지 않고 계속 되풀이해요. 그래서 로봇은 쉬지 않고 센서를 다시 보고 바퀴 속도를 고쳐요.</span><span class="lv-h">무한 반복은 <em>센서 읽기 → 계산 → 모터 출력</em>을 끝없이 되풀이하는 제어 루프예요. 출력 결과가 다시 센서 값에 영향을 주기 때문에 <em>피드백 제어</em>라고 해요. 루프가 빨리 돌수록 반응도 빨라요.</span></li>
+          <li data-ref="3"><span class="n">3</span><b>반사 쓰기</b><span class="lv-e">센서가 바닥을 보고 숫자를 알려 줘요. 검은색은 <em>작은 숫자</em>, 흰색은 <em>큰 숫자</em>예요.</span><span class="lv-m">컬러 센서가 바닥에 빛을 비추고, 되돌아온 빛의 양(<em>반사값</em>)을 화면에 숫자로 써요. 검은 선은 빛을 흡수해서 숫자가 작고, 흰 바닥은 빛을 많이 반사해서 숫자가 커요.</span><span class="lv-h">컬러 센서가 빛을 비추고 되돌아온 빛의 세기를 0~100 범위의 <em>반사값</em>으로 재요. '반사 쓰기'는 이 값을 콘솔에 출력해서, 검은색과 흰색 값을 재는 <em>센서 보정(캘리브레이션)</em>에 써요.</span></li>
+          <li data-ref="4"><span class="n">4</span><b>0.2초 기다리기</b><span class="lv-e">0.2초 쉬어요. 숫자가 천천히 보이게 해 줘요.</span><span class="lv-m">숫자가 너무 빨리 지나가지 않게 0.2초씩 쉬어요. 1초에 5번 써요. 묶음 A는 사람이 센서 값을 확인하려고 넣은 코드라서 로봇 움직임은 바꾸지 않아요.</span><span class="lv-h">출력 주기를 0.2초(1초에 5번)로 제한해요. 묶음 B에는 기다리기가 없어서 제어 계산은 이보다 훨씬 자주 실행돼요. 모니터링과 제어의 실행 주기가 다르다는 점을 눈여겨보세요.</span></li>
+          <li data-ref="5"><span class="n">5</span><b>오차 = 반사 − 60</b><span class="lv-e">60은 검은색과 흰색의 <em>가운데 숫자</em>예요. 오차는 가운데에서 얼마나 벗어났는지 알려 줘요.</span><span class="lv-m">60은 검은색과 흰색의 중간인 <em>기준값</em>이에요. 오차는 센서가 기준에서 얼마나 벗어났는지 알려 줘요. 흰 바닥 쪽이면 +, 검은 선 쪽이면 −가 돼요.</span><span class="lv-h">오차 e = 측정값 − 목표값이에요. 목표값(설정값) 60은 (검은색 + 흰색) ÷ 2로 정해요. 오차의 <em>부호</em>는 벗어난 방향을, <em>크기</em>는 벗어난 정도를 알려 줘요.</span></li>
+          <li data-ref="6"><span class="n">6</span><b>이동 시작하기</b><span class="lv-e">흰 바닥 쪽이면 <em>왼쪽</em>으로, 검은 선 쪽이면 <em>오른쪽</em>으로 꺾어요. 많이 벗어나면 많이 꺾어요.</span><span class="lv-m">왼쪽 바퀴는 <em>7 − 오차×0.4</em>, 오른쪽 바퀴는 <em>7 + 오차×0.4</em>예요. 7은 기본 속도, 0.4는 얼마나 세게 꺾을지 정하는 수예요. 많이 벗어날수록 많이 꺾어요. 벗어난 만큼 고치는 이 방법을 <em>비례 제어</em>라고 해요.</span><span class="lv-h"><em>비례 제어(P 제어)</em>예요. 조향량 = Kp × e (Kp = 0.4)이고, 왼쪽 = 기본 속도 − Kp·e, 오른쪽 = 기본 속도 + Kp·e예요. Kp가 크면 빨리 반응하지만 지그재그로 흔들리고, 작으면 커브에서 선을 놓쳐요. 오차의 변화량(D)과 쌓인 오차(I)까지 쓰면 <em>PID 제어</em>가 돼요.</span></li>
         </ol>
       </div>
     </div>
@@ -493,6 +565,11 @@ footer b { color: var(--ink); }
       <p style="margin:12px 0 0;font-size:14px;color:var(--muted)">실제 반사값은 바닥 종이와 조명에 따라 달라요. 먼저 묶음 A로 검은 선과 흰 바닥의 값을 재고, 두 값의 중간을 기준값으로 정해요. 예) 검은색 20, 흰색 100 → (20 + 100) ÷ 2 = 60</p>
     </div>
 
+    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p>로봇은 검은 선과 흰 바닥의 <b>경계</b>를 따라가요. 흰색이 보이면 왼쪽으로, 검은색이 보이면 오른쪽으로 꺾으면서요.</p></div>
+    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">조향량 = Kp × e &nbsp;·&nbsp; 왼쪽 = 7 − Kp·e &nbsp;·&nbsp; 오른쪽 = 7 + Kp·e &nbsp;(Kp = 0.4, e = 반사 − 60)</p>
+<ul><li>시뮬레이터에서 Kp(곱하는 수)를 0.1씩 올리며 지그재그가 시작되는 값을 찾아보세요. 기본 속도를 올리면 그 값이 어떻게 달라지나요?</li>
+<li><b>PD 제어로 바꾸기:</b> 변수 '이전 오차'를 만들고, 조향량 = Kp·e + Kd·(e − 이전 오차)로 계산한 뒤 이전 오차에 e를 넣어요. 흔들림이 줄어들어요.</li>
+<li>컬러 센서를 바퀴에서 더 앞쪽에 달면 앞을 미리 내다보는 효과가 생겨 더 안정적으로 달려요. 왜 그런지 설명해 보세요.</li></ul></div>
     <div>
       <p class="label">도전 과제 · 슬라이더를 바꿔 보고 눌러서 확인해요</p>
       <div class="challenges">
@@ -539,14 +616,14 @@ footer b { color: var(--ink); }
         <p class="label">블록 설명</p>
         <p class="hint-tap">키를 누르면 그 키를 확인하는 블록에 파란 테두리가 생겨요.</p>
         <ol class="explain">
-          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span>시작 버튼을 누르면 코드가 실행돼요.</span></li>
-          <li data-ref="2"><span class="n">2</span><b>무한</b><span>키보드를 계속 확인하고 바퀴 속도를 다시 정해요.</span></li>
-          <li data-ref="3"><span class="n">3</span><b>속도 = 0, 회전 = 0</b><span><em>속도</em>와 <em>회전</em>은 숫자를 담아 두는 상자, 변수예요. 반복할 때마다 둘 다 0으로 되돌려서, 키에서 손을 떼면 로봇이 멈춰요.</span></li>
-          <li data-ref="4"><span class="n">4</span><b>만약 위 키를 눌렀다면 → 속도 40</b><span>조건이 맞을 때만 안쪽 블록을 실행해요. 위 키를 누르고 있으면 앞으로 40% 속도예요.</span></li>
-          <li data-ref="5"><span class="n">5</span><b>만약 아래 키를 눌렀다면 → 속도 −30</b><span>마이너스는 뒤로 간다는 뜻이에요. 뒤는 잘 안 보이니까 조금 느린 30%로 정했어요.</span></li>
-          <li data-ref="6"><span class="n">6</span><b>만약 왼쪽 키를 눌렀다면 → 회전 −20</b><span>회전이 −이면 왼쪽으로 돌아요.</span></li>
-          <li data-ref="7"><span class="n">7</span><b>만약 오른쪽 키를 눌렀다면 → 회전 20</b><span>회전이 +이면 오른쪽으로 돌아요. 왼쪽과 오른쪽을 함께 누르면 <em>나중에 실행되는</em> 이 블록의 20이 남아요.</span></li>
-          <li data-ref="8"><span class="n">8</span><b>이동 시작하기</b><span>왼쪽 바퀴 = <em>속도 + 회전</em>, 오른쪽 바퀴 = <em>속도 − 회전</em>이에요. 회전이 −20이면 왼쪽 바퀴는 느려지고 오른쪽 바퀴는 빨라져서 왼쪽으로 돌아요.</span></li>
+          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span class="lv-e">▶ 버튼을 누르면 시작해요.</span><span class="lv-m">시작 버튼을 누르면 코드가 실행돼요.</span><span class="lv-h">이벤트 블록이에요. 시작 버튼을 누르는 사건(이벤트)이 일어나면 아래 스크립트가 실행돼요.</span></li>
+          <li data-ref="2"><span class="n">2</span><b>무한</b><span class="lv-e">키보드를 계속 살펴봐요.</span><span class="lv-m">키보드를 계속 확인하고 바퀴 속도를 다시 정해요.</span><span class="lv-h">반복할 때마다 키 상태를 직접 확인하는 <em>폴링</em> 방식이에요. '키를 눌렀을 때' 같은 이벤트 블록을 쓰는 방식과 비교해 보세요.</span></li>
+          <li data-ref="3"><span class="n">3</span><b>속도 = 0, 회전 = 0</b><span class="lv-e">숫자를 담는 상자 두 개를 0으로 비워요. 그래서 손을 떼면 <em>멈춰요</em>.</span><span class="lv-m"><em>속도</em>와 <em>회전</em>은 숫자를 담아 두는 상자, 변수예요. 반복할 때마다 둘 다 0으로 되돌려서, 키에서 손을 떼면 로봇이 멈춰요.</span><span class="lv-h"><em>변수 초기화</em>예요. 반복마다 기본값 0으로 덮어써서 '아무 키도 누르지 않음 = 정지' 상태를 만들어요. 초기화가 없으면 이전 반복의 값이 남아요.</span></li>
+          <li data-ref="4"><span class="n">4</span><b>만약 위 키를 눌렀다면 → 속도 40</b><span class="lv-e">위 키를 누르면 <em>앞으로</em> 가요.</span><span class="lv-m">조건이 맞을 때만 안쪽 블록을 실행해요. 위 키를 누르고 있으면 앞으로 40% 속도예요.</span><span class="lv-h"><em>조건문(if)</em>으로 입력(위 키)을 출력 값(속도 40)에 연결해요. 조건이 참일 때만 안쪽 블록이 실행돼요.</span></li>
+          <li data-ref="5"><span class="n">5</span><b>만약 아래 키를 눌렀다면 → 속도 −30</b><span class="lv-e">아래 키를 누르면 <em>뒤로</em> 가요. 뒤로는 조금 천천히 가요.</span><span class="lv-m">마이너스는 뒤로 간다는 뜻이에요. 뒤는 잘 안 보이니까 조금 느린 30%로 정했어요.</span><span class="lv-h">음수는 모터의 역방향 회전이에요. 후진 속도(−30)를 전진(40)보다 낮게 잡아 안전하게 만들었어요.</span></li>
+          <li data-ref="6"><span class="n">6</span><b>만약 왼쪽 키를 눌렀다면 → 회전 −20</b><span class="lv-e">왼쪽 키를 누르면 <em>왼쪽</em>으로 돌아요.</span><span class="lv-m">회전이 −이면 왼쪽으로 돌아요.</span><span class="lv-h">회전 성분 −20을 정해요. 속도 변수와 따로 정하기 때문에 전진과 회전을 동시에 할 수 있어요.</span></li>
+          <li data-ref="7"><span class="n">7</span><b>만약 오른쪽 키를 눌렀다면 → 회전 20</b><span class="lv-e">오른쪽 키를 누르면 <em>오른쪽</em>으로 돌아요.</span><span class="lv-m">회전이 +이면 오른쪽으로 돌아요. 왼쪽과 오른쪽을 함께 누르면 <em>나중에 실행되는</em> 이 블록의 20이 남아요.</span><span class="lv-h">블록은 위에서 아래로 <em>순서대로</em> 실행돼서, 두 키를 함께 누르면 뒤에 있는 이 블록이 앞의 값을 덮어써요. 이것이 곧 <em>우선순위</em>예요. '만약 ~ 아니면'으로 바꾸면 우선순위가 어떻게 달라질지 생각해 보세요.</span></li>
+          <li data-ref="8"><span class="n">8</span><b>이동 시작하기</b><span class="lv-e">두 숫자를 더하고 빼서 바퀴 속도를 정해요.</span><span class="lv-m">왼쪽 바퀴 = <em>속도 + 회전</em>, 오른쪽 바퀴 = <em>속도 − 회전</em>이에요. 회전이 −20이면 왼쪽 바퀴는 느려지고 오른쪽 바퀴는 빨라져서 왼쪽으로 돌아요.</span><span class="lv-h"><em>차동 구동</em> 혼합식이에요. 왼쪽 = v + ω, 오른쪽 = v − ω (v는 전진 성분, ω는 회전 성분). 전진과 회전을 나눠 다루는 이 방식을 <em>아케이드 드라이브</em>라고 해요.</span></li>
         </ol>
       </div>
     </div>
@@ -599,6 +676,11 @@ footer b { color: var(--ink); }
       </div>
     </div>
 
+    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p>화살표 키가 <b>운전대와 페달</b>이에요. 키에서 손을 떼면 로봇이 멈춰요.</p></div>
+    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">왼쪽 = v + ω &nbsp;·&nbsp; 오른쪽 = v − ω &nbsp;(v = 속도, ω = 회전)</p>
+<ul><li>키보드는 눌렀다/안 눌렀다만 아는 디지털 입력이라 속도가 0에서 40으로 갑자기 바뀌어요.</li>
+<li><b>부드럽게 출발하기:</b> 변수 '목표 속도'를 만들고 반복마다 속도 = 속도 + (목표 속도 − 속도) × 0.2로 바꾸면 천천히 빨라지는 가속 효과가 생겨요.</li>
+<li>'만약 ~ (이)라면, 아니면'으로 바꿔 왼쪽 키가 우선이 되게 하려면 블록을 어떻게 배치해야 할까요?</li></ul></div>
     <div>
       <p class="label">도전 과제 · 직접 눌러 보고 확인해요</p>
       <div class="challenges">
@@ -631,11 +713,11 @@ footer b { color: var(--ink); }
         <p class="label">블록 설명</p>
         <p class="hint-tap">블록이나 설명을 누르면 서로 짝이 표시돼요.</p>
         <ol class="explain">
-          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span>시작 버튼을 누르면 코드가 실행돼요.</span></li>
-          <li data-ref="2"><span class="n">2</span><b>무한</b><span>레버 위치를 계속 읽어서 바퀴에 전해요. 레버를 움직이는 즉시 로봇이 따라 움직여요.</span></li>
-          <li data-ref="3"><span class="n">3</span><b>왼쪽 레버 위치</b><span>컨트롤러 왼쪽 레버를 얼마나 밀었는지 숫자로 알려 줘요. 가운데면 <em>0</em>, 앞으로 밀수록 +, 뒤로 당길수록 −가 돼요.</span></li>
-          <li data-ref="4"><span class="n">4</span><b>오른쪽 레버 위치</b><span>오른쪽 레버도 같은 방법으로 숫자를 알려 줘요.</span></li>
-          <li data-ref="5"><span class="n">5</span><b>이동 시작하기</b><span>왼쪽 레버 값은 <em>왼쪽 바퀴</em>로, 오른쪽 레버 값은 <em>오른쪽 바퀴</em>로 그대로 보내요. 계산이 없어서 레버가 곧 바퀴예요. 탱크나 굴착기를 조종하는 방식과 같아요.</span></li>
+          <li data-ref="1"><span class="n">1</span><b>▶ 을(를) 클릭했을 때</b><span class="lv-e">▶ 버튼을 누르면 시작해요.</span><span class="lv-m">시작 버튼을 누르면 코드가 실행돼요.</span><span class="lv-h">이벤트 블록이에요. 시작 버튼을 누르면 아래 스크립트가 실행돼요.</span></li>
+          <li data-ref="2"><span class="n">2</span><b>무한</b><span class="lv-e">레버를 계속 살펴봐요.</span><span class="lv-m">레버 위치를 계속 읽어서 바퀴에 전해요. 레버를 움직이는 즉시 로봇이 따라 움직여요.</span><span class="lv-h">무한 반복으로 레버 값을 계속 읽어 바퀴에 전달해요. 계산이 없어서 입력과 출력 사이의 지연이 아주 짧아요.</span></li>
+          <li data-ref="3"><span class="n">3</span><b>왼쪽 레버 위치</b><span class="lv-e">왼쪽 레버를 얼마나 밀었는지 숫자로 알려 줘요. 가운데는 <em>0</em>이에요.</span><span class="lv-m">컨트롤러 왼쪽 레버를 얼마나 밀었는지 숫자로 알려 줘요. 가운데면 <em>0</em>, 앞으로 밀수록 +, 뒤로 당길수록 −가 돼요.</span><span class="lv-h"><em>아날로그 입력</em>이에요. 레버 위치를 −100~100 사이의 연속된 값으로 읽어요. 눌렀다/안 눌렀다 두 가지뿐인 키보드의 <em>디지털 입력</em>과 비교해 보세요.</span></li>
+          <li data-ref="4"><span class="n">4</span><b>오른쪽 레버 위치</b><span class="lv-e">오른쪽 레버도 똑같이 숫자를 알려 줘요.</span><span class="lv-m">오른쪽 레버도 같은 방법으로 숫자를 알려 줘요.</span><span class="lv-h">오른쪽 레버도 같은 범위의 아날로그 값이에요. 두 값이 서로 독립적이라서 두 바퀴를 따로 제어할 수 있어요.</span></li>
+          <li data-ref="5"><span class="n">5</span><b>이동 시작하기</b><span class="lv-e">왼쪽 레버는 <em>왼쪽 바퀴</em>, 오른쪽 레버는 <em>오른쪽 바퀴</em>를 움직여요.</span><span class="lv-m">왼쪽 레버 값은 <em>왼쪽 바퀴</em>로, 오른쪽 레버 값은 <em>오른쪽 바퀴</em>로 그대로 보내요. 계산이 없어서 레버가 곧 바퀴예요. 탱크나 굴착기를 조종하는 방식과 같아요.</span><span class="lv-h">입력 하나가 바퀴 하나에 1:1로 연결되는 <em>탱크 드라이브</em> 방식이에요. 키보드 코드의 아케이드 드라이브(v ± ω)와 비교해 보세요. 레버 하나를 속도, 다른 하나를 회전으로 써서 아케이드 방식으로 바꿀 수도 있어요.</span></li>
         </ol>
       </div>
     </div>
@@ -694,6 +776,11 @@ footer b { color: var(--ink); }
       </div>
     </div>
 
+    <div class="sum-card lv-e"><p class="label">한 줄 정리</p><p><b>왼손은 왼쪽 바퀴, 오른손은 오른쪽 바퀴!</b> 두 레버를 함께 밀면 앞으로 가요.</p></div>
+    <div class="card deep lv-h"><p class="label">고등 심화 · 더 생각해 보기</p><p class="eq">탱크 드라이브: 왼쪽 = 왼쪽 레버, 오른쪽 = 오른쪽 레버 &nbsp;→&nbsp; 아케이드 드라이브: 왼쪽 = 레버1 + 레버2, 오른쪽 = 레버1 − 레버2</p>
+<ul><li>레버는 미는 만큼 값이 변하는 아날로그 입력이라 속도를 세밀하게 조절할 수 있어요.</li>
+<li><b>데드존 만들기:</b> 손을 떼도 레버 값이 정확히 0이 아닐 수 있어요. '만약 레버 위치의 절댓값이 5보다 작다면 0으로' 처리하면 로봇이 저절로 움직이지 않아요.</li>
+<li>아케이드 방식으로 바꾸면 두 값을 더했을 때 100을 넘을 수 있어요. 어떻게 처리하면 좋을까요?</li></ul></div>
     <div>
       <p class="label">도전 과제 · 레버를 움직여 확인해요</p>
       <div class="challenges">
@@ -1083,6 +1170,21 @@ footer b { color: var(--ink); }
   });
   window.addEventListener('hashchange', () => show(location.hash.slice(1)));
   show(location.hash.slice(1) || 'line');
+
+
+  /* ---------- 설명 수준 ---------- */
+  function setLevel(lv) {
+    if (!['e', 'm', 'h'].includes(lv)) lv = 'm';
+    document.body.dataset.level = lv;
+    $$('.lvl button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lv === lv));
+    try { localStorage.setItem('lego-level', lv); } catch (e) {}
+  }
+  let savedLv = 'm'; try { savedLv = localStorage.getItem('lego-level') || 'm'; } catch (e) {}
+  setLevel(savedLv);
+  $$('.lvl button').forEach(b => b.addEventListener('click', () => setLevel(b.dataset.lv)));
+  $$('[data-go]').forEach(b => b.addEventListener('click', () => {
+    const t = document.getElementById(b.dataset.go); if (t) t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }));
 
   /* ---------- 메인 루프 ---------- */
   let last = performance.now();
