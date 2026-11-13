@@ -413,14 +413,6 @@ a.btn { text-decoration: none; }
 .conn b { color: var(--ink); font-size: 16px; }
 .conn span { font-size: 14.5px; }
 .conn em { font-style: normal; font-weight: 800; color: var(--blue); }
-.pair-mock { aspect-ratio: 16 / 9; background: #f5f6f8; border-bottom: 2px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 18px 26px 18px 56px; color: #222; }
-.pm-title { font-weight: 800; font-size: 14px; }
-.pm-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 2px solid #0a6ed1; border-radius: 10px; padding: 7px 12px; font-weight: 700; font-size: 14px; }
-.pm-row.off { border-color: #dde1e8; color: #666; }
-.pm-dot { width: 14px; height: 14px; border-radius: 4px; background: #23a59c; }
-.pm-row.off .pm-dot { background: #e0685c; }
-.pm-chk { margin-left: auto; color: #0a6ed1; font-weight: 800; }
-.pm-btn { align-self: flex-end; background: #0a6ed1; color: #fff; font-weight: 800; font-size: 14px; padding: 6px 16px; border-radius: 6px; }
 .need { margin-top: 16px; }
 .need-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 560px) { .need-grid { grid-template-columns: 1fr; } }
@@ -500,7 +492,7 @@ a.btn { text-decoration: none; }
     <li><img src="img/connect-3.png" alt="더블 모터의 버튼을 눌러 켜는 그림" width="914" height="508" loading="lazy"><div><b>더블 모터 켜기</b><span>더블 모터의 버튼을 눌러 전원을 켜요.</span></div></li>
     <li><img src="img/connect-4.png" alt="연결 카드를 더블 모터에 대고 스캔하는 그림" width="914" height="517" loading="lazy"><div><b>연결 카드 스캔하기</b><span>연결 카드를 더블 모터에 가까이 대서 스캔해요.</span></div></li>
     <li><img src="img/connect-5.png" alt="버튼을 다시 눌러 블루투스를 켜는 그림" width="923" height="523" loading="lazy"><div><b>블루투스 켜기</b><span>버튼을 <em>한 번 더</em> 눌러 블루투스를 켜요.</span></div></li>
-    <li><div class="pair-mock" aria-hidden="true"><div class="pm-title">하드웨어 연결</div><div class="pm-row"><span class="pm-dot"></span>더블 모터<span class="pm-chk">✓</span></div><div class="pm-row off"><span class="pm-dot"></span>컬러 센서</div><span class="pm-btn">페어링</span></div><div><b>하드웨어 선택하고 '페어링' 누르기</b><span>목록에서 연결할 하드웨어를 고르고 <em>페어링</em> 버튼을 눌러요. 연결되면 코딩을 시작할 수 있어요.</span></div></li>
+    <li><img src="img/connect-6.png" alt="브라우저 창 목록에서 하드웨어를 선택하고 페어링 버튼을 누르는 그림" width="776" height="507" loading="lazy"><div><b>하드웨어 선택하고 '페어링' 누르기</b><span>작은 창이 뜨면 목록에서 하드웨어 이름을 고르고 <em>페어링</em> 버튼을 눌러요. 연결되면 코딩을 시작할 수 있어요.</span></div></li>
   </ol>
   <div class="need card">
     <p class="label" style="--acc:var(--blue)">코드마다 연결할 하드웨어</p>
