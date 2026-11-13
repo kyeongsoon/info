@@ -419,6 +419,23 @@ a.btn { text-decoration: none; }
 .need-grid div { display: flex; flex-direction: column; gap: 2px; background: var(--editor); border-radius: 14px; padding: 10px 14px; }
 .need-grid span { font-weight: 700; color: var(--ink); }
 
+.varmake { border: 3px solid var(--bk-var); border-radius: 22px; background: var(--paper); overflow: hidden; }
+.varmake.none { border-style: dashed; border-color: var(--line); }
+.vm-head { display: flex; gap: 14px; align-items: center; padding: 14px 18px; background: var(--orange-soft); }
+.varmake.none .vm-head { background: transparent; }
+.vm-no { flex: none; font: 400 17px/1 var(--f-display); color: #fff; background: var(--bk-var-d); padding: 9px 12px; border-radius: 12px; }
+.varmake.none .vm-no { background: var(--muted); }
+.vm-t { margin: 0; font: 800 18px/1.35 var(--f-ui); color: var(--ink); }
+.vm-d { margin: 2px 0 0; font-size: 14.5px; color: var(--muted); }
+.vm-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px 24px; padding: 14px 18px 16px; align-items: center; }
+@media (max-width: 760px) { .vm-body { grid-template-columns: minmax(0, 1fr); } }
+.vm-steps { margin: 0; padding-left: 22px; display: grid; gap: 4px; font-size: 15px; }
+.vm-steps b { color: var(--ink); }
+.vm-show { display: flex; flex-direction: column; gap: 8px; background: var(--editor); border-radius: 16px; padding: 12px 14px; }
+.vm-k { font-size: 13px; font-weight: 700; color: var(--muted); }
+.vm-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.vm-pills .rep { font-size: 15px; min-height: 34px; padding: 4px 14px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -462,7 +479,7 @@ a.btn { text-decoration: none; }
     <div class="step s2">
       <span class="no">3</span><h3>코딩하기</h3>
       <p>세 코드 중 하나를 골라 블록을 쌓아요.</p>
-      <ul><li>라인트레이서 · 키보드 조종 · 조이스틱 조종 중 고르기</li><li>아래 블록 코드를 보고 똑같이 만들기</li><li>블록을 눌러 무슨 일을 하는지 읽어 보기</li></ul>
+      <ul><li>라인트레이서 · 키보드 조종 · 조이스틱 조종 중 고르기</li><li>필요한 변수 먼저 만들기 (라인트레이서: 오차 / 키보드: 속도, 회전)</li><li>아래 블록 코드를 보고 똑같이 만들기</li><li>블록을 눌러 무슨 일을 하는지 읽어 보기</li></ul>
       <button class="go" type="button" data-go="h-code">블록 코드 보러 가기 ↓</button>
     </div>
     <div class="step s3">
@@ -541,6 +558,13 @@ a.btn { text-decoration: none; }
   <!-- ===== 코드 1: 라인트레이서 ===== -->
   <div class="panel t-line" role="tabpanel" id="panel-line" aria-labelledby="tab-line">
     <div class="panel-head"><span class="tag">코드 1</span><h3>라인트레이서</h3><p>컬러 센서로 바닥의 검은 선을 보고, 선 가장자리를 스스로 따라가요.</p></div>
+    <div class="varmake">
+      <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 1개를 만들어요</p><p class="vm-d">오차는 센서 값이 기준값 60에서 얼마나 벗어났는지 담아 두는 숫자 상자예요. 변수를 먼저 만들어야 '오차 을(를) ~(으)로 설정하기' 블록에서 고를 수 있어요.</p></div></div>
+      <div class="vm-body">
+        <ol class="vm-steps"><li>블록 목록에서 주황색 <b>변수</b> 메뉴 누르기</li><li><b>변수 만들기</b> 버튼 누르기</li><li>이름 칸에 <b>오차</b>를 쓰고 확인 누르기</li></ol>
+        <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">오차</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '오차'</span></div>
+      </div>
+    </div>
     <div class="row wide-code">
       <div>
         <p class="label">블록 코드</p>
@@ -647,6 +671,13 @@ a.btn { text-decoration: none; }
   <!-- ===== 코드 2: 키보드 ===== -->
   <div class="panel t-key" role="tabpanel" id="panel-key" aria-labelledby="tab-key" hidden>
     <div class="panel-head"><span class="tag">코드 2</span><h3>키보드 조종</h3><p>화살표 키로 속도와 회전을 정하고, 두 값을 더하고 빼서 바퀴 속도를 만들어요.</p></div>
+    <div class="varmake">
+      <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 2개를 만들어요</p><p class="vm-d">속도는 앞뒤로 가는 빠르기, 회전은 왼쪽·오른쪽으로 도는 정도를 담는 숫자 상자예요. 두 변수를 먼저 만들어야 설정하기 블록에서 고를 수 있어요.</p></div></div>
+      <div class="vm-body">
+        <ol class="vm-steps"><li>블록 목록에서 주황색 <b>변수</b> 메뉴 누르기</li><li><b>변수 만들기</b> 버튼 누르기</li><li>이름 칸에 <b>속도</b>를 쓰고 확인 누르기</li><li>다시 <b>변수 만들기</b>를 눌러 <b>회전</b>도 만들기</li></ol>
+        <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">속도</span><span class="rep r-var">회전</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '속도' · '회전'</span></div>
+      </div>
+    </div>
     <div class="row">
       <div>
         <p class="label">블록 코드</p>
@@ -758,6 +789,7 @@ a.btn { text-decoration: none; }
   <!-- ===== 코드 3: 조이스틱 ===== -->
   <div class="panel t-joy" role="tabpanel" id="panel-joy" aria-labelledby="tab-joy" hidden>
     <div class="panel-head"><span class="tag">코드 3</span><h3>조이스틱 조종</h3><p>컨트롤러의 두 레버가 두 바퀴와 하나씩 짝을 이뤄요. 코드가 가장 짧아요.</p></div>
+    <div class="varmake none"><div class="vm-head"><span class="vm-no">변수 없음</span><div><p class="vm-t">이 코드는 변수를 만들지 않아도 돼요</p><p class="vm-d">레버 위치를 바퀴에 바로 보내서 숫자를 담아 둘 상자가 필요 없어요. 바로 블록을 쌓으면 돼요.</p></div></div></div>
     <div class="row">
       <div>
         <p class="label">블록 코드</p>
