@@ -90,8 +90,8 @@ button, input { font: inherit; }
 
 /* ---------- 머리말 ---------- */
 .hero { text-align: center; padding-block: 40px 28px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.eyebrow { margin: 0 0 14px; display: flex; align-items: center; gap: 14px; font: 700 clamp(12px, 2.4vw, 17px)/1 var(--f-latin); letter-spacing: .32em; color: var(--magenta); }
-.eyebrow b { font-weight: 700; margin-right: -.32em; }
+.eyebrow { margin: 0 0 14px; display: flex; align-items: center; gap: 14px; font: 800 clamp(13px, 2.6vw, 19px)/1 var(--f-ui); letter-spacing: .2em; color: var(--magenta); }
+.eyebrow b { font-weight: 800; margin-right: -.2em; }
 .dashes { display: inline-flex; gap: 5px; }
 .dashes i { width: clamp(14px, 3vw, 30px); height: 4px; border-radius: 2px; }
 .kicker { margin: 0; font: 400 clamp(24px, 5vw, 40px)/1.1 var(--f-display); }
@@ -121,7 +121,7 @@ h1 .blue { color: var(--blue); }
 
 /* ---------- 섹션 머리 ---------- */
 .sec-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 18px; }
-.sec-head h2 { margin: 0; font: 800 clamp(28px, 5vw, 40px)/1.1 var(--f-latin); color: var(--ink); letter-spacing: -.01em; }
+.sec-head h2 { margin: 0; font: 400 clamp(28px, 5vw, 40px)/1.1 var(--f-display); color: var(--ink); letter-spacing: -.01em; }
 .sec-head p { margin: 0; color: var(--muted); font-size: clamp(15px, 2.2vw, 18px); }
 .note { margin: 0 0 18px; max-width: 70ch; }
 
@@ -153,7 +153,7 @@ h1 .blue { color: var(--blue); }
 .zone-card[aria-selected="true"] { background: var(--acc-soft); box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 24px -14px var(--acc); }
 .zone-card .ico { width: 54px; height: 54px; border-radius: 50%; background: var(--acc); color: #fff; display: grid; place-items: center; margin-bottom: 4px; }
 .zone-card .ico svg { width: 28px; height: 28px; }
-.zone-card .en { font: 800 clamp(20px, 2.6vw, 25px)/1.15 var(--f-latin); color: var(--acc); }
+.zone-card .en { font: 400 clamp(22px, 2.8vw, 27px)/1.15 var(--f-display); color: var(--acc); }
 .zone-card .ko { font: 800 17px/1.35 var(--f-ui); color: var(--ink); }
 .zone-card .desc { font-size: 14.5px; color: var(--muted); }
 .t-line { --acc: var(--orange); --acc-soft: var(--orange-soft); }
@@ -163,7 +163,7 @@ h1 .blue { color: var(--blue); }
 /* ---------- 패널 ---------- */
 .panel { margin-top: 22px; display: flex; flex-direction: column; gap: 22px; }
 .panel-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; border-bottom: 3px solid var(--acc); padding-bottom: 12px; }
-.panel-head .tag { font: 800 13px/1 var(--f-latin); letter-spacing: .12em; color: #fff; background: var(--acc); padding: 7px 11px; border-radius: 999px; }
+.panel-head .tag { font: 800 13px/1 var(--f-ui); letter-spacing: .04em; color: #fff; background: var(--acc); padding: 7px 11px; border-radius: 999px; }
 .panel-head h3 { margin: 0; font: 400 clamp(26px, 4.4vw, 36px)/1.1 var(--f-display); color: var(--ink); }
 .panel-head p { margin: 0; color: var(--muted); flex: 1 1 260px; }
 .row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
@@ -355,7 +355,7 @@ footer b { color: var(--ink); }
 <div class="stripe" aria-hidden="true"><i class="c-magenta"></i><i class="c-green"></i><i class="c-blue"></i></div>
 
 <header class="hero wrap">
-  <p class="eyebrow"><span class="dashes" aria-hidden="true"><i class="c-green"></i><i class="c-orange"></i><i class="c-blue"></i></span><b>SCIENCE &amp; AI PLAYGROUND</b><span class="dashes" aria-hidden="true"><i class="c-blue"></i><i class="c-orange"></i><i class="c-green"></i></span></p>
+  <p class="eyebrow"><span class="dashes" aria-hidden="true"><i class="c-green"></i><i class="c-orange"></i><i class="c-blue"></i></span><b>과학 · 인공지능 놀이터</b><span class="dashes" aria-hidden="true"><i class="c-blue"></i><i class="c-orange"></i><i class="c-green"></i></span></p>
   <p class="kicker"><span class="g">레고 CS&amp;AI</span><span class="o">로 배우는</span></p>
   <h1>피지컬 <span class="blue">컴퓨팅</span></h1>
   <p class="brush">센서로 느끼고, 코드로 생각하고, 모터로 움직여요!</p>
@@ -371,7 +371,7 @@ footer b { color: var(--ink); }
 
 <!-- ================= 바퀴 기초 ================= -->
 <section aria-labelledby="h-basics">
-  <div class="sec-head"><h2 id="h-basics">DRIVE BASICS</h2><p>세 코드 모두 마지막 블록에서 두 바퀴 속도를 정해요</p></div>
+  <div class="sec-head"><h2 id="h-basics">바퀴로 움직이기</h2><p>세 코드 모두 마지막 블록에서 두 바퀴 속도를 정해요</p></div>
   <div class="basics-intro">
     <div class="code" style="padding:20px 22px; flex:0 1 auto; max-width:100%">
       <div class="b mot" style="cursor:default"><span class="mot-ico" aria-hidden="true"><svg viewBox="0 0 30 30" width="26" height="26"><circle cx="15" cy="15" r="11" fill="none" stroke="#1d4f4c" stroke-width="2.4"/><circle cx="15" cy="15" r="4" fill="#1d4f4c"/><path d="M3 15a12 12 0 0 1 3-8M27 15a12 12 0 0 1-3 8" stroke="#1d4f4c" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></span><span class="num">왼쪽 바퀴</span><span class="num">오른쪽 바퀴</span> 에서 % 속도로 이동 시작하기</div>
@@ -383,28 +383,28 @@ footer b { color: var(--ink); }
 
 <!-- ================= 코드 존 ================= -->
 <section aria-labelledby="h-code">
-  <div class="sec-head"><h2 id="h-code">CODE ZONE</h2><p>세 가지 방법으로 로봇을 움직여 보세요</p></div>
+  <div class="sec-head"><h2 id="h-code">코드 체험</h2><p>세 가지 방법으로 로봇을 움직여 보세요</p></div>
   <div class="zones" role="tablist" aria-label="코드 고르기">
     <button class="zone-card t-line" role="tab" id="tab-line" aria-controls="panel-line" data-tab="line">
       <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 22c5 0 5-8 10-8s5-8 10-8"/><circle cx="14" cy="14" r="3.2" fill="currentColor" stroke="none"/></svg></span>
-      <span class="en">LINE TRACER</span><span class="ko">스스로 선을 따라가는 로봇</span>
-      <span class="desc">코드 1 · 컬러 센서 반사값,<br>오차, 비례 제어</span>
+      <span class="en">라인트레이서</span><span class="ko">스스로 선을 따라가요</span>
+      <span class="desc">컬러 센서 반사값,<br>오차, 비례 제어</span>
     </button>
     <button class="zone-card t-key" role="tab" id="tab-key" aria-controls="panel-key" data-tab="keyboard">
       <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="10" y="3" width="8" height="8" rx="2"/><rect x="2" y="15" width="8" height="8" rx="2"/><rect x="10" y="15" width="8" height="8" rx="2"/><rect x="18" y="15" width="8" height="8" rx="2"/></svg></span>
-      <span class="en">KEYBOARD</span><span class="ko">화살표 키로 운전하기</span>
-      <span class="desc">코드 2 · 변수 속도·회전,<br>만약 ~(이)라면</span>
+      <span class="en">키보드 조종</span><span class="ko">화살표 키로 운전하기</span>
+      <span class="desc">변수 속도·회전,<br>만약 ~(이)라면</span>
     </button>
     <button class="zone-card t-joy" role="tab" id="tab-joy" aria-controls="panel-joy" data-tab="joystick">
       <span class="ico" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 4v20M20 4v20"/><rect x="4" y="8" width="8" height="5" rx="2" fill="currentColor"/><rect x="16" y="15" width="8" height="5" rx="2" fill="currentColor"/></svg></span>
-      <span class="en">JOYSTICK</span><span class="ko">두 레버로 조종하기</span>
-      <span class="desc">코드 3 · 레버 위치를<br>바퀴 속도로 바로 연결</span>
+      <span class="en">조이스틱 조종</span><span class="ko">두 레버로 조종하기</span>
+      <span class="desc">레버 위치를<br>바퀴 속도로 바로 연결</span>
     </button>
   </div>
 
   <!-- ===== 코드 1: 라인트레이서 ===== -->
   <div class="panel t-line" role="tabpanel" id="panel-line" aria-labelledby="tab-line">
-    <div class="panel-head"><span class="tag">CODE 1</span><h3>라인트레이서</h3><p>컬러 센서로 바닥의 검은 선을 보고, 선 가장자리를 스스로 따라가요.</p></div>
+    <div class="panel-head"><span class="tag">코드 1</span><h3>라인트레이서</h3><p>컬러 센서로 바닥의 검은 선을 보고, 선 가장자리를 스스로 따라가요.</p></div>
     <div class="row wide-code">
       <div>
         <p class="label">블록 코드</p>
@@ -505,7 +505,7 @@ footer b { color: var(--ink); }
 
   <!-- ===== 코드 2: 키보드 ===== -->
   <div class="panel t-key" role="tabpanel" id="panel-key" aria-labelledby="tab-key" hidden>
-    <div class="panel-head"><span class="tag">CODE 2</span><h3>키보드 조종</h3><p>화살표 키로 속도와 회전을 정하고, 두 값을 더하고 빼서 바퀴 속도를 만들어요.</p></div>
+    <div class="panel-head"><span class="tag">코드 2</span><h3>키보드 조종</h3><p>화살표 키로 속도와 회전을 정하고, 두 값을 더하고 빼서 바퀴 속도를 만들어요.</p></div>
     <div class="row">
       <div>
         <p class="label">블록 코드</p>
@@ -611,7 +611,7 @@ footer b { color: var(--ink); }
 
   <!-- ===== 코드 3: 조이스틱 ===== -->
   <div class="panel t-joy" role="tabpanel" id="panel-joy" aria-labelledby="tab-joy" hidden>
-    <div class="panel-head"><span class="tag">CODE 3</span><h3>조이스틱 조종</h3><p>컨트롤러의 두 레버가 두 바퀴와 하나씩 짝을 이뤄요. 코드가 가장 짧아요.</p></div>
+    <div class="panel-head"><span class="tag">코드 3</span><h3>조이스틱 조종</h3><p>컨트롤러의 두 레버가 두 바퀴와 하나씩 짝을 이뤄요. 코드가 가장 짧아요.</p></div>
     <div class="row">
       <div>
         <p class="label">블록 코드</p>
@@ -707,7 +707,7 @@ footer b { color: var(--ink); }
 
 <!-- ================= 비교 ================= -->
 <section aria-labelledby="h-cmp">
-  <div class="sec-head"><h2 id="h-cmp">COMPARE</h2><p>세 코드를 한눈에 비교해요</p></div>
+  <div class="sec-head"><h2 id="h-cmp">한눈에 비교</h2><p>세 코드를 한눈에 비교해요</p></div>
   <div class="cmp"><table>
     <thead><tr><th scope="col"><span class="sr" style="position:absolute;left:-9999px">항목</span></th><th scope="col">코드 1 라인트레이서</th><th scope="col">코드 2 키보드 조종</th><th scope="col">코드 3 조이스틱 조종</th></tr></thead>
     <tbody>
@@ -725,7 +725,7 @@ footer b { color: var(--ink); }
 </main>
 
 <footer class="wrap">
-  <p><b>2026 여주교육 FESTA</b> · Science &amp; AI PLAYGROUND 코딩 체험<br>레고 CS&amp;AI 피지컬 컴퓨팅 블록 코드 설명</p>
+  <p><b>2026 여주교육 페스타</b> · 과학·인공지능 놀이터 코딩 체험<br>레고 CS&amp;AI 피지컬 컴퓨팅 블록 코드 설명</p>
 </footer>
 <div class="stripe" aria-hidden="true"><i class="c-green"></i><i class="c-orange"></i><i class="c-blue"></i><i class="c-magenta"></i><i class="c-yellow"></i></div>
 
@@ -897,7 +897,7 @@ footer b { color: var(--ink); }
   function lineDraw() {
     const { ctx } = LS.st; if (!LS.st.fit()) return;
     ctx.drawImage(mat, 0, 0, W, H);
-    ctx.fillStyle = '#2470c8'; ctx.font = '800 13px Outfit, sans-serif'; ctx.fillText('START', 276, 66);
+    ctx.fillStyle = '#2470c8'; ctx.font = '800 14px "Gothic A1", sans-serif'; ctx.fillText('출발', 285, 64);
     ctx.fillStyle = '#2470c8'; ctx.fillRect(300, 69, 3, 22);
     if (LS.trail.length > 1) {
       ctx.strokeStyle = 'rgba(222,116,40,.55)'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.beginPath();
