@@ -427,9 +427,14 @@ a.btn { text-decoration: none; }
 .varmake.none .vm-no { background: var(--muted); }
 .vm-t { margin: 0; font: 800 18px/1.35 var(--f-ui); color: var(--ink); }
 .vm-d { margin: 2px 0 0; font-size: 14.5px; color: var(--muted); }
-.vm-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px 24px; padding: 14px 18px 16px; align-items: center; }
-@media (max-width: 760px) { .vm-body { grid-template-columns: minmax(0, 1fr); } }
-.vm-steps { margin: 0; padding-left: 22px; display: grid; gap: 4px; font-size: 15px; }
+.vm-body { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px 20px; padding: 14px 18px 16px; align-items: stretch; }
+@media (max-width: 860px) { .vm-body { grid-template-columns: minmax(0, 1fr); } }
+.vm-steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; counter-reset: vm; }
+@media (max-width: 560px) { .vm-steps { grid-template-columns: minmax(0, 1fr); } }
+.vm-steps li { counter-increment: vm; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+.vm-steps li > span:last-child::before { content: counter(vm) ". "; font-weight: 800; color: var(--bk-var-d); }
+.vm-img { display: flex; align-items: center; justify-content: center; height: 110px; background: #f5f6f8; border: 2px solid var(--line); border-radius: 14px; padding: 8px; overflow: hidden; }
+.vm-img img { display: block; width: auto; height: auto; max-width: 100%; max-height: 90px; }
 .vm-steps b { color: var(--ink); }
 .vm-show { display: flex; flex-direction: column; gap: 8px; background: var(--editor); border-radius: 16px; padding: 12px 14px; }
 .vm-k { font-size: 13px; font-weight: 700; color: var(--muted); }
@@ -561,7 +566,11 @@ a.btn { text-decoration: none; }
     <div class="varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 1개를 만들어요</p><p class="vm-d">오차는 센서 값이 기준값 60에서 얼마나 벗어났는지 담아 두는 숫자 상자예요. 변수를 먼저 만들어야 '오차 을(를) ~(으)로 설정하기' 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
-        <ol class="vm-steps"><li>블록 목록에서 주황색 <b>변수</b> 메뉴 누르기</li><li><b>변수 만들기</b> 버튼 누르기</li><li>이름 칸에 <b>오차</b>를 쓰고 확인 누르기</li></ol>
+        <ol class="vm-steps">
+          <li><span class="vm-img"><img src="img/var-1.png" alt="주황색 데이터 메뉴 버튼" width="99" height="50" loading="lazy"></span><span>블록 목록에서 주황색 <b>데이터</b> 메뉴 누르기</span></li>
+          <li><span class="vm-img"><img src="img/var-2.png" alt="데이터 아래 변수 항목의 변수 만들기 버튼" width="186" height="139" loading="lazy"></span><span>'변수' 아래 <b>변수 만들기...</b> 버튼 누르기</span></li>
+          <li><span class="vm-img"><img src="img/var-3.png" alt="변수 이름을 쓰고 확인을 누르는 변수 만들기 창" width="696" height="454" loading="lazy"></span><span>창이 뜨면 가운데 칸에 <b>오차</b>를 쓰고 <b>확인</b> 누르기</span></li>
+        </ol>
         <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">오차</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '오차'</span></div>
       </div>
     </div>
@@ -674,7 +683,11 @@ a.btn { text-decoration: none; }
     <div class="varmake">
       <div class="vm-head"><span class="vm-no">먼저!</span><div><p class="vm-t">블록을 쌓기 전에 변수 2개를 만들어요</p><p class="vm-d">속도는 앞뒤로 가는 빠르기, 회전은 왼쪽·오른쪽으로 도는 정도를 담는 숫자 상자예요. 두 변수를 먼저 만들어야 설정하기 블록에서 고를 수 있어요.</p></div></div>
       <div class="vm-body">
-        <ol class="vm-steps"><li>블록 목록에서 주황색 <b>변수</b> 메뉴 누르기</li><li><b>변수 만들기</b> 버튼 누르기</li><li>이름 칸에 <b>속도</b>를 쓰고 확인 누르기</li><li>다시 <b>변수 만들기</b>를 눌러 <b>회전</b>도 만들기</li></ol>
+        <ol class="vm-steps">
+          <li><span class="vm-img"><img src="img/var-1.png" alt="주황색 데이터 메뉴 버튼" width="99" height="50" loading="lazy"></span><span>블록 목록에서 주황색 <b>데이터</b> 메뉴 누르기</span></li>
+          <li><span class="vm-img"><img src="img/var-2.png" alt="데이터 아래 변수 항목의 변수 만들기 버튼" width="186" height="139" loading="lazy"></span><span>'변수' 아래 <b>변수 만들기...</b> 버튼 누르기</span></li>
+          <li><span class="vm-img"><img src="img/var-3.png" alt="변수 이름을 쓰고 확인을 누르는 변수 만들기 창" width="696" height="454" loading="lazy"></span><span>창이 뜨면 <b>속도</b>를 쓰고 <b>확인</b>. 다시 <b>변수 만들기...</b>를 눌러 <b>회전</b>도 만들기</span></li>
+        </ol>
         <div class="vm-show"><span class="vm-k">다 만들면 이렇게 생겨요</span><div class="vm-pills"><span class="rep r-var">속도</span><span class="rep r-var">회전</span></div><span class="vm-k">이름이 블록 코드와 똑같아야 해요: '속도' · '회전'</span></div>
       </div>
     </div>
